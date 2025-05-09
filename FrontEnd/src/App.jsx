@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import GoodsCard from './Components/GoodsCard'
 import NavBar from './Components/NavBar';
+import Tab from './Components/Tab';
 
 function App() {
   
@@ -18,7 +19,6 @@ function App() {
   return ( 
     <>
     <NavBar />
-
     <div className='flex flex-wrap justify-center gap-4'>
 
       <GoodsCard 
