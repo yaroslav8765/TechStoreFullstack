@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import GoodsCard from './Components/GoodsCard'
+import NavBar from './Components/NavBar';
 
 function App() {
   
@@ -16,7 +17,19 @@ function App() {
 
   return ( 
     <>
-    <div className='flex flex-wrap gap-4'>
+    <NavBar />
+
+    <div className='flex flex-wrap justify-center gap-4'>
+
+      <GoodsCard 
+        img="https://pm1.aminoapps.com/7954/ed76c65c9eadc327e24b378f3b65aa4fa4fc2749r1-479-512v2_00.jpg"
+        producName="Torhu - very cool dragonmaid waifu. Best waifu in the world"
+        price={123}
+        rating={5}
+        voted={999}
+      />
+
+
       {product && product.map((noteItem, index) => {
           return (
             <div key={index}>
@@ -24,7 +37,7 @@ function App() {
               img="https://pm1.aminoapps.com/7954/ed76c65c9eadc327e24b378f3b65aa4fa4fc2749r1-479-512v2_00.jpg"
               producName={noteItem.name}
               price={noteItem.price}
-              rating={5}
+              rating={4}
               voted={10}
               />
             </div>
