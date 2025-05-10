@@ -19,8 +19,8 @@ function GoodsCard(props) {
     }
 
     return (
-        <div className="mt-1 ml-1 mr-1 mb-1">
-            <form className="flex flex-col items-center bg-gray-100 w-[240px] h-[400px] rounded-2xl shadow-lg p-4 hover:bg-gray-300">
+        <div className="m-1">
+            <form className="flex flex-col items-center bg-gray-100 w-[240px] h-[400px] rounded-2xl shadow-lg p-4 hover:bg-gray-200 transition-bg duration-200">
                 {/* Picture */}
                 <img 
                 src={props.img}
@@ -55,7 +55,7 @@ function GoodsCard(props) {
                     onMouseLeave={mouseOutHandler}
                     >
                     <button 
-                        className={`relative z-10 text-white font-medium py-2 px-5 rounded-lg gradient-background transition-colors w-full text-lg ${isMousedOver ? 'filter grayscale' : ''}`}
+                        className={`relative z-10 text-white font-medium py-2 px-5 rounded-lg transition-colors w-full text-lg bg-[linear-gradient(300deg,_#481fff,_#ff2ba0,_#fa4141)] bg-[length:180%_180%] animate-gradient hover:bg-[linear-gradient(300deg,_#5a33ff,_#ff4bb5,_#ff5a5a)] transition-all duration-300">`}
                         onClick={onClickHandler}
                     >
                         Add
