@@ -4,6 +4,7 @@ import NavBar from './components/NavBar';
 import MainCarousel from './components/Carousel';
 import PopularGoods from './components/PopularGoods';
 import Footer from './components/Footer';
+import listOfLinks from './links';
 
 const tempCarouselList = [
   {
@@ -35,6 +36,7 @@ const tempBestSellers = [
     price: 1899,
     rating: 4.7,
     voted: 310,
+    old_price: 300
   },
   {
     id: 3,
@@ -42,6 +44,7 @@ const tempBestSellers = [
     price: 3699,
     rating: 4.6,
     voted: 180,
+    old_price: 300
   },
   {
     id: 4,
@@ -49,6 +52,7 @@ const tempBestSellers = [
     price: 8499,
     rating: 4.9,
     voted: 420,
+    old_price: 300
   },
   {
     id: 5,
@@ -63,6 +67,7 @@ const tempBestSellers = [
     price: 8499,
     rating: 4.9,
     voted: 420,
+    old_price: 300
   },
 
 ];
@@ -73,7 +78,7 @@ function App() {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/goods/Smartphones")
+    fetch(listOfLinks.smartphones)
       .then(res => res.json())
       .then(data => setProduct(data))
       .catch(err => console.error("Error fetching product:", err));
@@ -86,13 +91,8 @@ function App() {
       <NavBar />
       <div className='flex flex-col max-w-[1200px] w-full mx-auto mt-4'>
 
-
-
       <MainCarousel listOfObjects={tempCarouselList}/>
-
-
-
-        <div className='flex flex-wrap gap-4 '>
+        {/* <div className='flex flex-wrap gap-4 '>
           {product && product.map((noteItem, index) => {
             return (
               <div key={index}>
@@ -106,16 +106,10 @@ function App() {
               </div>
             );
           })}
-        </div>
-
+        </div> */}
         <PopularGoods title="Best Sellers" goodsCards={tempBestSellers}/>
-
         <PopularGoods title="Smartphones" goodsCards={tempBestSellers}/>
-
         <PopularGoods title="Laptops" goodsCards={tempBestSellers}/>
-
-        {/* <PopularGoods title="TV`s" goodsCards={tempBestSellers}/> */}
-
       </div>
       <Footer/>
     </div>

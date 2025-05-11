@@ -1,4 +1,5 @@
 import React from "react";
+import listOfLinks from "../links";
 
 function Footer() {
 
@@ -11,19 +12,19 @@ function Footer() {
                 <div className="mb-4 md:mb-0">
                     <h3 className="text-black font-semibold mb-2">Information</h3>
                     <ul>
-                        <li><a href="#" className="hover:underline">About Us</a></li>
-                        <li><a href="#" className="hover:underline">Privacy Policy</a></li>
-                        <li><a href="#" className="hover:underline">Terms & Conditions</a></li>
-                        <li><a href="#" className="hover:underline">Return Policy</a></li>
+                        <li><a href={listOfLinks.about_us} className="hover:underline">About Us</a></li>
+                        <li><a href={listOfLinks.privacy_polycy} className="hover:underline">Privacy Policy</a></li>
+                        <li><a href={listOfLinks.terms_and_conditions} className="hover:underline">Terms & Conditions</a></li>
+                        <li><a href={listOfLinks.return_policy} className="hover:underline">Return Policy</a></li>
                     </ul>
                 </div>
 
                 <div className="mb-4 md:mb-0">
                     <h3 className="text-black font-semibold mb-2">Customer Service</h3>
                     <ul>
-                        <li><a href="#" className="hover:underline">Contact Us</a></li>
-                        <li><a href="#" className="hover:underline">FAQs</a></li>
-                        <li><a href="#" className="hover:underline">Support Center</a></li>
+                        <li><a href={listOfLinks.contact_us} className="hover:underline">Contact Us</a></li>
+                        <li><a href={listOfLinks.FAQs} className="hover:underline">FAQs</a></li>
+                        <li><a href={listOfLinks.support_center} className="hover:underline">Support Center</a></li>
                     </ul>
                 </div>
 

@@ -4,20 +4,6 @@ import StarIcon from '@mui/icons-material/Star';
 
 function GoodsCard(props) {
 
-    const [isMousedOver, setMouseOver] = useState(false);
-
-    function onClickHandler() {
-
-    }
-
-    function mouseOverHandler() {
-        setMouseOver(true);
-    }
-
-    function mouseOutHandler() {
-        setMouseOver(false);
-    }
-
     return (
         <div className="m-1">
             <form className="flex flex-col items-center bg-gray-100 w-[240px] h-[400px] rounded-2xl shadow-lg p-4 hover:bg-gray-200 transition-bg duration-200">
@@ -29,10 +15,17 @@ function GoodsCard(props) {
                 />
 
                 {/* Name */}
-                <p className="text-black text-xl font-semibold mt-3 min-h-[55px] line-clamp-2 ">{props.producName}</p>
-
+                <p className="text-black text-xl text-left font-semibold mt-3 min-h-[55px] line-clamp-2 ">{props.producName}</p>
                 {/* Price */}
-                <p className="text-black text-lg font-bold  mt-">{props.price} ₴</p>
+                
+                <div className="flex flex-row w-full justify-center ">
+                    
+                    <p className={`ml-8 text-xl ${props.old_price ? 'text-red-500' : 'text-gray-600' } `}>{props.price} ₴ </p>
+
+                   {props.old_price && (
+                    <p className="ml-2 text-gray-600 text-sm line-through">{props.old_price}₴</p>
+                    )}
+                </div>
 
                 {/* Rating */}
                 <div className="flex items-center">
@@ -49,14 +42,12 @@ function GoodsCard(props) {
                 </div>
 
                 {/* Button */}
-                <div 
-                    className="relative w-full mt-2"
-                    onMouseEnter={mouseOverHandler}
-                    onMouseLeave={mouseOutHandler}
-                    >
+                <div className="relative w-full mt-2">
                     <button 
-                        className={`relative z-10 text-white font-medium py-2 px-5 rounded-lg transition-colors w-full text-lg bg-[linear-gradient(300deg,_#481fff,_#ff2ba0,_#fa4141)] bg-[length:180%_180%] animate-gradient hover:bg-[linear-gradient(300deg,_#5a33ff,_#ff4bb5,_#ff5a5a)] transition-all duration-300">`}
-                        onClick={onClickHandler}
+                        className={`relative z-10 text-white font-medium py-2 px-5 rounded-lg transition-colors w-full text-lg 
+                            bg-[linear-gradient(300deg,_#481fff,_#ff2ba0,_#fa4141)] bg-[length:180%_180%] 
+                            animate-gradient hover:bg-[linear-gradient(300deg,_#5a33ff,_#ff4bb5,_#ff5a5a)] 
+                            transition-all duration-300">`}
                     >
                         Add
                     </button>

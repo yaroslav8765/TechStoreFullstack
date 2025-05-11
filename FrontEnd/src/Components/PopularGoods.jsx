@@ -31,14 +31,14 @@ function PopularGoods({ goodsCards, title }) {
 
       <button
         onClick={scrollLeft} 
-        className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white shadow-md rounded-full p-2 hover:bg-gray-100 transition"
+        className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white shadow-md rounded-full p-1 hover:bg-gray-100 transition"
       >
         <ArrowCircleLeftIcon sx={{ color: "black" }} fontSize="large"/>
       </button>
 
       <button
         onClick={scrollRight}
-        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white shadow-md rounded-full p-2 hover:bg-gray-100 transition"
+        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white shadow-md rounded-full p-1 hover:bg-gray-100 transition"
       >
         <ArrowCircleRightIcon sx={{ color: "black" }} fontSize="large"/>
       </button>
@@ -56,6 +56,7 @@ function PopularGoods({ goodsCards, title }) {
                 price={item.price}
                 rating={item.rating}
                 voted={item.voted}
+                old_price={item.old_price}
               />
             ))}
         </div>

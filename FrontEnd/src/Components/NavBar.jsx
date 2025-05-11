@@ -10,6 +10,7 @@ import KeyboardIcon from '@mui/icons-material/Keyboard';
 import Tab from "./DropDownMenu";
 import IconButton from "./ui/Icon-Buttoon";
 import CategoryButton from "./ui/Category-Button";
+import listOfLinks from "../links";
 
 function NavBar() {
     const [usersPrompt, setUsersPrompt] = useState("");
@@ -22,7 +23,7 @@ function NavBar() {
     <div className=" px-6 py-4 bg-white shadow-md">
       <div className=" flex items-center justify-between max-w-[1200px] mx-auto">
         {/* Logo */}
-        <h1 className="text-2xl font-bold text-gray-800">TechStore</h1>
+        <h1 className="text-2xl font-bold text-gray-800" ><a href={listOfLinks.main}>TechStore</a></h1>
 
         {/* Search bar */}
         <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-[400px]">
