@@ -3,6 +3,7 @@ import GoodsCard from './components/GoodsCard'
 import NavBar from './components/NavBar';
 import MainCarousel from './components/Carousel';
 import PopularGoods from './components/PopularGoods';
+import Footer from './components/Footer';
 
 const tempCarouselList = [
   {
@@ -113,10 +114,10 @@ function App() {
 
         <PopularGoods title="Laptops" goodsCards={tempBestSellers}/>
 
-        <PopularGoods title="TV`s" goodsCards={tempBestSellers}/>
-
+        {/* <PopularGoods title="TV`s" goodsCards={tempBestSellers}/> */}
 
       </div>
+      <Footer/>
     </div>
   )
 }
