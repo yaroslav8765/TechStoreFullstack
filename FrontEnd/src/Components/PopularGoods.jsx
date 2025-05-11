@@ -5,7 +5,7 @@ import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
 const CARD_WIDTH = 240;
 
-function PopularGoods({ goodsCards, title }) {
+function PopularGoods({ goodsCards, title, category_link }) {
   const [scrollPosition, setScrollPosition] = useState(0);
   const containerRef = useRef();
 
@@ -16,14 +16,10 @@ function PopularGoods({ goodsCards, title }) {
   function scrollRight(){
     containerRef.current.scrollLeft += CARD_WIDTH;
   }
-  const handleScroll = (scrollAmount) => {
-    const newScrollPosition = scrollPosition + scrollAmount;
 
-    setScrollPosition(newScrollPosition);
-    console.log(newScrollPosition);
-    containerRef.current.scrollLeft = newScrollPosition;
+  const clickHandler = () => {
+    console.log(category_link);
   };
-
 
   return (
     <div className="relative flex flex-col mt-4 rounded-xl">
@@ -45,7 +41,7 @@ function PopularGoods({ goodsCards, title }) {
 
       <div className="overflow-x-auto scrollbar-hide scroll-smooth" ref={containerRef}>
         <div
-          className="flex gap-4 bg-gray-50 p-4 rounded-xl w-max min-w-full scroll-smooth"
+          className="flex gap-4  p-4 rounded-xl w-max min-w-full scroll-smooth"
         >
           {goodsCards &&
             goodsCards.map((item) => (
@@ -57,6 +53,7 @@ function PopularGoods({ goodsCards, title }) {
                 rating={item.rating}
                 voted={item.voted}
                 old_price={item.old_price}
+                product_link={item.product_link}
               />
             ))}
         </div>
@@ -67,6 +64,7 @@ function PopularGoods({ goodsCards, title }) {
           bg-[length:180%_180%] animate-gradient 
           hover:bg-[linear-gradient(300deg,_#1a75ff,_#00d4b4,_#4fffcf)] 
           transition-all duration-300"
+          onClick={clickHandler}
         >
           See more
         </button>

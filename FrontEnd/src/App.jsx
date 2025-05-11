@@ -29,6 +29,7 @@ const tempBestSellers = [
     price: 2999,
     rating: 4.8,
     voted: 235,
+    product_link: listOfLinks.contact_us
   },
   {
     id: 2,
@@ -36,7 +37,8 @@ const tempBestSellers = [
     price: 1899,
     rating: 4.7,
     voted: 310,
-    old_price: 300
+    old_price: 300,
+    product_link: listOfLinks.contact_us
   },
   {
     id: 3,
@@ -44,7 +46,8 @@ const tempBestSellers = [
     price: 3699,
     rating: 4.6,
     voted: 180,
-    old_price: 300
+    old_price: 300,
+    product_link: listOfLinks.contact_us
   },
   {
     id: 4,
@@ -52,7 +55,8 @@ const tempBestSellers = [
     price: 8499,
     rating: 4.9,
     voted: 420,
-    old_price: 300
+    old_price: 300,
+    product_link: listOfLinks.contact_us
   },
   {
     id: 5,
@@ -60,6 +64,7 @@ const tempBestSellers = [
     price: 8499,
     rating: 4.9,
     voted: 420,
+    product_link: listOfLinks.contact_us
   },
   {
     id: 6,
@@ -67,7 +72,9 @@ const tempBestSellers = [
     price: 8499,
     rating: 4.9,
     voted: 420,
-    old_price: 300
+    old_price: 300,
+    product_link: listOfLinks.contact_us
+
   },
 
 ];
@@ -92,24 +99,9 @@ function App() {
       <div className='flex flex-col max-w-[1200px] w-full mx-auto mt-4'>
 
       <MainCarousel listOfObjects={tempCarouselList}/>
-        {/* <div className='flex flex-wrap gap-4 '>
-          {product && product.map((noteItem, index) => {
-            return (
-              <div key={index}>
-                <GoodsCard 
-                  img="https://pm1.aminoapps.com/7954/ed76c65c9eadc327e24b378f3b65aa4fa4fc2749r1-479-512v2_00.jpg"
-                  producName={noteItem.name}
-                  price={noteItem.price}
-                  rating={4}
-                  voted={10}
-                />
-              </div>
-            );
-          })}
-        </div> */}
-        <PopularGoods title="Best Sellers" goodsCards={tempBestSellers}/>
-        <PopularGoods title="Smartphones" goodsCards={tempBestSellers}/>
-        <PopularGoods title="Laptops" goodsCards={tempBestSellers}/>
+        <PopularGoods title="Best Sellers" goodsCards={tempBestSellers} category_link="youtube.com"/>
+        <PopularGoods title="Smartphones" goodsCards={tempBestSellers} category_link="youtube.com"/>
+        <PopularGoods title="Laptops" goodsCards={tempBestSellers} category_link="youtube.com"/>
       </div>
       <Footer/>
     </div>
