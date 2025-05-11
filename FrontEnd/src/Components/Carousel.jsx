@@ -30,7 +30,6 @@ const MainCarousel = (props) => {
                 </div>
             );
         })}
-
         </Carousel>
     </div>
   );

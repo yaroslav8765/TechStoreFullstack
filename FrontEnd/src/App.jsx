@@ -49,6 +49,20 @@ const tempBestSellers = [
     rating: 4.9,
     voted: 420,
   },
+  {
+    id: 5,
+    name: "Монитор LG UltraGear 27\"",
+    price: 8499,
+    rating: 4.9,
+    voted: 420,
+  },
+  {
+    id: 6,
+    name: "Монитор LG UltraGear 27\"",
+    price: 8499,
+    rating: 4.9,
+    voted: 420,
+  },
 
 ];
 
