@@ -1,7 +1,8 @@
-from fastapi import APIRouter,Depends, HTTPException
+from fastapi import APIRouter,Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 from ..database import SessionLocal
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from typing import Annotated
 from ..routers.auth import get_current_user
 from starlette import status
@@ -294,3 +295,6 @@ async def change_password(user: user_dependency, db: db_dependancy, request: Rec
 
     db.commit
 
+@router.get("/search", status_code=status.HTTP_200_OK)
+async def search( request: str, db: db_dependancy):
+    return db.query(Goods).filter(Goods.name.ilike(f"%{request}%")).all()
