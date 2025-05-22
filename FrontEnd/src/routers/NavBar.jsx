@@ -59,20 +59,20 @@ function NavBar() {
               <IconButton icon={SearchIcon}/>
             </div>
 
-             {isRequestActive && <div className="ml-4 absolute top-[100px] left-1/2 transform -translate-x-1/2 w-[400px] max-h-[70vh] overflow-y-auto bg-white rounded-xl shadow-lg z-50 p-4 space-y-4 scrollbar-hide scroll-smooth">
+            {isRequestActive && <div className="ml-4 absolute top-[100px] left-1/2 transform -translate-x-1/2 w-[400px] max-h-[70vh] overflow-y-auto bg-white rounded-xl shadow-lg z-50 p-4 space-y-4 scrollbar-hide scroll-smooth">
               {Array.isArray(resData) && resData.map((item, index) => (
                 <SingleSearchBarResult
                   key={item.id}
                   img="https://pm1.aminoapps.com/7954/ed76c65c9eadc327e24b378f3b65aa4fa4fc2749r1-479-512v2_00.jpg"
                   title={item.name}
                   price={item.price}
-                  old_price={100}
-                  categoty={item.category}
+                  old_price={item.old_price}
+                  category={item.category}
                   id={item.id}
                   description={item.description}
                 />
               ))}
-              </div>}
+          </div>}
 
           </div>
             {/* Icons */}
