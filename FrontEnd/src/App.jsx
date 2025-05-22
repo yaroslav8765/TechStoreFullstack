@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import GoodsCard from './components/GoodsCard'
-import NavBar from './components/NavBar';
+import NavBar from './routers/NavBar';
 import MainCarousel from './components/Carousel';
 import PopularGoods from './components/PopularGoods';
-import Footer from './components/Footer';
+import Footer from './routers/Footer';
 import listOfLinks from './links';
 
 const tempCarouselList = [

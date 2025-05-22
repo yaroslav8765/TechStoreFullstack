@@ -1,3 +1,5 @@
+import Search from "antd/es/transfer/search";
+
 const listOfLinks = {
     main: "http://localhost:5173/",
     smartphones: "http://127.0.0.1:8000/goods/Smartphones",
@@ -5,6 +7,7 @@ const listOfLinks = {
     headphones: "http://127.0.0.1:8000/goods/Headphones",
     mouses: "http://127.0.0.1:8000/goods/Mouses", 
     keyboards: "http://127.0.0.1:8000/goods/Keyboards",
+    search: "http://127.0.0.1:8000/user/search",
     about_us: "https://www.instagram.com/yap0slav/",
     privacy_polycy:"https://www.instagram.com/yap0slav/",
     terms_and_conditions:"https://www.instagram.com/yap0slav/",
