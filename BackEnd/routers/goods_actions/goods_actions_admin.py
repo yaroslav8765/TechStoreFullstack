@@ -4,10 +4,11 @@ from pydantic import BaseModel
 from starlette import status
 from sqlalchemy.orm import Session
 from ...database import SessionLocal
-from ...models import Users, Orders, Smartphones, Laptops, Goods 
+from ...models import Users, Orders, Smartphones, Laptops, Goods, GoodsImage 
 from ...routers.auth import get_current_user
 from ...routers.goods_actions.request_models.smartphone import AddEditSmartphoneRequest, add_smartphones_model, edit_smartphone_model
 from ...routers.goods_actions.request_models.laptop import AddEditLaptopRequest, add_laptop_model, edit_laptop_model
+from typing import List
 
 router = APIRouter(
     prefix = "/admin-panel",
@@ -24,49 +25,62 @@ def get_db():
 db_dependancy = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
+
 class AddEditGoodsRequest(BaseModel):
     name: str
     price: float
+    old_price: float
     description: str
     category: str
     quantity: int = 0
-    image_url: str
     characteristics_table: str
+    image_url: str
+    image_urls: List[str]
 
     model_config = {
-        "json_schema_extra" : {
-            "example" : {
-                "name" : "Empty", 
-                "price" : -1,
-                "description" : "Empty",
-                "category" : "Empty", 
-                "quantity" : -1,
-                "image_url" : "Empty",
-                "characteristics_table" : "Empty"
+        "json_schema_extra": {
+            "example": {
+                "name": "Samsung Galaxy S23 Ultra",
+                "old_price": 1599, 
+                "price": 1199,
+                "description": "Топовый флагман Samsung с 200MP камерой.",
+                "category": "Smartphones", 
+                "quantity": 35,
+                "characteristics_table": "Samsung Galaxy S23 Ultra, 12GB RAM, 256GB Storage",
+                "image_url": "https://example.com/samsung_s23_1.jpg",
+                "image_urls": [
+                    "https://example.com/samsung_s23_2.jpg",
+                    "https://example.com/samsung_s23_3.jpg"
+                ]
             }
         }
     }
 
-def add_goods_model(goods_request: AddEditGoodsRequest):
-    add_goods_model = Goods(
+def add_goods_model(goods_request: AddEditGoodsRequest) -> Goods:
+    good = Goods(
         name=goods_request.name,
         price=goods_request.price,
+        old_price=goods_request.old_price,
         description=goods_request.description,
         category=goods_request.category,
         quantity=goods_request.quantity,
-        image_url=goods_request.image_url,
-        characteristics_table = goods_request.characteristics_table
+        characteristics_table=goods_request.characteristics_table,
+        image_url = goods_request.image_url,
     )
-    return add_goods_model
 
-def edit_goods_model(goods_request: AddEditGoodsRequest, old_good: Goods):
+    good.images = [GoodsImage(url=url) for url in goods_request.image_urls]
+
+    return good
+
+
+def edit_goods_model(goods_request: AddEditGoodsRequest, old_good: Goods) -> Goods:
     update_fields = {
         "name": "Empty",
         "price": -1,
+        "old_price": -2,
         "description": "Empty",
         "category": "Empty",
         "quantity": -1,
-        "image_url": "Empty",
         "characteristics_table": "Empty",
     }
 
@@ -75,7 +89,13 @@ def edit_goods_model(goods_request: AddEditGoodsRequest, old_good: Goods):
         if new_value != empty_value:
             setattr(old_good, field, new_value)
 
+    if goods_request.image_urls:
+        old_good.images.clear()
+        for url in goods_request.image_urls:
+            old_good.images.append(GoodsImage(url=url))
+
     return old_good
+
 
 
 
@@ -98,40 +118,62 @@ def edit_goods_model(goods_request: AddEditGoodsRequest, old_good: Goods):
 #                                                Smartphones                                                #
 #                                                                                                           #
 #############################################################################################################
-@router.post("/add-goods/smartphone", status_code = status.HTTP_201_CREATED)
-async def add_smartphone_to_the_db(db: db_dependancy, user: user_dependency, characteristics_request: AddEditSmartphoneRequest, goods_request: AddEditGoodsRequest):
+@router.post("/add-goods/smartphone", status_code=status.HTTP_201_CREATED)
+async def add_smartphone_to_the_db(
+    db: db_dependancy,
+    user: user_dependency,
+    characteristics_request: AddEditSmartphoneRequest,
+    goods_request: AddEditGoodsRequest
+):
     if user is None or user.get('role') != 'admin':
         raise HTTPException(status_code=401, detail='Authentication Failed')
     
     add_goods = add_goods_model(goods_request)
     db.add(add_goods)
     db.commit()
+    db.refresh(add_goods)
 
-    new_goods_id = db.query(Goods).filter(Goods.name == goods_request.name, 
-                                          Goods.price == goods_request.price, 
-                                          Goods.description == goods_request.description).first()
-    
-    add_smartphone_model = add_smartphones_model(characteristics_request, new_goods_id.id)
+    add_smartphone_model = add_smartphones_model(characteristics_request, add_goods.id)
     db.add(add_smartphone_model)
+
+    # for url in goods_request.image_urls:
+    #     db.add(GoodsImage(url=url, good_id=add_goods.id))
+
     db.commit()
+    return {"message": "Good created", "id": add_goods.id}
 
 
-@router.put("/edit-goods/smartphone", status_code = status.HTTP_200_OK)
-async def edit_smartphone_in_db(db: db_dependancy, user: user_dependency, characteristics_request: AddEditSmartphoneRequest, goods_request: AddEditGoodsRequest, goods_id: int):
+
+@router.put("/edit-goods/smartphone", status_code=status.HTTP_200_OK)
+async def edit_smartphone_in_db(
+    db: db_dependancy,
+    user: user_dependency,
+    characteristics_request: AddEditSmartphoneRequest,
+    goods_request: AddEditGoodsRequest,
+    goods_id: int
+):
     if user is None or user.get('role') != 'admin':
         raise HTTPException(status_code=401, detail='Authentication Failed')
     
     old_good = db.query(Goods).filter(Goods.id == goods_id).first()
     if old_good is None:
         raise HTTPException(status_code=404, detail='Good not found')
-    edit_goods_model(goods_request, old_good)
-    db.commit()
 
-    old_smartphone = db.query(Smartphones).filter(Smartphones.goods_id == old_good.id).first()
+    edit_goods_model(goods_request, old_good)
+    
+    db.query(GoodsImage).filter(GoodsImage.good_id == goods_id).delete()
+
+    # for url in goods_request.image_urls:
+    #     db.add(GoodsImage(url=url, good_id=goods_id))
+
+    old_smartphone = db.query(Smartphones).filter(Smartphones.goods_id == goods_id).first()
     if old_smartphone is None:
-        raise HTTPException(status_code=404, detail='Good not found')
+        raise HTTPException(status_code=404, detail='Smartphone not found')
+    
     edit_smartphone_model(characteristics_request, old_smartphone)
+
     db.commit()
+    return {"message": "Good updated", "id": goods_id}
 
 
 #############################################################################################################
@@ -139,37 +181,58 @@ async def edit_smartphone_in_db(db: db_dependancy, user: user_dependency, charac
 #                                                Laptops                                                    #
 #                                                                                                           #
 #############################################################################################################
-@router.post("/add-goods/laptop", status_code = status.HTTP_201_CREATED)#                              Laptop                                   
-async def add_laptop_to_the_db(db: db_dependancy, user: user_dependency, characteristics_request: AddEditLaptopRequest, goods_request: AddEditGoodsRequest):
-    if user is None or user.get('role') != 'admin':
-        raise HTTPException(status_code=401, detail='Authentication Failed')
+@router.post("/add-goods/laptop", status_code=status.HTTP_201_CREATED)
+async def add_laptop_to_the_db(
+    db: db_dependancy,
+    user: user_dependency,
+    characteristics_request: AddEditLaptopRequest,
+    goods_request: AddEditGoodsRequest
+):
+    if user is None or user.get("role") != "admin":
+        raise HTTPException(status_code=401, detail="Authentication Failed")
     
     add_goods = add_goods_model(goods_request)
     db.add(add_goods)
     db.commit()
+    db.refresh(add_goods)
 
-    new_goods_id = db.query(Goods).filter(Goods.name == goods_request.name, 
-                                          Goods.price == goods_request.price, 
-                                          Goods.description == goods_request.description).first()
-    
-    add_smartphone_model = add_laptop_model(characteristics_request, new_goods_id.id)
-    db.add(add_smartphone_model)
+    add_laptop = add_laptop_model(characteristics_request, add_goods.id)
+    db.add(add_laptop)
+
+    # for url in goods_request.image_urls:
+    #     db.add(GoodsImage(url=url, good_id=add_goods.id))
+
     db.commit()
+    return {"message": "Laptop added", "id": add_goods.id}
 
 
-@router.put("/edit-goods/laptop", status_code = status.HTTP_200_OK)#                                    Laptop         
-async def edit_laptop_in_db(db: db_dependancy, user: user_dependency, characteristics_request: AddEditLaptopRequest, goods_request: AddEditGoodsRequest, goods_id: int):
-    if user is None or user.get('role') != 'admin':
-        raise HTTPException(status_code=401, detail='Authentication Failed')
-    
+@router.put("/edit-goods/laptop", status_code=status.HTTP_200_OK)
+async def edit_laptop_in_db(
+    db: db_dependancy,
+    user: user_dependency,
+    characteristics_request: AddEditLaptopRequest,
+    goods_request: AddEditGoodsRequest,
+    goods_id: int
+):
+    if user is None or user.get("role") != "admin":
+        raise HTTPException(status_code=401, detail="Authentication Failed")
+
     old_good = db.query(Goods).filter(Goods.id == goods_id).first()
     if old_good is None:
-        raise HTTPException(status_code=404, detail='Good not found')
-    edit_goods_model(goods_request, old_good)
-    db.commit()
+        raise HTTPException(status_code=404, detail="Good not found")
 
-    old_smartphone = db.query(Laptops).filter(Laptops.goods_id == old_good.id).first()
-    if old_smartphone is None:
-        raise HTTPException(status_code=404, detail='Good not found')
-    edit_laptop_model(characteristics_request, old_smartphone)
+    edit_goods_model(goods_request, old_good)
+
+    db.query(GoodsImage).filter(GoodsImage.good_id == goods_id).delete()
+
+    for url in goods_request.image_urls:
+        db.add(GoodsImage(url=url, good_id=goods_id))
+
+    old_laptop = db.query(Laptops).filter(Laptops.goods_id == goods_id).first()
+    if old_laptop is None:
+        raise HTTPException(status_code=404, detail="Laptop not found")
+
+    edit_laptop_model(characteristics_request, old_laptop)
+
     db.commit()
+    return {"message": "Laptop updated", "id": goods_id}

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from typing import Annotated
 from ...routers.auth import get_current_user
 from starlette import status
-from ...models import Goods, Basket, OrderItem, Orders, Users, Smartphones, Laptops
+from ...models import Goods, Basket, OrderItem, Orders, Users, Smartphones, Laptops, GoodsImage
 from ...routers.email_actions.email_verification import send_verification_email
 from ...routers.auth import check_if_user_enter_email_or_phone_num
 from ...routers.email_actions.email_mailing import send_order_details, send_cancel_order_notification
@@ -44,18 +44,28 @@ async def show_category_goods(db: db_dependancy, category: str):
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "No such category")
     return category_goods
 
-@router.get("/{category}/{goods_name}", status_code = status.HTTP_200_OK)
-async def get_goods_info(db: db_dependancy, category: str, goods_name: str):
+@router.get("/{category}/{goods_id}", status_code=status.HTTP_200_OK)
+async def get_goods_info(db: db_dependancy, category: str, goods_id: int):
     model = CATEGORY_TO_MODEL.get(category.lower())
-
-    goods_base_info = db.query(Goods).filter(func.lower(Goods.name) == goods_name.lower()).first()
 
     if model is None:
         raise HTTPException(status_code=400, detail="Invalid category")
-    
-    goods_details_model = db.query(model).filter(model.goods_id == goods_base_info.id).first()
 
-    if goods_details_model is None:
+    goods_base_info = db.query(Goods).filter(Goods.id == goods_id).first()
+
+    if goods_base_info is None:
         raise HTTPException(status_code=404, detail="Goods not found")
 
-    return goods_base_info, goods_details_model
+    goods_details_model = db.query(model).filter(model.goods_id == goods_id).first()
+
+    if goods_details_model is None:
+        raise HTTPException(status_code=404, detail="Goods details not found")
+
+        
+    goods_images = db.query(GoodsImage).filter(GoodsImage.good_id == goods_base_info.id).all()
+
+    if goods_images is None:    
+        goods_images = "https://media.tenor.com/7vW_xoioKbIAAAAM/anime-girl-shrugging-and-looking-away.gif"
+
+
+    return goods_base_info, goods_details_model, goods_images

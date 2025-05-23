@@ -1,6 +1,7 @@
 from .database import Base
 from sqlalchemy import Column, Integer, Float, String, Boolean, ForeignKey, DateTime
 from datetime import datetime, timezone, timedelta
+from sqlalchemy.orm import relationship
 
 utc_plus_2 = timezone(timedelta(hours=2))
 
@@ -22,13 +23,25 @@ class Goods(Base):
     id                      = Column(Integer, primary_key=True, index=True)
     name                    = Column(String)
     price                   = Column(Float)
+    old_price               = Column(Float)
     description             = Column(String)
     category                = Column(String)
     quantity                = Column(Integer, default=0)
     image_url               = Column(String)
     characteristics_table   = Column(String)
 
-    
+    images = relationship("GoodsImage", back_populates="good", cascade="all, delete")
+
+
+class GoodsImage(Base):
+    __tablename__ = 'goods_images'
+
+    id       = Column(Integer, primary_key=True, index=True)
+    url      = Column(String, nullable=False)
+    good_id  = Column(Integer, ForeignKey('goods.id'))
+
+    good = relationship("Goods", back_populates="images")
+
 class Smartphones(Base):
     __tablename__ = "smartphones"
 
@@ -57,9 +70,9 @@ class Smartphones(Base):
     NFC                     = Column(Boolean, default=None)
     USB_Interface           = Column(String, default=None)
     Battery_capacity        = Column(String, default=None)
-    Height                  = Column(Integer)
-    Width                   = Column(Integer)
-    Depth                   = Column(Integer)
+    Height                  = Column(Float)
+    Width                   = Column(Float)
+    Depth                   = Column(Float)
     Weight                  = Column(Integer)
     Manufacturer_color      = Column(String)
     Warranty_period         = Column(String) 
@@ -92,10 +105,10 @@ class Laptops(Base):
     Thunderbolt_Support     = Column(Boolean, default=None)
     Battery_capacity        = Column(String, default=None)
     Battery_life            = Column(String, default=None)
-    Height                  = Column(Integer)
-    Width                   = Column(Integer)
-    Depth                   = Column(Integer)
-    Weight                  = Column(Integer)
+    Height                  = Column(Float)
+    Width                   = Column(Float)
+    Depth                   = Column(Float)
+    Weight                  = Column(Float)
     Manufacturer_color      = Column(String)
     Warranty_period         = Column(String) 
     Country_of_manufacture  = Column(String)

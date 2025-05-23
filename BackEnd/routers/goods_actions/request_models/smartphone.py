@@ -26,10 +26,10 @@ class AddEditSmartphoneRequest(BaseModel):
     NFC: Optional[bool] = None
     USB_Interface: Optional[str] = None
     Battery_capacity: Optional[str] = None
-    Height: int
-    Width: int
-    Depth: int
-    Weight: int
+    Height: float
+    Width: float
+    Depth: float
+    Weight: float
     Manufacturer_color: str
     Warranty_period: str
     Country_of_manufacture: str

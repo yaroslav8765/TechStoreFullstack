@@ -21,10 +21,10 @@ class AddEditLaptopRequest(BaseModel):
     Thunderbolt_Support: Optional[bool] = None
     Battery_capacity: Optional[str] = None
     Battery_life: Optional[str] = None
-    Height: int
-    Width: int
-    Depth: int
-    Weight: int
+    Height: float
+    Width: float
+    Depth: float
+    Weight: float
     Manufacturer_color: str
     Warranty_period: str
     Country_of_manufacture: str
