@@ -35,7 +35,7 @@ function GoodsCard(props) {
                     <img 
                     src={props.img}
                     alt={props.producName}
-                    className="w-[180px] h-[200px] object-cover gap-y-2 mt-2 rounded-xl"
+                    className="w-[180px] h-[180px] object-contain gap-y-2 mt-2 rounded-xl"
                     />
 
                     {/* Name */}

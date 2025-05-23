@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from starlette import status
 from sqlalchemy.orm import Session
 from ...database import SessionLocal
-from ...models import Users, Orders, Smartphones, Laptops, Goods, GoodsImage 
+from ...models import Users, Orders, Smartphones, Laptops, Goods, GoodsImage, BestSellers
 from ...routers.auth import get_current_user
 from ...routers.goods_actions.request_models.smartphone import AddEditSmartphoneRequest, add_smartphones_model, edit_smartphone_model
 from ...routers.goods_actions.request_models.laptop import AddEditLaptopRequest, add_laptop_model, edit_laptop_model
@@ -236,3 +236,39 @@ async def edit_laptop_in_db(
 
     db.commit()
     return {"message": "Laptop updated", "id": goods_id}
+
+@router.post("/add-bestseller/{id}", status_code=status.HTTP_201_CREATED)
+async def add_bestseller_to_the_db(
+    id: int,
+    db: db_dependancy,
+    user: user_dependency,
+):
+    if user is None or user.get("role") != "admin":
+        raise HTTPException(status_code=401, detail="Authentication Failed")
+
+    new_bestseller = BestSellers(goods_id=id)
+    db.add(new_bestseller)
+    db.commit()
+    db.refresh(new_bestseller)
+
+    return {"message": "Bestseller added", "bestseller": new_bestseller.id}
+
+
+@router.delete("/delete-bestseller/{id}", status_code=status.HTTP_200_OK)
+async def delete_bestseller_by_goods_id(
+    id: int,
+    db: db_dependancy,
+    user: user_dependency,
+):
+    if user is None or user.get("role") != "admin":
+        raise HTTPException(status_code=401, detail="Authentication Failed")
+    
+    bestseller = db.query(BestSellers).filter(BestSellers.goods_id == id).first()
+    
+    if bestseller is None:
+        raise HTTPException(status_code=404, detail="Bestseller not found")
+    
+    db.delete(bestseller)
+    db.commit()
+    
+    return {"message": f"Bestseller with id {id} has been deleted."}

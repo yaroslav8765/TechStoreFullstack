@@ -141,3 +141,9 @@ class OrderItem(Base):
     order_id        = Column(Integer, ForeignKey("orders.order_number"))
     goods_id        = Column(Integer, ForeignKey("goods.id"))
     quantity        = Column(Integer)
+
+class BestSellers(Base):
+    __tablename__ = "best_sellers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    goods_id = Column(Integer, ForeignKey("goods.id"))

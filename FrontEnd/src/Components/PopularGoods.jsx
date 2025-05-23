@@ -1,14 +1,15 @@
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import GoodsCard from "./GoodsCard";
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import { Link } from "react-router-dom";
+import listOfLinks from "../links";
 
 const CARD_WIDTH = 240;
 
-function PopularGoods({ goodsCards, title, category_link }) {
-  const [scrollPosition, setScrollPosition] = useState(0);
+function PopularGoods({ title, category_link }) {
   const containerRef = useRef();
-
+  const [goodsCards, setGoodsCard] = useState([]);
   function scrollLeft(){
     containerRef.current.scrollLeft -= CARD_WIDTH;
   }
@@ -17,9 +18,15 @@ function PopularGoods({ goodsCards, title, category_link }) {
     containerRef.current.scrollLeft += CARD_WIDTH;
   }
 
-  const clickHandler = () => {
-    console.log(category_link);
-  };
+  useEffect( () => {
+    async function fetchGoods(){
+      const response = await fetch(`${listOfLinks.main_api}goods/${category_link}`)
+      const resData = await response.json();
+      console.log(resData);
+      setGoodsCard(resData);
+    }
+    fetchGoods();
+  }, [])
 
   return (
     <div className="relative flex flex-col mt-4 rounded-xl">
@@ -47,7 +54,7 @@ function PopularGoods({ goodsCards, title, category_link }) {
             goodsCards.map((item) => (
               <GoodsCard
                 key={item.id}
-                img="https://pm1.aminoapps.com/7954/ed76c65c9eadc327e24b378f3b65aa4fa4fc2749r1-479-512v2_00.jpg"
+                img={item.image_url}
                 producName={item.name}
                 price={item.price}
                 rating={item.rating}
@@ -60,14 +67,14 @@ function PopularGoods({ goodsCards, title, category_link }) {
       </div>
 
       <div className="flex items-end justify-end mt-2">
-        <button className="text-white px-15 py-4 mr-11 font-bold text-xl rounded-xl bg-[linear-gradient(300deg,_#0f52ba,_#00c2c2,_#2fe0a2)] 
+        <Link className="text-white px-15 py-4 mr-11 font-bold text-xl rounded-xl bg-[linear-gradient(300deg,_#0f52ba,_#00c2c2,_#2fe0a2)] 
           bg-[length:180%_180%] animate-gradient 
           hover:bg-[linear-gradient(300deg,_#1a75ff,_#00d4b4,_#4fffcf)] 
           transition-all duration-300"
-          onClick={clickHandler}
+          to={category_link}
         >
           See more
-        </button>
+        </Link>
       </div>
     </div>
   );

@@ -63,7 +63,7 @@ function NavBar() {
               {Array.isArray(resData) && resData.map((item, index) => (
                 <SingleSearchBarResult
                   key={item.id}
-                  img="https://pm1.aminoapps.com/7954/ed76c65c9eadc327e24b378f3b65aa4fa4fc2749r1-479-512v2_00.jpg"
+                  img={item.image_url}
                   title={item.name}
                   price={item.price}
                   old_price={item.old_price}
