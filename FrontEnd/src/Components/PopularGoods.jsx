@@ -10,6 +10,7 @@ const CARD_WIDTH = 240;
 function PopularGoods({ title, category_link }) {
   const containerRef = useRef();
   const [goodsCards, setGoodsCard] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
   function scrollLeft(){
     containerRef.current.scrollLeft -= CARD_WIDTH;
   }
@@ -20,16 +21,19 @@ function PopularGoods({ title, category_link }) {
 
   useEffect( () => {
     async function fetchGoods(){
+      setIsFetching(true)
       const response = await fetch(`${listOfLinks.main_api}goods/${category_link}`)
       const resData = await response.json();
       console.log(resData);
       setGoodsCard(resData);
+      setIsFetching(false)
     }
     fetchGoods();
   }, [])
 
   return (
-    <div className="relative flex flex-col mt-4 rounded-xl">
+    <>
+      <div className="relative flex flex-col mt-4 rounded-xl">
       <h3 className="text-gray-700 text-4xl font-bold mb-6">{title}</h3>
 
       <button
@@ -46,7 +50,7 @@ function PopularGoods({ title, category_link }) {
         <ArrowCircleRightIcon sx={{ color: "black" }} fontSize="large"/>
       </button>
 
-      <div className="overflow-x-auto scrollbar-hide scroll-smooth" ref={containerRef}>
+      {!isFetching && <div className="overflow-x-auto scrollbar-hide scroll-smooth" ref={containerRef}>
         <div
           className="flex gap-4  p-4 rounded-xl w-max min-w-full scroll-smooth"
         >
@@ -60,12 +64,24 @@ function PopularGoods({ title, category_link }) {
                 rating={item.rating}
                 voted={item.voted}
                 old_price={item.old_price}
-                product_link={item.product_link}
+                product_link={item.id}
+                category={item.category}
               />
             ))}
         </div>
       </div>
-
+      }
+      {isFetching && <div className="flex justify-center h-[440px]">
+        <div class="flex items-center justify-center">
+          <button type="button" class="inline-flex cursor-not-allowed items-center rounded-md bg-gray-500 px-4 py-2 text-sm leading-6 font-semibold text-white transition duration-150 ease-in-out hover:bg-indigo-400" disabled="">
+            <svg class="mr-3 -ml-1 size-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>Processing…
+            </button>
+          </div>
+        </div>
+      }
       <div className="flex items-end justify-end mt-2">
         <Link className="text-white px-15 py-4 mr-11 font-bold text-xl rounded-xl bg-[linear-gradient(300deg,_#0f52ba,_#00c2c2,_#2fe0a2)] 
           bg-[length:180%_180%] animate-gradient 
@@ -77,6 +93,7 @@ function PopularGoods({ title, category_link }) {
         </Link>
       </div>
     </div>
+    </>
   );
 }
 

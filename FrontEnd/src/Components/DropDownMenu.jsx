@@ -73,7 +73,7 @@ const items = [
   
     return (
         <div className="relative w-full flex items-center py-4 text-gray-700 text-xl font-bold"> 
-            <Dropdown menu={{ items, onClick }} trigger={['hover']} placement="rightTop"> 
+            <Dropdown menu={{ items, onClick }} trigger={['hover']} placement="bottomLeft"> 
                 <button 
                     type="text" 
                     className="hover:bg-gray-300 bg-gray-100 p-2 pl-4 pr-4 rounded-lg transition-bg duration-200" >                 

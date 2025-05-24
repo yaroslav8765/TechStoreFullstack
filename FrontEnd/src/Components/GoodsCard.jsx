@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Rating from '@mui/material/Rating';
 import StarIcon from '@mui/icons-material/Star';
 import listOfLinks from "../links";
-
+import { Link } from "react-router-dom";
 function GoodsCard(props) {
 
     const clickHandler = async (e) => {
@@ -29,7 +29,7 @@ function GoodsCard(props) {
 
     return (
         <div className="m-1">
-            <a href={props.product_link}> 
+            <Link to={`/${props.category}/${props.product_link}`}> 
                 <form className="flex flex-col items-center bg-gray-100 w-[240px] h-[400px] rounded-2xl shadow-lg p-4 hover:bg-gray-200 transition-bg duration-200" >
                     {/* Picture */}
                     <img 
@@ -78,7 +78,7 @@ function GoodsCard(props) {
                         </button>
                     </div>
                 </form>
-            </a>
+            </Link>
         </div>
     );
 }

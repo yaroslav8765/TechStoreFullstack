@@ -12,7 +12,7 @@ import IconButton from "../components/ui/Icon-Buttoon";
 import CategoryButton from "../components/ui/Category-Button";
 import SingleSearchBarResult from "../components/ui/SingleSearchBarResult";
 import listOfLinks from "../links";
-
+import { Link } from "react-router-dom";
 
 function NavBar() {
     const [usersPrompt, setUsersPrompt] = useState("");
@@ -43,7 +43,7 @@ function NavBar() {
       <div className=" px-6 py-4 bg-white shadow-md">
         <div className=" flex items-center justify-between max-w-[1200px] mx-auto">
           {/* Logo */}
-          <h1 className="text-2xl font-bold text-gray-800" ><a href={listOfLinks.main}>TechStore</a></h1>
+          <h1 className="text-2xl font-bold text-gray-800" ><Link to={listOfLinks.main}>TechStore</Link></h1>
           <div className="flex flex-col justify-center items-center  z-50">
 
             {/* Search bar */}
@@ -90,11 +90,11 @@ function NavBar() {
           </div>
 
           <div className=" flex gap-8">
-            <CategoryButton title="Smartphones" icon={SmartphoneIcon}/>
-            <CategoryButton title="Laptops" icon={LaptopChromebookIcon}/>
-            <CategoryButton title="Headphones" icon={HeadsetMicIcon}/>
-            <CategoryButton title="Mouses" icon={MouseIcon}/>
-            <CategoryButton title="Keyboards" icon={KeyboardIcon}/>
+            <CategoryButton title="Smartphones" icon={SmartphoneIcon} categoty_link={"/Smartphones"}/>
+            <CategoryButton title="Laptops" icon={LaptopChromebookIcon} categoty_link={"/Laptops"}/>
+            <CategoryButton title="Headphones" icon={HeadsetMicIcon} categoty_link={"/Headphones"}/>
+            <CategoryButton title="Mouses" icon={MouseIcon} categoty_link={"/Mouses"}/>
+            <CategoryButton title="Keyboards" icon={KeyboardIcon} categoty_link={"/Keyboards"}/>
           </div>
 
         </div>
