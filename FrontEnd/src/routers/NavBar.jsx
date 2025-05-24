@@ -77,8 +77,8 @@ function NavBar() {
           </div>
             {/* Icons */}
             <div className="flex items-center space-x-8">
-              <IconButton icon={PersonIcon}/>
-              <IconButton icon={ShoppingCartIcon}/>
+              <Link to="/profile"><IconButton icon={PersonIcon}/></Link>
+              <Link to="/card"><IconButton icon={ShoppingCartIcon}/></Link>
             </div>
 
         </div >
