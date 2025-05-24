@@ -2,11 +2,11 @@ from fastapi import APIRouter,Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 from ..database import SessionLocal
 from sqlalchemy.orm import Session
-from sqlalchemy import text
+from sqlalchemy import text, func
 from typing import Annotated
 from ..routers.auth import get_current_user
 from starlette import status
-from ..models import Goods, Basket, OrderItem, Orders, Users
+from ..models import Goods, Basket, OrderItem, Orders, Users, GoodsRating
 from ..routers.email_actions.email_verification import send_verification_email
 from ..routers.auth import check_if_user_enter_email_or_phone_num
 from ..routers.email_actions.email_mailing import send_order_details, send_cancel_order_notification
@@ -70,6 +70,12 @@ class EditUserRequest(BaseModel):
             }
         }
     }
+
+class PostReviewRequest(BaseModel):
+    good_id: int
+    rate: float = Field(..., ge=1.0, le=5.0)
+    comment: str = Field(max_length=300)
+
 
 @router.get("/show-basket", status_code = status.HTTP_200_OK)
 async def show_basket(db: db_dependancy, user: user_dependency):
@@ -298,3 +304,38 @@ async def change_password(user: user_dependency, db: db_dependancy, request: Rec
 @router.get("/search", status_code=status.HTTP_200_OK)
 async def search( request: str, db: db_dependancy):
     return db.query(Goods).filter(Goods.name.ilike(f"%{request}%")).all()
+
+
+@router.post("/post-review", status_code = status.HTTP_200_OK)
+async def post_review(db: db_dependancy, user: user_dependency, request: PostReviewRequest):
+    if user is None:
+        return {"message": "Sorry, but at this moment if you want to made a review you need to create accout first"}
+        #here I want to add LocalStorage so user can add goods to the basket without registration 
+        #and list of the goods will be stored in the local storage even if user closed the site
+
+    if db.query(GoodsRating).filter(GoodsRating.author_id == user.get("id"), GoodsRating.good_id == request.good_id).first():
+        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = "You alredy made a review")
+    else:
+        postRewiew = GoodsRating(
+                good_id = request.good_id,
+                author_id = user.get("id"),
+                comment = request.comment,
+                rate = request.rate
+            )
+        db.add(postRewiew)
+        db.commit()
+
+        updated_good = db.query(Goods).filter(Goods.id == request.good_id).first()
+        result = db.query(
+            func.count(GoodsRating.id).label("total_reviews"),
+            func.avg(GoodsRating.rate).label("average_rating")
+        ).filter(GoodsRating.good_id == request.good_id).first()
+
+        total_reviews = result.total_reviews
+        average_rating = result.average_rating
+
+        updated_good.rating = average_rating
+        updated_good.voted = total_reviews
+        db.commit()
+
+        return {"message": "Posted"}

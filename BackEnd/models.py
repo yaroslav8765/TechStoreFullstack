@@ -1,5 +1,5 @@
 from .database import Base
-from sqlalchemy import Column, Integer, Float, String, Boolean, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, Float, String, Boolean, ForeignKey, DateTime, CheckConstraint
 from datetime import datetime, timezone, timedelta
 from sqlalchemy.orm import relationship
 
@@ -29,8 +29,11 @@ class Goods(Base):
     quantity                = Column(Integer, default=0)
     image_url               = Column(String)
     characteristics_table   = Column(String)
+    rating                  = Column(Float, default=0)
+    voted                   = Column(Integer, default=0)
 
     images = relationship("GoodsImage", back_populates="good", cascade="all, delete")
+    ratings = relationship("GoodsRating", back_populates="good2", cascade="all, delete")
 
 
 class GoodsImage(Base):
@@ -41,6 +44,18 @@ class GoodsImage(Base):
     good_id  = Column(Integer, ForeignKey('goods.id'))
 
     good = relationship("Goods", back_populates="images")
+
+class GoodsRating(Base):
+    __tablename__ = 'goods_rating'
+
+    id        = Column(Integer, primary_key=True, index=True)
+    rate      = Column(Float, nullable=False)
+    author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    comment   = Column(String(300))
+    good_id   = Column(Integer, ForeignKey('goods.id'), nullable=False)
+    
+    good2 = relationship("Goods", back_populates="ratings")
+
 
 class Smartphones(Base):
     __tablename__ = "smartphones"
