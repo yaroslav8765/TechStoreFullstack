@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import GoodsCard from './components/GoodsCard'
-import NavBar from './routers/NavBar';
-import MainCarousel from './components/Carousel';
-import PopularGoods from './components/PopularGoods';
-import Footer from './routers/Footer';
-import listOfLinks from './links';
+import GoodsCard from '../components/GoodsCard'
+import NavBar from './NavBar';
+import MainCarousel from '../components/Carousel';
+import PopularGoods from '../components/PopularGoods';
+import Footer from './Footer';
+import listOfLinks from '../links';
 
 const tempCarouselList = [
   {
@@ -22,11 +22,10 @@ const tempCarouselList = [
 ];
 
 
-function App() {
+function MainPage() {
 
   return ( 
     <div className='flex flex-col '>
-      <NavBar />
       <div className='flex flex-col max-w-[1200px] w-full mx-auto mt-4'>
 
       <MainCarousel listOfObjects={tempCarouselList}/>
@@ -34,9 +33,8 @@ function App() {
         <PopularGoods title="Smartphones"  category_link="Smartphones"/>
         <PopularGoods title="Laptops" category_link="Laptops"/>
       </div>
-      <Footer/>
     </div>
   )
 }
 
-export default App
+export default MainPage
