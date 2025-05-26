@@ -5,6 +5,7 @@ import MainCarousel from '../components/Carousel';
 import PopularGoods from '../components/PopularGoods';
 import Footer from './Footer';
 import listOfLinks from '../links';
+import { Outlet } from 'react-router-dom';
 
 const tempCarouselList = [
   {
@@ -26,6 +27,7 @@ function MainPage() {
 
   return ( 
     <div className='flex flex-col '>
+      <Outlet />
       <div className='flex flex-col max-w-[1200px] w-full mx-auto mt-4'>
 
       <MainCarousel listOfObjects={tempCarouselList}/>
