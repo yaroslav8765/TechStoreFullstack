@@ -4,6 +4,7 @@ import MainPage from './routers/MainPage.jsx'
 import { BrowserRouter, createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from './routers/RootLayot.jsx';
 import Login from './routers/Login.jsx';
+import {action as loginAction} from "./routers/Login.jsx"
 const router = createBrowserRouter([
     {
         path:'/',
@@ -12,7 +13,7 @@ const router = createBrowserRouter([
             path:'/', 
             element: <MainPage/>,
             children: [
-                {path:'profile', element: <Login/>}
+                {path:'profile', element: <Login/>, action: loginAction}
             ]
             }
         ]
