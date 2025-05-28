@@ -1,19 +1,20 @@
 import { redirect } from "react-router-dom";
+import listOfLinks from "../src/links";
 
-export function getAuthToken(){
-    const token = localStorage.getItem("access_token");
-    return token;
+export function getAuthToken() {
+  return localStorage.getItem("access_token");
 }
 
-export function tokenLoader(){
-    return getAuthToken();
+export function tokenLoader() {
+  return getAuthToken();
 }
 
-export function checkAuthLoader(){
-    const token =  getAuthToken();
+export function checkAuthLoader() {
+  const token = getAuthToken();
 
-    if(!token) {
-        return redirect('/auth');
-    }
+  if (!token) {
+    return redirect(`/${listOfLinks.auth}`);
+  }
 
+  return null; 
 }

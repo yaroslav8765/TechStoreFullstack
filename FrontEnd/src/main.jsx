@@ -8,7 +8,7 @@ import {action as loginAction} from "./routers/Login.jsx"
 import {tokenLoader} from "../util/auth.js"
 import listOfLinks from "./links";
 import Profile from './routers/Profile.jsx';
-
+import {loader as profileLoader} from "./routers/Profile.jsx"
 const router = createBrowserRouter([
     {
         path:'/',
@@ -24,7 +24,8 @@ const router = createBrowserRouter([
             },
             {
                 path:listOfLinks.profile, 
-                element:<Profile/>
+                element:<Profile/>,
+                loader: profileLoader
             }
         ]
     }

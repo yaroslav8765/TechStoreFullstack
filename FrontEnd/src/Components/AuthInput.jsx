@@ -5,8 +5,6 @@ const AuthInput = ({ label, placeholder, value, onChange, name, errorMessage, is
   return (
     <div className="flex flex-col mx-6 mt-4">
             <p className="text-lg text-gray-600">{label}</p>
-            <p className="text-md text-red-600">{errorMessage}</p>
-
       <input
         className="bg-gray-50 h-[35px] rounded-md border border-gray-500 pl-2"
         placeholder={placeholder}
@@ -15,6 +13,9 @@ const AuthInput = ({ label, placeholder, value, onChange, name, errorMessage, is
         name={name}
         type={isInputHidden ? "password" : "text"}
       />
+
+      <p className="text-md text-red-600">{errorMessage}</p>
+
     </div>
   );
 };

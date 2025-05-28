@@ -20,7 +20,8 @@ const listOfLinks = {
     register: "/register",
     login_for_access_token: "auth/token",
     auth:"auth",
-    profile: "profile"
+    profile: "profile",
+    get_users_info: "user/user-info"
 }
 
 export default listOfLinks;

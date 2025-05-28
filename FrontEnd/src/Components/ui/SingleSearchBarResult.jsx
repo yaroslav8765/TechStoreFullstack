@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 function SingleSearchBarResult(props) {
     return(
         <Link to={`/${props.category}/${props.id}`}>
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-row justify-between rounded-md bg-gray-50 hover:bg-gray-100 transition-bg duration-200">
                 <div className="flex w-full max-w-[120px] h-full max-h-[180px]">
                 <img 
                     src={props.img}

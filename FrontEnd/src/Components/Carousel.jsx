@@ -5,7 +5,7 @@ const contentStyle = {
   height: '400px',
   color: '#fff',
   lineHeight: '160px',
-  background: '#e0e0e0',
+  background: '#ffffff',
 };
 const MainCarousel = (props) => {
 
