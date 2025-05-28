@@ -5,16 +5,26 @@ import { BrowserRouter, createBrowserRouter, RouterProvider } from "react-router
 import RootLayout from './routers/RootLayot.jsx';
 import Login from './routers/Login.jsx';
 import {action as loginAction} from "./routers/Login.jsx"
+import {tokenLoader} from "../util/auth.js"
+import listOfLinks from "./links";
+import Profile from './routers/Profile.jsx';
+
 const router = createBrowserRouter([
     {
         path:'/',
-        element:<RootLayout/>, 
+        element:<RootLayout/>,
+        loader: tokenLoader,
+        id:'root', 
         children: [{
             path:'/', 
             element: <MainPage/>,
             children: [
-                {path:'profile', element: <Login/>, action: loginAction}
+                {path:'auth', element: <Login/>, action: loginAction},
             ]
+            },
+            {
+                path:listOfLinks.profile, 
+                element:<Profile/>
             }
         ]
     }

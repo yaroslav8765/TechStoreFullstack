@@ -12,9 +12,12 @@ import IconButton from "../components/ui/Icon-Buttoon";
 import CategoryButton from "../components/ui/Category-Button";
 import SingleSearchBarResult from "../components/ui/SingleSearchBarResult";
 import listOfLinks from "../links";
-import { Link } from "react-router-dom";
+import { Link, useRouteLoaderData } from "react-router-dom";
 
 function NavBar() {
+
+    const token = useRouteLoaderData('root');
+
     const [usersPrompt, setUsersPrompt] = useState("");
     const [isRequestActive, setIsRequestActive] = useState(false);
     const [resData, setResData] = useState([]);    
@@ -77,7 +80,7 @@ function NavBar() {
           </div>
             {/* Icons */}
             <div className="flex items-center space-x-8">
-              <Link to="/profile"><IconButton icon={PersonIcon}/></Link>
+              <Link to={token ? listOfLinks.profile : listOfLinks.auth}><IconButton icon={PersonIcon}/></Link>
               <Link to="/card"><IconButton icon={ShoppingCartIcon}/></Link>
             </div>
 
