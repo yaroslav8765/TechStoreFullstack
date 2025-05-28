@@ -12,11 +12,17 @@ function Profile(){
     }
 
     return(
-        <div>
+    <div className='flex flex-col '>
+      <div className='flex flex-col max-w-[1200px] w-full mx-auto mt-4'>
+
+        
             <button className="bg-red-500 text-black" onClick={logoutHandler}>
                 Logout
             </button>
-        </div>
+      </div>
+    </div>
+
+
     );
 }
 

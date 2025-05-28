@@ -339,3 +339,13 @@ async def post_review(db: db_dependancy, user: user_dependency, request: PostRev
         db.commit()
 
         return {"message": "Posted"}
+    
+
+@router.get("/user-info", status_code = status.HTTP_200_OK)
+async def get_current_user_info(db: db_dependancy, user: user_dependency):
+    if user is None:
+        return {"message": "Sorry, but at this moment if you want to made a review you need to create accout first"}
+
+    
+    user_info = db.query(Users).filter(Users.id == user.get("id")).first()
+    return user_info

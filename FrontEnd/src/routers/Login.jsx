@@ -46,7 +46,7 @@ function Login(){
         <div className="flex justify-between m-6">
             <Link 
                 to=".."
-                className="bg-red-300 px-8 py-2 rounded-4xl shadow-md text-white font-medium transition-colors text-lg 
+                className="bg-red-300 px-8 py-2 rounded-4xl shadow-md text-white font-medium  text-lg 
                 bg-[linear-gradient(300deg,_#481fff,_#ff2ba0,_#fa4141)] bg-[length:180%_180%] 
                 animate-gradient hover:bg-[linear-gradient(300deg,_#5a33ff,_#ff4bb5,_#ff5a5a)] 
                 transition-all duration-300"> 
