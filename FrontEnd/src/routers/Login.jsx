@@ -77,7 +77,7 @@ function Login(){
         </div>
 
         <Link 
-        to={"https://accounts.google.com/gsi/button?logo_alignment=left&size=large&width=1000px&type=standard&text=signin_with&theme=outline&is_fedcm_supported=true&client_id=1058493733503-89b5ap5gm4a5sr3lcc5351gq7414494i.apps.googleusercontent.com&iframe_id=gsi_30374_12426&cas=8Okg4KJ%2BmCS%2Bp2hTTMkMlM5EOpdqHt5HncwrwsXANq8"} 
+        to={"123"} 
         className="border-1 border-gray-300 shadow-md mx-16 py-3 mt-8 transition-bg duration-200 hover:bg-gray-200">
             <div className="flex justify-around items-center">
                 <p>Continue with Google</p>

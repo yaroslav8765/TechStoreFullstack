@@ -21,18 +21,19 @@ function NavBar() {
     const [usersPrompt, setUsersPrompt] = useState("");
     const [isRequestActive, setIsRequestActive] = useState(false);
     const [resData, setResData] = useState([]);    
+
+    async function handleClickOnSearch() {
+      setIsRequestActive(true);
+      const response = await fetch(`http://127.0.0.1:8000/goods/bestsellers`);
+      const data = await response.json();
+      setResData(data);
+    }
+
     async function handleChange(event) {
       setUsersPrompt(event.target.value);
       const response = await fetch(`${listOfLinks.search}?request=${event.target.value}`);
       const data = await response.json();
-      setResData(data);
-      console.log(resData);
-      console.log(`Users prompt:"${event.target.value}`);
-      if (event.target.value != "") {
-        setIsRequestActive(true);
-      } else {
-        setIsRequestActive(false)
-      }
+        setResData(data);
     }
 
     return (
@@ -57,24 +58,32 @@ function NavBar() {
                 placeholder="Search products..."
                 onChange={handleChange}
                 value={usersPrompt}
-                onClick={() => setIsRequestActive(true)}
+                onClick={handleClickOnSearch}
               />
               <IconButton icon={SearchIcon}/>
             </div>
 
-            {isRequestActive && <div className="ml-4 absolute top-[100px] left-1/2 transform -translate-x-1/2 w-[400px] max-h-[70vh] overflow-y-auto bg-white rounded-xl shadow-lg z-50 p-4 space-y-4 scrollbar-hide scroll-smooth">
-              {Array.isArray(resData) && resData.map((item, index) => (
-                <SingleSearchBarResult
-                  key={item.id}
-                  img={item.image_url}
-                  title={item.name}
-                  price={item.price}
-                  old_price={item.old_price}
-                  category={item.category}
-                  id={item.id}
-                  description={item.description}
-                />
-              ))}
+            {isRequestActive && <div className=" absolute top-[100px] left-1/2 transform -translate-x-1/2 w-[400px] max-h-[70vh] overflow-y-auto bg-white rounded-xl shadow-lg z-50  space-y-4 scrollbar-hide scroll-smooth">
+              {Array.isArray(resData) ? (
+                resData.length > 0 ? (
+                  resData.map((item) => (
+                    <SingleSearchBarResult
+                      key={item.id}
+                      img={item.image_url}
+                      title={item.name}
+                      price={item.price}
+                      old_price={item.old_price}
+                      category={item.category}
+                      id={item.id}
+                      description={item.description}
+                    />
+                  ))
+                ) : (
+                  <p className="text-gray-700 text-center py-4">No results</p>
+                )
+              ) : (
+                <p className="text-red-500">Error</p>
+              )}
           </div>}
 
           </div>

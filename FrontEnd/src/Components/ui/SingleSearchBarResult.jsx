@@ -3,12 +3,12 @@ import {Link} from "react-router-dom";
 function SingleSearchBarResult(props) {
     return(
         <Link to={`/${props.category}/${props.id}`}>
-            <div className="flex flex-row justify-between rounded-md bg-gray-50 hover:bg-gray-100 transition-bg duration-200">
+            <div className="flex flex-row m-2 justify-between rounded-md bg-gray-100 hover:bg-gray-200 transition-bg duration-200 m">
                 <div className="flex w-full max-w-[120px] h-full max-h-[180px]">
                 <img 
                     src={props.img}
                     alt={props.producName}
-                    className="w-[100px] h-[125px] object-contain gap-y-2 mt-2 rounded-xl"
+                    className="w-[100px] h-[125px] object-contain gap-y-2 m-2  rounded-xl"
                 />
                 </div>
                 <div className="ml-2 flex flex-col w-full pt-2">
