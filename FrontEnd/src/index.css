@@ -44,5 +44,35 @@
 
 .slick-arrow{
   color:gray !important;
+}
 
+@layer components {
+  .gradient-btn-red {
+    @apply px-8 py-2 rounded-4xl shadow-md text-white font-medium text-lg transition-all duration-300;
+    background: linear-gradient(300deg, #481fff, #ff2ba0, #fa4141);
+    background-size: 180% 180%;
+    animation: gradient 3s ease infinite;
+  }
+
+  .gradient-btn-red:hover {
+    background: linear-gradient(300deg, #5a33ff, #ff4bb5, #ff5a5a);
+  }
+
+  .gradient-btn-green {
+    @apply px-10 py-2 rounded-4xl shadow-md text-white font-bold text-lg transition-all duration-300;
+    background: linear-gradient(300deg, #0f52ba, #00c2c2, #2fe0a2);
+    background-size: 180% 180%;
+    animation: gradient 3s ease infinite;
+  }
+
+  .gradient-btn-green:hover {
+    background: linear-gradient(300deg, #1a75ff, #00d4b4, #4fffcf);
+  }
+}
+
+@layer components {
+  .google-auth-btn {
+    @apply flex justify-around items-center border border-gray-300 shadow-md mx-16 py-3 mt-8 
+    transition-colors duration-200 hover:bg-gray-200;
+  }
 }

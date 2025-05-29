@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import GoodsCard from '../components/GoodsCard'
-import NavBar from './NavBar';
+import NavBar from '../layouts/NavBar';
 import MainCarousel from '../components/Carousel';
 import PopularGoods from '../components/PopularGoods';
-import Footer from './Footer';
+import Footer from '../layouts/Footer';
 import listOfLinks from '../links';
 import { Outlet } from 'react-router-dom';
 

@@ -25,7 +25,10 @@ const router = createBrowserRouter([
             {
                 path:listOfLinks.profile, 
                 element:<Profile/>,
-                loader: profileLoader
+                loader: profileLoader,
+                children: [
+                    
+                ]
             }
         ]
     }

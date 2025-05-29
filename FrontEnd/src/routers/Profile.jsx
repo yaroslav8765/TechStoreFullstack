@@ -4,16 +4,17 @@ import listOfLinks from "../links";
 import { getAuthToken, checkAuthLoader } from "../../util/auth.js"
 import { Link } from "react-router-dom";
 import { useState } from "react"
-import ProfileMenu from "../components/ui/ProfileMenu";
+import ProfileMenu from "../ui/ProfileMenu.jsx";
+import CartComponent from "../components/CartComponent.jsx";
 
 function Profile(){
     const navigate = useNavigate();
     const revalidator = useRevalidator();
     const userInfo = useLoaderData();
-    const [currentMode, setCurretMode ]= useState("Basket");
+    const [currentMode, setCurretMode ]= useState("Cart");
 
-    function setModeToBasket(){
-        setCurretMode("Basket")
+    function setModeToCart(){
+        setCurretMode("Cart")
     }
 
     function setModeToEditProfile(){
@@ -37,17 +38,20 @@ function Profile(){
 
 
     return(
-      <div className='flex max-w-[1200px] w-full mx-auto mt-4'>
-        <div className="flex flex-col bg-gray-100 shadow-sm rounded-xl w-[300px] gap-1">
-        <h2 className="text-gray-700 text-4xl font-semibold text-center mt-2">Hello, {userInfo?userInfo.first_name:null} </h2>
+      <div className='flex max-w-[1200px] w-full mx-auto mt-4 gap-6'>
+        <div className="flex flex-col bg-white shadow-md rounded-lg w-[300px] h-[330px] gap-4 p-6">
+        <h2 className="text-gray-800 text-3xl font-semibold text-center">
+            Hello, {userInfo ? userInfo.first_name : null}
+        </h2>
         <ProfileMenu
-            onBasketClick={setModeToBasket}
+            onBasketClick={setModeToCart}
             onEditProfileClick={setModeToEditProfile}
             onChangePasswordClick={setModeToChangePassword}
             onMyOrdersClick={setModeToMyOrders}
             logoutHandler={logoutHandler}
         />
         </div>
+        {currentMode === "Cart" ? <CartComponent/>: null}
       </div>
     );
 }

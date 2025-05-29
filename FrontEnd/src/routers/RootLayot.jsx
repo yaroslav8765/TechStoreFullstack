@@ -1,15 +1,15 @@
-import NavBar from "./NavBar";
-import Footer from "./Footer";
+import NavBar from "../layouts/NavBar";
+import Footer from "../layouts/Footer";
 import { Outlet } from 'react-router-dom';
 
 function RootLayout(){
     return(
-        <div>
+        <div className="min-h-screen flex flex-col">
             <nav>
             <NavBar/>
             </nav>
-            <main>
-            <Outlet/>
+            <main className="flex-grow">
+                <Outlet/>
             </main>
             <footer>
             <Footer/>

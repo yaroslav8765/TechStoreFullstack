@@ -6,7 +6,8 @@ const AuthInput = ({ label, placeholder, value, onChange, name, errorMessage, is
     <div className="flex flex-col mx-6 mt-4">
             <p className="text-lg text-gray-600">{label}</p>
       <input
-        className="bg-gray-50 h-[35px] rounded-md border border-gray-500 pl-2"
+       className="bg-gray-50 h-[35px] rounded-md border border-gray-500 pl-2 
+             focus:border-cyan-600 focus:ring-1 focus:ring-cyan-300 outline-none"
         placeholder={placeholder}
         onChange={onChange}
         value={value}
