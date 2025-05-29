@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouteLoaderData } from "react-router-dom";
 import { getAuthToken, checkAuthLoader } from "../../util/auth.js"
+import SingleCartItem from "../ui/SingleCartItem.jsx";
 
 function CartComponent(){
     const token = useRouteLoaderData('root');
@@ -32,10 +33,27 @@ function CartComponent(){
     return <>
         <div className=" w-full h-[600px] shadow-md">
               <h2 className="text-gray-800 text-3xl font-semibold text-center">Your Cart</h2>
-              {usersGoods.length === 0 ? <p className="text-gray-800 text-3xl font-semibold text-center">Your cart is empty</p> 
-              : 
-              <p className="text-gray-800 text-3xl font-semibold text-center">Here is your goods</p>
-              }
+                {usersGoods.length === 0 ? (
+                <p className="text-gray-800 text-3xl font-semibold text-center">Your cart is empty</p>
+                ) : (
+                <div className=" max-h-[60vh] overflow-y-auto rounded-xl shadow-lg z-50 space-y-4  scroll-smooth">
+                    <div className="flex flex-col w-full">
+                    {usersGoods.map((item, index) => (
+                        <SingleCartItem
+                        key={index}
+                        image_url={item.goods.image_url}
+                        name={item.goods.name}
+                        price={item.goods.price}
+                        old_price={item.goods.old_price}
+                        category={item.goods.category}
+                        id={item.goods.id}
+                        description={item.goods.description}
+                        />
+
+                    ))}
+                    </div>
+                </div>
+                )}
         </div>
     </>
 }

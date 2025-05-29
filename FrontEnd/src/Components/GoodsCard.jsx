@@ -68,10 +68,7 @@ function GoodsCard(props) {
                     {/* Button */}
                     <div className="relative w-full mt-2">
                         <button 
-                            className={`relative z-10 text-white font-medium py-2 px-5 rounded-lg transition-colors w-full text-lg 
-                            bg-[linear-gradient(300deg,_#481fff,_#ff2ba0,_#fa4141)] bg-[length:180%_180%] 
-                            animate-gradient hover:bg-[linear-gradient(300deg,_#5a33ff,_#ff4bb5,_#ff5a5a)] 
-                            transition-all duration-300">`}
+                            className={`relative z-10  py-2 px-5 rounded-lg  w-full text-lg gradient-btn-red`}
                             onClick={clickHandler}
                         >
                             Add

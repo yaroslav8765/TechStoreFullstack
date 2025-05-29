@@ -118,10 +118,7 @@ function PopularGoods({ title, category_link }) {
         </div>
       }
       <div className="flex items-end justify-end mt-2">
-        <Link className="text-white px-15 py-4 mr-11 font-bold text-xl rounded-xl bg-[linear-gradient(300deg,_#0f52ba,_#00c2c2,_#2fe0a2)] 
-          bg-[length:180%_180%] animate-gradient 
-          hover:bg-[linear-gradient(300deg,_#1a75ff,_#00d4b4,_#4fffcf)] 
-          transition-all duration-300"
+        <Link className="text-white px-15 py-4 mr-11 font-bold text-xl rounded-xl gradient-btn-green"
           to={category_link}
         >
           See more

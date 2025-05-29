@@ -40,8 +40,8 @@ function Login() {
         />
 
         <div className="flex justify-between m-6">
-          <Link to=".." className="gradient-btn-red">Cancel</Link>
-          <button type="submit" className="gradient-btn-green">Continue</button>
+          <Link to=".." className="gradient-btn-red px-8 py-2 rounded-4xl">Cancel</Link>
+          <button type="submit" className="gradient-btn-green px-10 py-2 rounded-4xl">Continue</button>
         </div>
 
         <div className="mx-6 text-sm">
