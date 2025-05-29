@@ -77,15 +77,27 @@ class PostReviewRequest(BaseModel):
     comment: str = Field(max_length=300)
 
 
-@router.get("/show-basket", status_code = status.HTTP_200_OK)
+@router.get("/show-basket", status_code=status.HTTP_200_OK)
 async def show_basket(db: db_dependancy, user: user_dependency):
     if user is None:
-        return {"message": "Sorry, but at this moment if you want to add good to the basket you need to create accout first"}
-        #here I want to add LocalStorage so user can add goods to the basket without registration 
-        #and list of the goods will be stored in the local storage even if user closed the site
-    goods_to_return = []
+        return {
+            "localStorage": True,
+            "message": "User not authenticated. Use localStorage on the client side to store basket items."
+        }
 
-    return db.query(Basket).filter(Basket.user_id == user.get("id")).all()
+    goods_in_basket = db.query(Basket).filter(Basket.user_id == user.get("id")).all()
+    
+    result = []
+    for item in goods_in_basket:
+        good_info = db.query(Goods).filter(Goods.id == item.goods_id).first()
+        result.append({
+            "basket_id": item.id,
+            "quantity": item.quantity,
+            "goods": good_info
+        })
+
+    return result
+
 
 
 
