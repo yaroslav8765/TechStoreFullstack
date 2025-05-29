@@ -43,7 +43,7 @@ function Tab() {
       <Dropdown menu={{ items, onClick }} trigger={['hover']} placement="bottomLeft">
         <button
           type="button"
-          className="h-[50px] hover:bg-gray-300 bg-gray-100 p-2 pl-4 pr-4 rounded-lg transition-bg duration-200 flex items-center gap-2"
+          className="h-[50px]  hover:bg-gray-300 bg-gray-100 p-2 pl-4 pr-4 rounded-lg transition-bg duration-200 flex items-center gap-2"
         >
           <MenuIcon fontSize="large" />
           Catalog

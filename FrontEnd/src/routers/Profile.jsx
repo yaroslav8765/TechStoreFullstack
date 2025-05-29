@@ -38,7 +38,7 @@ function Profile(){
 
     return(
       <div className='flex max-w-[1200px] w-full mx-auto mt-4'>
-        <div className="flex flex-col bg-gray-100 rounded-xl w-[300px] gap-1">
+        <div className="flex flex-col bg-gray-100 shadow-sm rounded-xl w-[300px] gap-1">
         <h2 className="text-gray-700 text-4xl font-semibold text-center mt-2">Hello, {userInfo?userInfo.first_name:null} </h2>
         <ProfileMenu
             onBasketClick={setModeToBasket}

@@ -51,7 +51,7 @@ function NavBar() {
           <div className="flex flex-col justify-center items-center  z-50">
 
             {/* Search bar */}
-            <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-[400px] z-50">
+            <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 h-[45px] w-[400px] z-50 shadow-md">
               <input
                 className="flex-grow bg-transparent text-black placeholder-gray-500 focus:outline-none"
                 name="title"
@@ -60,7 +60,7 @@ function NavBar() {
                 value={usersPrompt}
                 onClick={handleClickOnSearch}
               />
-              <IconButton icon={SearchIcon}/>
+              <SearchIcon sx={{ fontSize: '30px' }} className="text-gray-700 w-[40px] h-[40px]  rounded-md hover:text-black transition-bg duration-200"/>
             </div>
 
             {isRequestActive && <div className=" absolute top-[100px] left-1/2 transform -translate-x-1/2 w-[400px] max-h-[70vh] overflow-y-auto bg-white rounded-xl shadow-lg z-50  space-y-4 scrollbar-hide scroll-smooth">
@@ -89,7 +89,7 @@ function NavBar() {
           </div>
             {/* Icons */}
             <div className="flex items-center space-x-8">
-              <Link to={token ? listOfLinks.profile : listOfLinks.auth}><IconButton icon={PersonIcon}/></Link>
+              <Link to={token ? listOfLinks.profile : listOfLinks.auth}><IconButton  icon={PersonIcon}/></Link>
               <Link to="/card"><IconButton icon={ShoppingCartIcon}/></Link>
             </div>
 
