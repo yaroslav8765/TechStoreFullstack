@@ -2,7 +2,6 @@ import Search from "antd/es/transfer/search";
 
 const listOfLinks = {
     main: "http://localhost:5173",
-    main_api: "http://127.0.0.1:8000/",
     smartphones: "http://127.0.0.1:8000/goods/Smartphones",
     laptops: "http://127.0.0.1:8000/goods/Laptops",
     headphones: "http://127.0.0.1:8000/goods/Headphones",

@@ -12,7 +12,7 @@ function Tab() {
 
   const onClick = (e) => {
      if (e.key === "Smartphones") {
-      navigate("/Lmartphones");
+      navigate("/Smartphones");
     } else if (e.key === "Laptops") {
       navigate("/Laptops");
     } else if (e.key === "All") {

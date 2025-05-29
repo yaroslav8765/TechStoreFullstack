@@ -76,12 +76,14 @@ function Login(){
         </p>
         </div>
 
-        <button className="border-1 border-gray-300 shadow-md mx-16 py-3 mt-8 transition-bg duration-200 hover:bg-gray-200">
+        <Link 
+        to={"https://accounts.google.com/gsi/button?logo_alignment=left&size=large&width=1000px&type=standard&text=signin_with&theme=outline&is_fedcm_supported=true&client_id=1058493733503-89b5ap5gm4a5sr3lcc5351gq7414494i.apps.googleusercontent.com&iframe_id=gsi_30374_12426&cas=8Okg4KJ%2BmCS%2Bp2hTTMkMlM5EOpdqHt5HncwrwsXANq8"} 
+        className="border-1 border-gray-300 shadow-md mx-16 py-3 mt-8 transition-bg duration-200 hover:bg-gray-200">
             <div className="flex justify-around items-center">
                 <p>Continue with Google</p>
                 <img src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s48-fcrop64=1,00000000ffffffff-rw" className="h-[30px]"/>
             </div>
-        </button>
+        </Link>
 
         <div className="flex items-center my-6">
         <div className="flex-grow border-t border-gray-300"></div>
@@ -103,12 +105,11 @@ function Login(){
 export default Login;
 
 export async function action({request}) {
+    const API_URL = import.meta.env.VITE_API_URL;
     const formData = await request.formData();
     const postData = Object.fromEntries(formData);
     const requestData = `username=${postData.username}&password=${postData.password}`
-    console.log(requestData);
-    console.log(`${listOfLinks.main_api}${listOfLinks.login_for_access_token}`);
-    const response = await fetch(`${listOfLinks.main_api}${listOfLinks.login_for_access_token}`, {
+    const response = await fetch(`${API_URL}/${listOfLinks.login_for_access_token}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",

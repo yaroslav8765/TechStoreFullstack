@@ -55,11 +55,12 @@ function Profile(){
 export default Profile;
 
 export async function loader() {
+    const API_URL = import.meta.env.VITE_API_URL;
     const authResult = checkAuthLoader();
     if (authResult) return authResult;
     const token = getAuthToken();
 
-    const response = await fetch(listOfLinks.main_api + listOfLinks.get_users_info, {
+    const response = await fetch(API_URL + "/user/user-info", {
         method: "GET",
         headers: {
         "Content-type":"application/json",

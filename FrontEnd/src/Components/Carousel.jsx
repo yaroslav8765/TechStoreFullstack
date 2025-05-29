@@ -22,7 +22,7 @@ const MainCarousel = (props) => {
                 <div className="flex items-center justify-center">
                     <div style={contentStyle}>
                         <img
-                            className="mx-auto h-full object-contain"
+                            className="mx-auto h-full w-full object-cover"
                             src={Item.image_link}
                             alt="slide"
                         />
