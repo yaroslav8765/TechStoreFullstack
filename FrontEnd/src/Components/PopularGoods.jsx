@@ -93,6 +93,7 @@ function PopularGoods({ title, category_link }) {
             goodsCards.map((item) => (
               <GoodsCard
                 key={item.id}
+                id={item.id}
                 img={item.image_url}
                 producName={item.name}
                 price={item.price}

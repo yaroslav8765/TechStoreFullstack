@@ -15,7 +15,7 @@ function Modal({ children, redirectLink }) {
       />
       <dialog
         open
-        className="z-50 border-none rounded-md shadow-lg p-0 overflow-hidden fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white"
+        className="z-50 border-none rounded-md bg-transparent  p-0 overflow-hidden fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "
       >
         {children}
       </dialog>

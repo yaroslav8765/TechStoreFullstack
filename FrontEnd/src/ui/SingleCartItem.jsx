@@ -23,6 +23,7 @@ function SingleCartItem(props) {
     })
     });
     if(response.ok){
+    props.onChange(props.id, quantity+1);
     setQuantity(quantity+1);
     }
   }
@@ -43,6 +44,7 @@ function SingleCartItem(props) {
     })
     });
     if(response.ok){
+      props.onChange(props.id, quantity-1);
       setQuantity(quantity-1);
     }
   }
@@ -69,11 +71,12 @@ async function changeGoodHandler(e) {
   console.log("Response status:", response.status, response.statusText);
 
   if (response.ok) {
+    props.onChange(props.id, newValue);
     setQuantity(newValue);
   } else {
-    console.error("Ошибка:", response.status);
+    console.error("Error:", response.status);
     const errorData = await response.json();
-    console.error("Детали:", errorData);
+    console.error("Details:", errorData);
   }
 }
   

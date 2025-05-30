@@ -6,9 +6,11 @@ import RootLayout from './routers/RootLayot.jsx';
 import Login from './routers/Login.jsx';
 import {action as loginAction} from "./routers/Login.jsx"
 import {tokenLoader} from "../util/auth.js"
-import listOfLinks from "./links";
 import Profile from './routers/Profile.jsx';
 import {loader as profileLoader} from "./routers/Profile.jsx"
+import CartComponentOverlay from './components/CartComponentOverlay.jsx';
+import CartComponent from './components/CartComponent.jsx';
+
 const router = createBrowserRouter([
     {
         path:'/',
@@ -20,10 +22,11 @@ const router = createBrowserRouter([
             element: <MainPage/>,
             children: [
                 {path:'auth', element: <Login/>, action: loginAction},
+                {path:'cart', element: <CartComponentOverlay/>}
             ]
             },
             {
-                path:listOfLinks.profile, 
+                path:'profile', 
                 element:<Profile/>,
                 loader: profileLoader,
                 children: [

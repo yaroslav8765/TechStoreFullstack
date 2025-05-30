@@ -2,28 +2,33 @@ import React, { useState } from "react";
 import Rating from '@mui/material/Rating';
 import StarIcon from '@mui/icons-material/Star';
 import listOfLinks from "../links";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { checkAuthLoader, getAuthToken } from "../../util/auth";
+
+
 function GoodsCard(props) {
+    const API_URL = import.meta.env.VITE_API_URL;
+    const navigate = useNavigate();
 
-    const clickHandler = async (e) => {
+    async function clickHandler(e){
         e.preventDefault();
-
-        try {
-        const response = await fetch(listOfLinks.add_to_the_basket, {
+        const authResult = checkAuthLoader();
+        if(authResult) return authResult;
+        const token = getAuthToken();
+        console.log(`${API_URL}/user/add-to-basket`);
+        const response = await fetch(`${API_URL}/user/add-to-basket`, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ 
                 goods_id: props.id,
                 quantity: 1,
              }),
         });
-
-        const result = await response.json();
-        console.log('Server response:', result);
-        } catch (error) {
-        console.error('Error:', error);
+        if(response.ok){
+            navigate('/cart');
         }
     };
 
@@ -68,7 +73,7 @@ function GoodsCard(props) {
                     {/* Button */}
                     <div className="relative w-full mt-2">
                         <button 
-                            className={`relative z-10  py-2 px-5 rounded-lg  w-full text-lg gradient-btn-red`}
+                            className={`relative z-30  py-2 px-5 rounded-lg  w-full text-lg gradient-btn-red`}
                             onClick={clickHandler}
                         >
                             Add
