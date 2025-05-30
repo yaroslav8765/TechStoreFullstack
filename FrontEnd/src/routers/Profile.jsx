@@ -1,7 +1,7 @@
 import { redirect, useLoaderData } from "react-router-dom";
 import { useNavigate,useRevalidator  } from "react-router-dom";
 import listOfLinks from "../links";
-import { getAuthToken, checkAuthLoader } from "../../util/auth.js"
+import { getAuthToken, checkAuthLoader,removeToken } from "../../util/auth.js"
 import { Link } from "react-router-dom";
 import { useState } from "react"
 import ProfileMenu from "../ui/ProfileMenu.jsx";
@@ -30,8 +30,7 @@ function Profile(){
     }
 
     function logoutHandler(){
-        localStorage.removeItem("access_token");
-        revalidator.revalidate();
+        removeToken();
         navigate('/');
     }
 

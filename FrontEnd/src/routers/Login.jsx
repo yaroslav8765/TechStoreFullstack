@@ -16,7 +16,7 @@ function Login() {
   }
 
   return (
-    <Modal>
+    <Modal redirectLink="..">
       <Form method="post" className="flex flex-col w-[380px] h-[600px] bg-white">
         <h2 className="text-2xl font-bold text-center py-4 border-b text-gray-600">Sign in</h2>
 

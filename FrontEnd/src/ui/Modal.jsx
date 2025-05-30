@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 
-function Modal({ children }) {
+function Modal({ children, redirectLink }) {
   const navigate = useNavigate();
 
   function closeHandler() {
-    navigate('..');
+    navigate(redirectLink);
   }
 
   return (

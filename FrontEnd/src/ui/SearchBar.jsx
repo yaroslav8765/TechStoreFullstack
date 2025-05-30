@@ -23,9 +23,8 @@ function SearchBar() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center z-50">
-      {/* Search bar */}
-      <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 h-[45px] w-[400px] z-50 shadow-md">
+    <div className="flex flex-col justify-center items-center w-full max-w-[440px] mx-auto z-50">
+      <div className="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 h-[45px] max-w-[400px] w-full mx-2 z-50 shadow-md">
         <input
           className="flex-grow bg-transparent text-black placeholder-gray-500 focus:outline-none"
           name="title"

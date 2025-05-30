@@ -5,7 +5,7 @@ import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { Link } from "react-router-dom";
 import listOfLinks from "../links";
 
-const CARD_WIDTH = 240;
+const CARD_WIDTH = 265;
 
 function PopularGoods({ title, category_link }) {
   const API_URL = import.meta.env.VITE_API_URL;

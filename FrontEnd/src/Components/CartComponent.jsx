@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { useRouteLoaderData } from "react-router-dom";
-import { getAuthToken, checkAuthLoader } from "../../util/auth.js"
+import { useRouteLoaderData, useNavigate  } from "react-router-dom";
+import { getAuthToken, checkAuthLoader, removeToken } from "../../util/auth.js"
 import SingleCartItem from "../ui/SingleCartItem.jsx";
+import CrititcalErrorWindow from "../ui/CrititcalErrorWindow.jsx";
 
 function CartComponent(){
     const token = useRouteLoaderData('root');
-
+    const navigator = useNavigate();
     const [usersGoods, setUsersGoods] = useState([]);
-
+    const [isError, setIsError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     useEffect(()=>{
     async function getUsersGoods() {
         const API_URL = import.meta.env.VITE_API_URL;
@@ -22,15 +24,22 @@ function CartComponent(){
             "Authorization": `Bearer ${token}`
             }
         });
-    
         const resData = await response.json();
+        if (Array.isArray(resData)) {
         setUsersGoods(resData);
-        console.log(resData);
+        } else {
+        setUsersGoods([]);
+        setErrorMessage((resData.detail || JSON.stringify(resData)) + ". Please, try to re-login");
+        console.error("CART ERROR:", resData.message || resData);
+        setIsError(true);
+        removeToken();
+        }
     }
     getUsersGoods();
     },[])
 
     return <>
+        {isError && <CrititcalErrorWindow message={errorMessage}/>}
         <div className=" w-full h-[600px] shadow-md">
               <h2 className="text-gray-800 text-3xl font-semibold text-center">Your Cart</h2>
                 {usersGoods.length === 0 ? (

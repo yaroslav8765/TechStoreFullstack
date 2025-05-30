@@ -1,4 +1,5 @@
-import { redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
+
 export function getAuthToken() {
   return localStorage.getItem("access_token");
 }
@@ -15,4 +16,9 @@ export function checkAuthLoader() {
   }
 
   return null; 
+}
+
+export function removeToken(){
+  localStorage.removeItem("access_token");
+  //revalidator.revalidate();
 }
