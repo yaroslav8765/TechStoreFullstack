@@ -40,12 +40,12 @@ function CartComponent(){
 
     return <>
         {isError && <CrititcalErrorWindow message={errorMessage}/>}
-        <div className=" w-full h-[600px] shadow-md">
+        <div className=" w-full h-[609px] shadow-md rounded-2xl">
               <h2 className="text-gray-800 text-3xl font-semibold text-center">Your Cart</h2>
                 {usersGoods.length === 0 ? (
                 <p className="text-gray-800 text-3xl font-semibold text-center">Your cart is empty</p>
                 ) : (
-                <div className=" max-h-[60vh] overflow-y-auto rounded-xl shadow-lg z-50 space-y-4  scroll-smooth">
+                <div className=" max-h-[60vh] overflow-y-auto rounded-xl shadow-lg z-50 space-y- scroll-smooth">
                     <div className="flex flex-col w-full">
                     {usersGoods.map((item, index) => (
                         <SingleCartItem
@@ -57,6 +57,7 @@ function CartComponent(){
                         category={item.goods.category}
                         id={item.goods.id}
                         description={item.goods.description}
+                        quantity={item.quantity}
                         />
 
                     ))}

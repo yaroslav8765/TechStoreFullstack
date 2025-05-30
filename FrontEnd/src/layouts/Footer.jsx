@@ -34,14 +34,12 @@ function Footer() {
                         <input 
                             type="email" 
                             placeholder="Email address" 
-                            className="px-3 py-2 border rounded-l-md w-full max-w-[200px] outline-none"
+                            className="px-3 py-2 border rounded-l-md w-full max-w-[200px] outline-none
+                            focus:border-cyan-600 focus:ring-1 focus:ring-cyan-300 outline-none"
                         />
                         <button 
                             type="submit" 
-                            className=" text-white px-4 py-2 rounded-r-md bg-[linear-gradient(300deg,_#0f52ba,_#00c2c2,_#2fe0a2)] 
-                            bg-[length:180%_180%] animate-gradient 
-                            hover:bg-[linear-gradient(300deg,_#1a75ff,_#00d4b4,_#4fffcf)] 
-                            transition-all duration-300"
+                            className=" text-white px-4 py-2 rounded-r-md gradient-btn-green"
                         >
                             Subscribe
                         </button>
