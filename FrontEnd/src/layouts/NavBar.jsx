@@ -24,7 +24,7 @@ function NavBar() {
           <LogoLink />
           <SearchBar />
           <div className="flex items-center space-x-8">
-            <Link to={token ? listOfLinks.profile : listOfLinks.auth}>
+            <Link to={token ? `${listOfLinks.profile}/users-info` : listOfLinks.auth}>
               <IconButton icon={PersonIcon} />
             </Link>
             <Link to="/cart">

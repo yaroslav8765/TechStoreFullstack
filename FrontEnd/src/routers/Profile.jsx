@@ -11,22 +11,26 @@ function Profile(){
     const navigate = useNavigate();
     const revalidator = useRevalidator();
     const userInfo = useLoaderData();
-    const [currentMode, setCurretMode ]= useState("Cart");
+    const [currentMode, setCurretMode ]= useState("Profile");
 
     function setModeToCart(){
         setCurretMode("Cart")
+        navigate('cart');
     }
 
     function setModeToEditProfile(){
         setCurretMode("Profile")
+        navigate('users-info');
     }
 
     function setModeToChangePassword(){
         setCurretMode("Password")
+        navigate('change-password');
     }
 
     function setModeToMyOrders(){
         setCurretMode("Orders")
+        navigate('orders-history');
     }
 
     function logoutHandler(){
