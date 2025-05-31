@@ -1,51 +1,84 @@
 import SingleSearchBarResult from "./SingleSearchBarResult";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { checkAuthLoader, getAuthToken } from "../../util/auth";
 
 function SingleCartItem(props) {
   const API_URL = import.meta.env.VITE_API_URL;
   const [quantity, setQuantity] = useState(props.quantity || 1);
+  const [isMaxError, setIsMaxError] = useState(false);
+  const [isMinError, setIsMinError] = useState(false);
 
   async function plusGoodHandled(){
-    const authResult = checkAuthLoader();
-    if(authResult) return authResult;
-    const token = getAuthToken();
-    const response = await fetch(`${API_URL}/user/basket-edit`,{
-      method:"PUT",
-      headers:{
-        "Content-type":"application/json",
-        "Authorization":`Bearer ${token}`
-      },
-    body: JSON.stringify({
-      goods_id: props.id,
-      new_quantity: quantity + 1
-    })
-    });
-    if(response.ok){
-    props.onChange(props.id, quantity+1);
-    setQuantity(quantity+1);
+    const prevValue = quantity;
+    console.log(props.quantity);
+    if(quantity+1>props.left_quantity){
+      /* show error */
+      setIsMaxError(true);
+    } else {
+      setIsMaxError(false);
+      setIsMinError(false);
+      setQuantity(quantity+1);
+    //   const authResult = checkAuthLoader();
+    //   if(authResult) return authResult;
+    //   const token = getAuthToken();
+
+    //   const response = await fetch(`${API_URL}/user/basket-edit`,{
+    //     method:"PUT",
+    //     headers:{
+    //       "accept": "application/json",
+    //       "Content-type":"application/json",
+    //       "Authorization":`Bearer ${token}`
+    //     },
+    //   body: JSON.stringify({
+    //     goods_id: props.id,
+    //     new_quantity: prevValue + 1
+    //   })
+    //   });
+    // if(response.ok){
+    //   props.onChange(props.id, quantity + 1);
+    // } else {
+    //   const resData = await response.json();
+    //   console.log(resData);
+    //   const maxQuantity = resData.detail.max_quantity;
+    //   setQuantity(maxQuantity || quantity);
+    //   //alert(`Cannot increase quantity! Max: ${maxQuantity}`);
+    // }
     }
+   
   }
 
   async function minusGoodHandled(){
-    const authResult = checkAuthLoader();
-    if(authResult) return authResult;
-    const token = getAuthToken();
-    const response = await fetch(`${API_URL}/user/basket-edit`,{
-      method:"PUT",
-      headers:{
-        "Content-type":"application/json",
-        "Authorization":`Bearer ${token}`
-      },
-    body: JSON.stringify({
-      goods_id: props.id,
-      new_quantity: quantity - 1
-    })
-    });
-    if(response.ok){
-      props.onChange(props.id, quantity-1);
+    const prevValue = quantity;
+    if(quantity-1 < 1){
+      /* show error */
+      setIsMinError(true);
+    } else {
+      setIsMaxError(false);
+      setIsMinError(false);
       setQuantity(quantity-1);
+      // const authResult = checkAuthLoader();
+      // if(authResult) return authResult;
+      // const token = getAuthToken();
+
+      
+      // const response = await fetch(`${API_URL}/user/basket-edit`,{
+      //   method:"PUT",
+      //   headers:{
+      //     "Content-type":"application/json",
+      //     "Authorization":`Bearer ${token}`
+      //   },
+      // body: JSON.stringify({
+      //   goods_id: props.id,
+      //   new_quantity: prevValue - 1
+      // })
+      // });
+      // if(response.ok){
+      //   props.onChange(props.id, quantity-1);
+      // } else {
+      //   setQuantity(prevValue);
+      //   //*** Show error ***/
+      // }
     }
   }
 
@@ -55,28 +88,40 @@ async function changeGoodHandler(e) {
   const token = getAuthToken();
 
   const newValue = Number(e.target.value);
-
-  const response = await fetch(`${API_URL}/user/basket-edit`, {
-    method: "PUT",
-    headers: {
-      "Content-type": "application/json",
-      "Authorization": `Bearer ${token}`
-    },
-    body: JSON.stringify({
-      goods_id: props.id,
-      new_quantity: newValue
-    })
-  });
-
-  console.log("Response status:", response.status, response.statusText);
-
-  if (response.ok) {
-    props.onChange(props.id, newValue);
-    setQuantity(newValue);
+  if(newValue > props.left_quantity || newValue < 1){
+    if(newValue>props.left_quantity){
+      setIsMaxError(true);
+      setIsMinError(false);
+      setQuantity(props.left_quantity);
+    }
+    if(newValue<1){
+      setQuantity(1);
+      setIsMaxError(false);
+      setIsMinError(true);
+    }
   } else {
-    console.error("Error:", response.status);
-    const errorData = await response.json();
-    console.error("Details:", errorData);
+    setIsMaxError(false);
+    setIsMinError(false);
+    setQuantity(newValue);
+    // const response = await fetch(`${API_URL}/user/basket-edit`, {
+    //   method: "PUT",
+    //   headers: {
+    //     "Content-type": "application/json",
+    //     "Authorization": `Bearer ${token}`
+    //   },
+    //   body: JSON.stringify({
+    //     goods_id: props.id,
+    //     new_quantity: newValue
+    //   })
+    // });
+
+    // if (response.ok) {
+    //   props.onChange(props.id, newValue);
+    // } else {
+    //   console.error("Error:", response.status);
+    //   const errorData = await response.json();
+    //   console.error("Details:", errorData);
+    // }
   }
 }
   
@@ -103,6 +148,11 @@ async function deleteGoodHandler() {
     }
 }
 
+useEffect(() => {
+  if(props.quantity > props.left_quantity){
+      setQuantity(props.left_quantity);
+  }
+},[])
 
   return (
     <div className="flex justify-around px-6">
@@ -137,6 +187,10 @@ async function deleteGoodHandler() {
             onClick={plusGoodHandled}>
             +
             </button>
+          </div>
+          <div>
+            {isMaxError && <p className="text-md font-bold text-red-500">We have only {props.left_quantity}</p>}
+            {isMinError && <p className="text-md font-bold text-red-500">Min. value: 1</p>}
           </div>
           <div className="flex gap-2">
             <p className="text-gray-600 text-xl">Total:</p>

@@ -6,6 +6,9 @@ import { Link } from "react-router-dom";
 import { useState } from "react"
 import ProfileMenu from "../ui/ProfileMenu.jsx";
 import CartComponent from "../components/CartComponent.jsx";
+import UserInfo from "../components/UsersInfo.jsx";
+import ChangePassword from "../components/ChangePassword.jsx";
+import OrdersHistory from "../components/OrdersHistory.jsx";
 
 function Profile(){
     const navigate = useNavigate();
@@ -54,7 +57,12 @@ function Profile(){
             logoutHandler={logoutHandler}
         />
         </div>
-        {currentMode === "Cart" ? <CartComponent/>: null}
+        {currentMode === "Cart" ? <CartComponent/>: 
+        currentMode === "Profile" ? <UserInfo/>:
+        currentMode === "Password" ? <ChangePassword/>:
+        currentMode === "Orders" ? <OrdersHistory/>:
+        currentMode === "Cart" ? <CartComponent/>:
+        null}
       </div>
     );
 }

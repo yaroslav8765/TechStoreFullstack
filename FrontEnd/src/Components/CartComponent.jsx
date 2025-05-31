@@ -93,6 +93,7 @@ function CartComponent(){
                         id={item.goods.id}
                         description={item.goods.description}
                         quantity={item.quantity}
+                        left_quantity={item.goods.quantity}
                         onDelete={handleDelete}
                         onChange={changeHandler}
                         />

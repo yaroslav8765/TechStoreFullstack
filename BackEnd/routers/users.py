@@ -142,7 +142,13 @@ async def edit_basket(db: db_dependancy, user: user_dependency, request: EditThe
     
     model = db.query(Goods).filter(Goods.id == request.goods_id).first()
     if model.quantity < request.new_quantity:
-        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = f"We don`t have enought goods. There is only {model.quantity}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={
+                "error": "We don`t have enough goods",
+                "max_quantity": model.quantity
+            }
+        )
 
     edit_basket_model.quantity = request.new_quantity
 
