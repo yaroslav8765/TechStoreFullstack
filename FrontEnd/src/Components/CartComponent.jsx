@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { useRouteLoaderData, useNavigate, Link  } from "react-router-dom";
+import { Link  } from "react-router-dom";
 import { getAuthToken, checkAuthLoader, removeToken } from "../../util/auth.js"
 import SingleCartItem from "../ui/SingleCartItem.jsx";
 import CrititcalErrorWindow from "../ui/CrititcalErrorWindow.jsx";
+import LoadingAnimation from "./LoadingAnimation.jsx";
 
 function CartComponent(){
-    const token = useRouteLoaderData('root');
-    const navigator = useNavigate();
     const [usersGoods, setUsersGoods] = useState([]);
     const [isError, setIsError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [totalSum, setTotalSum] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
     const sum = usersGoods.reduce((acc, item) => {
@@ -22,6 +22,7 @@ function CartComponent(){
 
     useEffect(()=>{
     async function getUsersGoods() {
+        setIsLoading(true);
         const API_URL = import.meta.env.VITE_API_URL;
         const authResult = checkAuthLoader();
         if (authResult) return authResult;
@@ -44,6 +45,7 @@ function CartComponent(){
         setIsError(true);
         removeToken();
         }
+        setIsLoading(false);
     }
     getUsersGoods();
     },[])
@@ -67,8 +69,9 @@ function CartComponent(){
     }
 
 
-    return <div className="flex flex-col w-full items-center shadow-md rounded-xl bg-white">
+    return <div className={`flex flex-col w-full items-center justify-center shadow-md rounded-xl ${isLoading ? 'bg-gray-100' : 'bg-white'}`}>
         {isError && <CrititcalErrorWindow message={errorMessage}/>}
+        {isLoading ? <LoadingAnimation className="flex justify-center items-center"/> : <div>
         <div className=" w-full h-[650px] ">
               <h2 className="text-gray-800 text-3xl font-semibold text-center my-2">Your Cart</h2>
                 {usersGoods.length === 0 ? (
@@ -105,20 +108,21 @@ function CartComponent(){
                 )}
         </div>
         {usersGoods.length !== 0 ? 
-            <div>
-                <div className="flex gap-4 items-center">
-                    <div className="flex-grow border-t border-gray-300"></div>
-                        <div className="flex gap-2 pb-2">
-                            <h2 className="text-2xl font-semibold text-gray-900">Total:</h2>
-                            <h2 className="text-2xl font-bold text-gray-900">{totalSum} ₴</h2>
-                        </div>
-                    <div className="flex-grow border-t border-gray-300"></div>
+           <div className="flex flex-col items-center">
+            <div className="flex gap-4 items-center w-full">
+                <div className="flex-grow border-t border-gray-300"></div>
+                <div className="flex gap-2 pb-2">
+                <h2 className="text-2xl font-semibold text-gray-900">Total:</h2>
+                <h2 className="text-2xl font-bold text-gray-900">{totalSum} ₴</h2>
                 </div>
-                <Link 
-                    to="/check-out" 
-                    className="flex items-center justify-center rounded-3xl gradient-btn-green  my-8 mx-40 w-[250px] h-[50px]">
-                    Proceed to checkout
-                </Link>
+                <div className="flex-grow border-t border-gray-300"></div>
+            </div>
+
+            <Link 
+                to="/check-out" 
+                className="flex items-center justify-center rounded-3xl gradient-btn-green my-8 w-[250px] h-[50px]">
+                Proceed to checkout
+            </Link>
             </div> :
             <Link 
                 to="/" 
@@ -126,7 +130,7 @@ function CartComponent(){
                 Let`s go shopping
             </Link>
             }
-        
+        </div>}
     </div>
 }
 
