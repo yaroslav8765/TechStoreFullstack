@@ -1,5 +1,5 @@
 import SingleSearchBarResult from "./SingleSearchBarResult";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { checkAuthLoader, getAuthToken } from "../../util/auth";
 
@@ -8,77 +8,62 @@ function SingleCartItem(props) {
   const [quantity, setQuantity] = useState(props.quantity || 1);
   const [isMaxError, setIsMaxError] = useState(false);
   const [isMinError, setIsMinError] = useState(false);
+  const timeoutRef = useRef(null);
+
+  async function sendDataToServer(newQuantity){
+    const authResult = checkAuthLoader();
+    if(authResult) return authResult;
+    const token = getAuthToken();
+    const response = await fetch(`${API_URL}/user/basket-edit`,{
+      method:"PUT",
+      headers:{
+        "accept": "application/json",
+        "Content-type":"application/json",
+        "Authorization":`Bearer ${token}`
+      },
+    body: JSON.stringify({
+      goods_id: props.id,
+      new_quantity: newQuantity
+    })
+    });
+  }
+
 
   async function plusGoodHandled(){
     const prevValue = quantity;
     console.log(props.quantity);
     if(quantity+1>props.left_quantity){
-      /* show error */
       setIsMaxError(true);
     } else {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
       setIsMaxError(false);
       setIsMinError(false);
+      props.onChange(props.id, quantity + 1);
       setQuantity(quantity+1);
-    //   const authResult = checkAuthLoader();
-    //   if(authResult) return authResult;
-    //   const token = getAuthToken();
 
-    //   const response = await fetch(`${API_URL}/user/basket-edit`,{
-    //     method:"PUT",
-    //     headers:{
-    //       "accept": "application/json",
-    //       "Content-type":"application/json",
-    //       "Authorization":`Bearer ${token}`
-    //     },
-    //   body: JSON.stringify({
-    //     goods_id: props.id,
-    //     new_quantity: prevValue + 1
-    //   })
-    //   });
-    // if(response.ok){
-    //   props.onChange(props.id, quantity + 1);
-    // } else {
-    //   const resData = await response.json();
-    //   console.log(resData);
-    //   const maxQuantity = resData.detail.max_quantity;
-    //   setQuantity(maxQuantity || quantity);
-    //   //alert(`Cannot increase quantity! Max: ${maxQuantity}`);
-    // }
+      timeoutRef.current = setTimeout(() => {
+      sendDataToServer(quantity+1);
+      }, 500);
     }
    
   }
 
   async function minusGoodHandled(){
-    const prevValue = quantity;
     if(quantity-1 < 1){
-      /* show error */
       setIsMinError(true);
     } else {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
       setIsMaxError(false);
       setIsMinError(false);
+      props.onChange(props.id, quantity-1);
       setQuantity(quantity-1);
-      // const authResult = checkAuthLoader();
-      // if(authResult) return authResult;
-      // const token = getAuthToken();
-
-      
-      // const response = await fetch(`${API_URL}/user/basket-edit`,{
-      //   method:"PUT",
-      //   headers:{
-      //     "Content-type":"application/json",
-      //     "Authorization":`Bearer ${token}`
-      //   },
-      // body: JSON.stringify({
-      //   goods_id: props.id,
-      //   new_quantity: prevValue - 1
-      // })
-      // });
-      // if(response.ok){
-      //   props.onChange(props.id, quantity-1);
-      // } else {
-      //   setQuantity(prevValue);
-      //   //*** Show error ***/
-      // }
+      timeoutRef.current = setTimeout(() => {
+        sendDataToServer(quantity-1);
+      }, 500);
     }
   }
 
@@ -100,28 +85,16 @@ async function changeGoodHandler(e) {
       setIsMinError(true);
     }
   } else {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
     setIsMaxError(false);
     setIsMinError(false);
+    props.onChange(props.id, newValue);
     setQuantity(newValue);
-    // const response = await fetch(`${API_URL}/user/basket-edit`, {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-type": "application/json",
-    //     "Authorization": `Bearer ${token}`
-    //   },
-    //   body: JSON.stringify({
-    //     goods_id: props.id,
-    //     new_quantity: newValue
-    //   })
-    // });
-
-    // if (response.ok) {
-    //   props.onChange(props.id, newValue);
-    // } else {
-    //   console.error("Error:", response.status);
-    //   const errorData = await response.json();
-    //   console.error("Details:", errorData);
-    // }
+    timeoutRef.current = setTimeout(() => {
+      sendDataToServer(newValue);
+    }, 500);
   }
 }
   
