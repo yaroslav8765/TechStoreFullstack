@@ -367,3 +367,11 @@ async def get_current_user_info(db: db_dependancy, user: user_dependency):
     
     user_info = db.query(Users).filter(Users.id == user.get("id")).first()
     return user_info
+
+@router.get("/show-user-orders",status_code= status.HTTP_200_OK )
+async def show_users_order(db: db_dependancy, user: user_dependency):
+    if user is None :
+        raise HTTPException(status_code=401, detail='Authentication Failed')
+    order_info_to_return = []
+    order_info_to_return = db.query(Orders).filter(Orders.user_id == user.get("id")).all()
+    return order_info_to_return
