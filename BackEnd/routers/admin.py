@@ -85,14 +85,23 @@ async def show_users_orders(db: db_dependancy, user_id: int, user: user_dependen
 async def show_order_info(db: db_dependancy, order_number: int, user: user_dependency):
     if user is None or user.get('role') != 'admin':
         raise HTTPException(status_code=401, detail='Authentication Failed')
-    order_info_to_return = db.query(Orders).filter(Orders.order_number == order_number).first()
+    order = db.query(Orders).filter(Orders.order_number == order_number).first()
+    if not order:
+        raise HTTPException(status_code=404, detail='Order not found')
 
-    list_of_goods_ids = db.query(OrderItem).filter(OrderItem.order_id == order_info_to_return.order_number).all()
-    list_of_goods = []
-    for good in list_of_goods_ids:
-        list_of_goods.append(db.query(Goods).filter(Goods.id == good.goods_id).first())
+    order_items = db.query(OrderItem).filter(OrderItem.order_id == order_number).all()
+    
+    goods = []
+    for item in order_items:
+        good = db.query(Goods).filter(Goods.id == item.goods_id).first()
+        if good:
+            goods.append(good)
 
-    return order_info_to_return, list_of_goods
+    return {
+        "order": order,
+        "order_items": order_items,
+        "goods": goods
+    }
 
 
 

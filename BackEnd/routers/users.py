@@ -375,3 +375,25 @@ async def show_users_order(db: db_dependancy, user: user_dependency):
     order_info_to_return = []
     order_info_to_return = db.query(Orders).filter(Orders.user_id == user.get("id")).all()
     return order_info_to_return
+
+@router.get("/show-order-info/{order_number}",status_code= status.HTTP_200_OK )
+async def show_order_info(db: db_dependancy, order_number: int, user: user_dependency):
+    if user is None:
+        raise HTTPException(status_code=401, detail='Authentication Failed')
+    order = db.query(Orders).filter(Orders.order_number == order_number, Orders.user_id == user.get("id")).first()
+    if not order:
+        raise HTTPException(status_code=404, detail='Order not found')
+
+    order_items = db.query(OrderItem).filter(OrderItem.order_id == order_number).all()
+    
+    goods = []
+    for item in order_items:
+        good = db.query(Goods).filter(Goods.id == item.goods_id).first()
+        if good:
+            goods.append(good)
+
+    return {
+        "order": order,
+        "order_items": order_items,
+        "goods": goods
+    }

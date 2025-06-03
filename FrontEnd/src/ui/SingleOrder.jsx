@@ -1,7 +1,7 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useState } from 'react';
-
+import ExpandedOrderItem from './ExpandedOrderItem';
 
 
 function SingleOrder(props){
@@ -19,7 +19,6 @@ function SingleOrder(props){
                     className={`flex justify-center items-center hover:bg-gray-100 w-[25px] h-[25px] border-1 
                         border-gray-500 rounded-4xl hover:border-cyan-400  text-gray-500 hover:text-cyan-400 
                         transition-color duration-200 '`}
-                    onClick={expandHandler}
                         >
                     <ExpandMoreIcon className={`mt-[2px] `} />
                 </div>
@@ -34,11 +33,10 @@ function SingleOrder(props){
             
         </div>
 
-        <div
-        className={`expandable-content ${isExpanded ? 'expanded' : ''}`}
-        >
-        <p className='orders-table'>sdgsdgkjmkplj</p>
+        <div className={`expandable-content ${isExpanded ? 'expanded' : ''}`}>
+            <ExpandedOrderItem/>
         </div>
+
     </div>
 }
 
