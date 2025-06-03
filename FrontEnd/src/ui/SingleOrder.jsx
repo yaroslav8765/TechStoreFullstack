@@ -1,18 +1,47 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import ExpandedOrderItem from './ExpandedOrderItem';
+import { checkAuthLoader, getAuthToken } from "../../util/auth";
 
 
 function SingleOrder(props){
     const [isExpanded,  setIsExpanded] = useState(false);
-    
+    const [orderDetails, setOrderDetails] = useState([]);
+    const [orderGoods, setOrderGoods] = useState([]);
+    const [orderInfo, setOrderInfo] = useState([]);
+    const API_URL = import.meta.env.VITE_API_URL;
+
     async function expandHandler() {
         isExpanded ? setIsExpanded(false) : setIsExpanded(true);
     } 
 
+     useEffect(()=>{
+        async function getOrderData() {
+            
+            const authResult = checkAuthLoader();
+            if(authResult) return authResult;
+            const token = getAuthToken();
+            const response = await fetch(`${API_URL}/user/show-order-info/${props.order_number}`,{
+                method:"GET",
+                headers:{
+                    "Content-type":"application/json",
+                    "Authorization":`Bearer ${token}`
+                }
+            })
 
-    return <div className='flex flex-col mx-2 px-8 py-2 shadow-md border-1 border-gray-200 rounded-md'>
+            if(response.ok){
+                const resData = await response.json();
+                console.log(resData);
+                setOrderInfo(resData.order);
+                setOrderDetails(resData.order_items);
+                setOrderGoods(resData.goods);
+            }
+        }
+        getOrderData();
+    },[])
+
+    return <div className='flex flex-col mx-2 px-8 py-2 shadow-sm border-1 border-gray-200 rounded-md'>
         <div className="flex justify-between " onClick={expandHandler}>
             <div className={`transition-transform duration-300 ${isExpanded ? '-rotate-90' : ''}`}>
                 <div 
@@ -34,7 +63,14 @@ function SingleOrder(props){
         </div>
 
         <div className={`expandable-content ${isExpanded ? 'expanded' : ''}`}>
-            <ExpandedOrderItem/>
+            {orderGoods && orderGoods.map((good, index) =>
+            <ExpandedOrderItem
+                key={index} 
+                image_url={1}
+                goods_name={"asfsf"}
+                quantity={orderDetails[index].quantity}
+            />
+            )}
         </div>
 
     </div>
