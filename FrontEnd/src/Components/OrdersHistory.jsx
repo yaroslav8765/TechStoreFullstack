@@ -34,7 +34,7 @@ function OrdersHistory(){
 
     return <div className={`flex flex-col w-full items-center shadow-md rounded-xl ${isLoading ? 'bg-gray-100' : 'bg-white'}`}>
 
-            <div className="flex flex-col w-full  gap-2">
+            <div className="flex flex-col w-full  gap-1">
                 <div className="flex mx-2 justify-between px-8 py-2">
                     <div className='flex justify-center items-center  w-[25px] h-[25px] border-1 '> </div>
                     <h2 className="orders-table">Order number</h2>

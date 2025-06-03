@@ -191,10 +191,12 @@ async def create_order(db: db_dependancy, user: user_dependency, order: CreateOr
     goods_in_basket = []
     goods_in_basket = db.query(Basket).filter(Basket.user_id == user.get("id")).all()
     for good in goods_in_basket:
+        goods_info = db.query(Goods).filter(Goods.id == good.goods_id).first()
         order_item = OrderItem(
             goods_id = good.goods_id,
             quantity = good.quantity,
-            order_id = create_order_model.order_number
+            order_id = create_order_model.order_number,
+            price_for_one = goods_info.price
         )
         total_price += good.quantity * (db.query(Goods).filter(Goods.id == good.goods_id).first()).price
         db.add(order_item)

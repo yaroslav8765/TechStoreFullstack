@@ -156,6 +156,7 @@ class OrderItem(Base):
     order_id        = Column(Integer, ForeignKey("orders.order_number"))
     goods_id        = Column(Integer, ForeignKey("goods.id"))
     quantity        = Column(Integer)
+    price_for_one   = Column(Float)
 
 class BestSellers(Base):
     __tablename__ = "best_sellers"
