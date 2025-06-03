@@ -35,9 +35,9 @@ const router = createBrowserRouter([
                 loader: profileLoader,
                 children: [
                     {path: 'cart', element :<CartComponent/>},
-                    {path: 'users-info', element :<CartComponent/>},
-                    {path: 'change-password', element :<CartComponent/>},
-                    {path: 'orders-history', element :<CartComponent/>},
+                    {path: 'users-info', element :<UserInfo/>},
+                    {path: 'change-password', element :<ChangePassword/>},
+                    {path: 'orders-history', element :<OrdersHistory/>},
                 ]
             }
         ]

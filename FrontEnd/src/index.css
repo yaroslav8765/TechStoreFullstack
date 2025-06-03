@@ -74,3 +74,24 @@
     transition-all duration-300 ease-in-out hover:bg-gray-200 hover:border-gray-400;
   }
 }
+
+.orders-table {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  color: #4B5563;
+  font-weight: 600; 
+  font-size: 1rem;
+  width: 100px;
+  text-align: center;
+}
+
+.expandable-content {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 500ms ease-in-out;
+}
+
+.expandable-content.expanded {
+  max-height: 500px; 
+}

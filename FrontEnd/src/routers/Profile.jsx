@@ -69,6 +69,7 @@ function Profile(){
 
 export default Profile;
 
+//Need to add JWT ERROR
 export async function loader() {
     const API_URL = import.meta.env.VITE_API_URL;
     const authResult = checkAuthLoader();
