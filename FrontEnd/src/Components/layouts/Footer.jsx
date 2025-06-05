@@ -1,5 +1,5 @@
 import React from "react";
-import listOfLinks from "../links";
+import listOfLinks from "../../links";
 
 function Footer() {
 

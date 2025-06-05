@@ -4,7 +4,7 @@ import { MdExpandMore } from "react-icons/md";
 import { useState,useEffect } from 'react';
 import ExpandedOrderItem from './ExpandedOrderItem';
 import { checkAuthLoader, getAuthToken } from "../../util/auth";
-
+import OrderStatusIcon from './OrderStatusIcon';
 
 function SingleOrder(props){
     const [isExpanded,  setIsExpanded] = useState(false);
@@ -38,11 +38,12 @@ function SingleOrder(props){
                 setOrderDetails(resData.order_items);
                 setOrderGoods(resData.goods);
                 console.log(orderGoods.length*114);
-                setContainerHeight(((orderGoods.length+1)*114)+72);
+                setContainerHeight(((resData.goods.length + 1) * 114) + 72);
+
             }
         }
         getOrderData();
-    },[])
+    },[containerHeight])
 
     return <div className='flex flex-col mx-2 mb-2  px-8 py-2 shadow-sm border-1 border-gray-200 rounded-md '>
         <div className="flex justify-between " onClick={expandHandler}>
@@ -50,13 +51,13 @@ function SingleOrder(props){
 
             <h2 className="orders-table">{props.order_number}</h2>
             <h2 className="orders-table">{props.created_at}</h2>
-            <h2 className="orders-table">{props.total_price}</h2>
+            <h2 className="orders-table">{props.total_price} ₴</h2>
             <h2 className="orders-table">{props.last_update}</h2>
-            <h2 className="orders-table">{props.order_status}</h2>
+            <OrderStatusIcon status={props.order_status}/>
 
             
         </div>
-        <div className='overflow-y-auto max-h-[500px] '>
+        <div className='mt-2 overflow-y-auto max-h-[500px] '>
             <div
             className="overflow-hidden transition-[max-height] duration-500 ease-in-out"
             style={{
@@ -66,7 +67,8 @@ function SingleOrder(props){
 
                 {orderGoods && orderGoods.map((good, index) =>
                 <ExpandedOrderItem
-                    key={index} 
+                    key={index}
+                    id={good.id} 
                     image_url={good.image_url}
                     goods_name={good.name}
                     quantity={orderDetails[index].quantity}
@@ -74,6 +76,7 @@ function SingleOrder(props){
                     price_for_all={orderDetails[index].quantity*orderDetails[index].price_for_one}
                     shipping_adress={orderInfo.shipping_adress}
                     reciever_name={orderInfo.reciever_name}
+                    category={good.category}
                 />
                 )}
                 <div className="flex flex-col items-end text-right text-sm text-gray-500 p-4">

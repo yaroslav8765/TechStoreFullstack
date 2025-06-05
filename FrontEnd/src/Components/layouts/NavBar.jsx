@@ -6,13 +6,13 @@ import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
 import HeadsetMicIcon from '@mui/icons-material/HeadsetMic';
 import MouseIcon from '@mui/icons-material/Mouse';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
-import Tab from "../components/DropDownMenu";
-import IconButton from "../ui/Icon-Buttoon";
-import CategoryButton from "../ui/Category-Button";
-import listOfLinks from "../links";
+import Tab from "../DropDownMenu";
+import IconButton from "../../ui/Icon-Buttoon";
+import CategoryButton from "../../ui/Category-Button";
+import listOfLinks from "../../links";
 import { Link, useRouteLoaderData } from "react-router-dom";
-import SearchBar from "../ui/SearchBar";
-import LogoLink from "../ui/LogoLink";
+import SearchBar from "../../ui/SearchBar";
+import LogoLink from "../../ui/LogoLink";
 
 function NavBar() {
   const token = useRouteLoaderData('root');

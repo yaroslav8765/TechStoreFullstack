@@ -49,6 +49,7 @@ function Profile(){
                 console.error("PROFILE ERROR:", resData.message || resData);
                 setIsError(true);
                 removeToken();
+                revalidator.revalidate();
             }
             setIsLoading(false);
         }
