@@ -5,13 +5,31 @@ import LoadingAnimation from "./LoadingAnimation";
 
 function UserInfo(){
     const [isLoading, setIsLoading] = useState(false);
-    const API_URL = import.meta.env.VITE_API_URL;
+    const [UserInfo, setUserInfo] = useState([]);
 
     useEffect(()=>{
-        async function getOrderData() {
+        async function getUserData() {
             setIsLoading(true);
+            const API_URL = import.meta.env.VITE_API_URL;
+            const authResult = checkAuthLoader();
+            if (authResult) return authResult;
+            const token = getAuthToken();
+            const response = await fetch(API_URL + "/user/user-info",{
+                method:"GET",
+                headers:{
+                    "Content-type":"application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            })
             
-            setIsLoading(false);
+            if(response.ok){
+                const resData = await response.json();
+                console.log(resData);
+                setUserInfo(resData);
+            }else{
+
+            }
+            getUserData(false);
         }
         getOrderData();
     },[])
