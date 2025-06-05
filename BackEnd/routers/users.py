@@ -1,5 +1,5 @@
 from fastapi import APIRouter,Depends, HTTPException, Query
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from ..database import SessionLocal
 from sqlalchemy.orm import Session
 from sqlalchemy import text, func
@@ -11,6 +11,7 @@ from ..routers.email_actions.email_verification import send_verification_email
 from ..routers.auth import check_if_user_enter_email_or_phone_num
 from ..routers.email_actions.email_mailing import send_order_details, send_cancel_order_notification
 from passlib.context import CryptContext
+from typing import Optional
 
 router = APIRouter(
     prefix = "/user",
@@ -55,18 +56,29 @@ class RecoverPasswordRequest(BaseModel):
     new_password: str 
 
 class EditUserRequest(BaseModel):
-    first_name: str = Field(min_length = 2, max_length = 30)
-    last_name: str = Field(min_length = 2, max_length = 50)
-    phone_number: str 
-    email: str
+    first_name: Optional[str] = Field(default=None, min_length=2, max_length=30)
+    last_name: Optional[str] = Field(default=None, min_length=2, max_length=50)
+    phone_number: Optional[str] = Field(default=None)
+    email: Optional[EmailStr] = Field(default=None)
+
+    avatar_url: Optional[str] = Field(default=None, example="https://example.com/avatar.jpg")
+    bio: Optional[str] = Field(default=None, max_length=500, example="I love shopping and good deals!")
+    shipping_address: Optional[str] = Field(default=None, example="123 Main St, Springfield")
+    billing_address: Optional[str] = Field(default=None, example="123 Main St, Springfield")
+    preferred_payment: Optional[str] = Field(default=None, example="credit_card")
 
     model_config = {
-        "json_schema_extra" : {
-            "example" : {
-                "first_name" : "Empty", 
-                "last_name" : "Empty",
-                "phone_number" : "Empty",
-                "email" : "Empty"
+        "json_schema_extra": {
+            "example": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "phone_number": "+123456789",
+                "email": "john.doe@example.com",
+                "avatar_url": "https://example.com/avatar.jpg",
+                "bio": "I love shopping and good deals!",
+                "shipping_address": "123 Main St, Springfield",
+                "billing_address": "123 Main St, Springfield",
+                "preferred_payment": "credit_card"
             }
         }
     }

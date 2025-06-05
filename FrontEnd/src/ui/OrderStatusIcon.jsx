@@ -2,35 +2,35 @@
 
 function OrderStatusIcon({status}){
 
-    const formattedStatus = status.charAt(0).toUpperCase() + status.slice(1);
+    let formattedStatus = status.charAt(0).toUpperCase() + status.slice(1);
     let color = "bg-amber-400"
-switch(formattedStatus){
-    case "Pending":
-        color = "bg-yellow-400";
+    switch(formattedStatus){
+        case "Pending":
+            color = "bg-yellow-400";
         break;
-    case "Compecting":
-        color = "bg-purple-500"; 
+        case "Compecting":
+            color = "bg-purple-500"; 
         break;
-    case "Shipped":
-        color = "bg-blue-400"; 
+        case "Sended":
+            color = "bg-blue-400"; 
         break;
-    case "Waiting for recieving":
-        color = "bg-orange-400"; 
+        case "Waiting for reciever":
+            color = "bg-orange-400"; 
+            formattedStatus="Awaiting rec." 
         break;
-    case "Recieved":
-        color = "bg-green-500"; 
+        case "Recieved":
+            color = "bg-green-500"; 
         break;
-    case "Canceled":
-        color = "bg-red-500";
+        case "Canceled":
+            color = "bg-red-500";
         break;
-    default:
-        color = "bg-gray-400"; 
-    }
-
+        default:
+            color = "bg-gray-400"; 
+        }
 
 
     return<>
-        <div className="flex justify-center items-center bg-amber-400 rounded-4xl w-[80px] h-full">
+        <div className={`flex justify-center items-center text-center ${color} rounded-4xl w-[110px] h-full`}>
             <p className="text-white font-semibold">{formattedStatus}</p>
         </div>
     </>

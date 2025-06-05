@@ -6,7 +6,7 @@ from ..database import SessionLocal
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from starlette import status
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from ..models import Users
 from passlib.context import CryptContext
 from jose import jwt, JWTError
@@ -35,8 +35,8 @@ oauth2_bearer = OAuth2PasswordBearer(tokenUrl = "auth/token")
 
 class CreateUserRequest(BaseModel):
     email_or_phone_number: str
-    first_name: str = Field(min_length = 1, max_length = 50)      
-    last_name: str = Field(min_length = 1, max_length = 50, default = None)            
+    first_name: Optional[str] = Field(default=None, min_length=2, max_length=30)
+    last_name: Optional[str] = Field(default=None, min_length=2, max_length=50)       
     password: str      
 
 class Token(BaseModel):

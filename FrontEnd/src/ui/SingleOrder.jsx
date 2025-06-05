@@ -57,7 +57,7 @@ function SingleOrder(props){
 
             
         </div>
-        <div className='mt-2 overflow-y-auto max-h-[500px] '>
+        <div className={` overflow-y-auto max-h-[500px]`} >
             <div
             className="overflow-hidden transition-[max-height] duration-500 ease-in-out"
             style={{

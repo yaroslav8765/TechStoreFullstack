@@ -16,6 +16,16 @@ class Users(Base):
     hashed_password = Column(String)
     is_active       = Column(Boolean, default=True)
     role            = Column(String)
+    created_at      = Column(DateTime, default=datetime.now(utc_plus_2))  
+    updated_at      = Column(DateTime, default=datetime.now(utc_plus_2), onupdate=datetime.now(utc_plus_2)) 
+    avatar_url      = Column(String, nullable=True)
+    bio             = Column(String, nullable=True)
+    last_login      = Column(DateTime, nullable=True)
+    is_verified     = Column(Boolean, default=False)
+    shipping_address  = Column(String, nullable=True) 
+    billing_address   = Column(String, nullable=True)
+    loyalty_points    = Column(Integer, default=0)
+    preferred_payment = Column(String, nullable=True) 
 
 class Goods(Base):
     __tablename__ = 'goods'

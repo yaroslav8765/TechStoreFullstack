@@ -1,7 +1,7 @@
 import SingleOrder from "../ui/SingleOrder";
 import { useState, useEffect } from "react";
 import { checkAuthLoader, getAuthToken } from "../../util/auth";
-
+import LoadingAnimation from "./LoadingAnimation";
 
 function OrdersHistory(){
     const [isLoading, setIsLoading] = useState(false);
@@ -10,7 +10,7 @@ function OrdersHistory(){
 
     useEffect(()=>{
         async function getOrderData() {
-            
+            setIsLoading(true);
             const authResult = checkAuthLoader();
             if(authResult) return authResult;
             const token = getAuthToken();
@@ -27,14 +27,15 @@ function OrdersHistory(){
                 console.log(resData);
                 setOrders(resData);
             }
+            setIsLoading(false);
         }
         getOrderData();
     },[])
 
 
-    return <div className={`flex flex-col w-full items-center shadow-md rounded-xl ${isLoading ? 'bg-gray-100' : 'bg-white'}`}>
+    return <div className={`flex flex-col w-full items-center ${isLoading?"justify-center":null} shadow-md rounded-xl ${isLoading ? 'bg-gray-100' : 'bg-white'}`}>
 
-            <div className="flex flex-col w-full  gap-1">
+            {isLoading ? <LoadingAnimation className="flex justify-center items-center"/> :<div className="flex flex-col w-full  gap-1">
                 <div className="flex mx-2 justify-between px-8 py-2">
                     <div className='flex justify-center items-center  w-[25px] h-[25px] border-1 '> </div>
                     <h2 className="orders-table">Order number</h2>
@@ -54,7 +55,7 @@ function OrdersHistory(){
                     order_status = {order.status}
                     />
                 )}
-            </div>
+            </div>}
     </div>
 }
 

@@ -81,6 +81,7 @@ function Profile(){
 
     function logoutHandler(){
         removeToken();
+        revalidator.revalidate();
         navigate('/');
     }
 
