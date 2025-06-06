@@ -7,12 +7,11 @@ import { Form } from "react-router-dom";
 import { useActionData } from "react-router-dom";
 
 function UserInfo(){
-    const submitResponse = useActionData();
+    const submitResponse = useActionData(true);
+    const [isSavedSuccesfully, setIsSavedSuccesfully] = useState(true)
     const [isLoading, setIsLoading] = useState(false);
-    const [UserInfo, setUserInfo] = useState({});
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
-    const [bio, setBio] = useState();
     const [phoneNumber, setPhoneNumber] = useState();
     const [shippingAddress, setShippingAddress] = useState();
     const [email, setEmail] = useState();
@@ -20,11 +19,10 @@ function UserInfo(){
     
     function handleInputChange(event) {
         const { name, value } = event.target;
-        if (name === "firstName") setFirstName(value);
-        if (name === "lastName") setLastName(value);
-        if (name === "bio") setBio(value);
+        if (name === "first_name") setFirstName(value);
+        if (name === "last_name") setLastName(value);
         if (name === "shipping_address") setShippingAddress(value);
-        if (name === "phoneNumber") setPhoneNumber(value);
+        if (name === "phone_number") setPhoneNumber(value);
         if (name === "email") setEmail(value);
     }
 
@@ -48,18 +46,17 @@ function UserInfo(){
                 console.log(resData);
                 setFirstName(resData.first_name|| '');
                 setLastName(resData.last_name|| '');
-                setBio(resData.bio|| '');
                 setShippingAddress(resData.shipping_address|| '');
                 setPhoneNumber(resData.phone_number|| '');
                 setEmail(resData.email|| '');
-
+                setIsSavedSuccesfully(submitResponse);
             }else{
 
             }
             setIsLoading(false);
         }
         getUserData();
-    },[])
+    },[submitResponse])
 
     return <div className={`flex flex-col w-full items-center ${isLoading?"justify-center":null} shadow-md rounded-xl ${isLoading ? 'bg-gray-100' : 'bg-white'}`}>
 
@@ -72,14 +69,14 @@ function UserInfo(){
                         placeholder="Enter your first name"
                         value={firstName}
                         onChange={handleInputChange}
-                        name="firstName"
+                        name="first_name"
                         />
                         <AuthInput
                         label="Last name"
                         placeholder="Enter your last name"
                         value={lastName}
                         onChange={handleInputChange}
-                        name="lastName"
+                        name="last_name"
                         />
                         <AuthInput
                         label="Shipping address"
@@ -95,7 +92,7 @@ function UserInfo(){
                         placeholder="Enter your phone number"
                         value={phoneNumber}
                         onChange={handleInputChange}
-                        name="phoneNumber"
+                        name="phone_number"
                         />
                         <AuthInput
                         label="Email"
@@ -104,8 +101,10 @@ function UserInfo(){
                         onChange={handleInputChange}
                         name="email"
                         />
+                        
                     </div>
                     </div>
+                    {isSavedSuccesfully && <p className="text-green-400 text-xl">Changes saved successfully!</p>}
                     <button className="gradient-btn-green rounded-4xl min-w-[200px] min-h-[40px]">Save changes</button>
                 </Form>}
     </div>
@@ -116,5 +115,24 @@ export default UserInfo;
 export async function action({request}) {
     const formData = await request.formData();
     const postData = Object.fromEntries(formData);
-    console.log(postData);
+    console.log(JSON.stringify(postData));
+    const API_URL = import.meta.env.VITE_API_URL;
+    const authResult = checkAuthLoader();
+    if (authResult) return authResult;
+    const token = getAuthToken();
+    const response = await fetch(API_URL + "/user/edit-user-info",{
+        method:"PUT",
+        headers:{
+            "Content-type":"application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body:JSON.stringify(postData)
+    })
+    
+    if(response.ok){
+        return true;
+    }else{
+        return false;
+    }
+
 }

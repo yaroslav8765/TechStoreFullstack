@@ -283,11 +283,15 @@ async def edit_user(db: db_dependancy, user: user_dependency, request: EditUserR
 
     if request.last_name != "Empty":
         user_model.last_name = request.last_name
+    
+    if request.shipping_address != "Empty":
+        user_model.shipping_address = request.shipping_address
+
 
     if request.email != "Empty":
         if check_if_user_enter_email_or_phone_num(request.email) == "Email":
             is_user_with_such_email_exist = db.query(Users).filter(Users.email == request.email).first()
-            if is_user_with_such_email_exist is None:
+            if request.email == user_model.email or  is_user_with_such_email_exist is None:
                 permission_to_change_email = True
             else:
                 raise HTTPException(status_code = status.HTTP_422_UNPROCESSABLE_ENTITY, detail = "User with such email already exist")
@@ -295,28 +299,29 @@ async def edit_user(db: db_dependancy, user: user_dependency, request: EditUserR
     if request.phone_number != "Empty":
         if check_if_user_enter_email_or_phone_num(request.phone_number) == "Phone_number":
             is_user_with_such_number_exist = db.query(Users).filter(Users.phone_number == request.phone_number).first()
-            if is_user_with_such_number_exist is None:
+            if request.phone_number == user_model.phone_number or is_user_with_such_number_exist is None:
                 permission_to_change_number = True
-
             else:
                 raise HTTPException(status_code = status.HTTP_422_UNPROCESSABLE_ENTITY, detail = "User with such phone number already exist")
 
     
-    if request.email != "Empty":
+    if request.email and request.email != "Empty":
         if check_if_user_enter_email_or_phone_num(request.email) == "Something wrong with your email or phone number. Please, check if your information is correct":
             raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = "Something wrong with your email. Please, check if your information is correct")
-    if request.phone_number != "Empty":
+    if request.phone_number and request.phone_number != "Empty":
         if check_if_user_enter_email_or_phone_num(request.phone_number) == "Something wrong with your email or phone number. Please, check if your information is correct":
             raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = "Something wrong with your phone number. Please, check if your information is correct")
     
     if permission_to_change_number == True:
-        user_model.phone_number = request.phone_number
+        if request.phone_number != user_model.phone_number:
+            user_model.phone_number = request.phone_number
         #need to send verefication SMS
 
     if permission_to_change_email == True:
-        user_model.email = request.email
-        user_model.is_active = False
-        await send_verification_email(request.email)
+        if request.email != user_model.email:
+            user_model.email = request.email   
+            user_model.is_active = False
+            await send_verification_email(request.email)
 
     db.add(user_model)
     db.commit()
