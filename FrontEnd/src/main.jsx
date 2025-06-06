@@ -7,13 +7,12 @@ import Login from './routers/Login.jsx';
 import {action as loginAction} from "./routers/Login.jsx"
 import {tokenLoader} from "../util/auth.js"
 import Profile from './routers/Profile.jsx';
-import {loader as profileLoader} from "./routers/Profile.jsx"
 import CartComponentOverlay from './components/CartComponentOverlay.jsx';
 import CartComponent from './components/CartComponent.jsx';
 import UserInfo from './components/UsersInfo.jsx';
 import OrdersHistory from './components/OrdersHistory.jsx';
 import ChangePassword from './components/ChangePassword.jsx';
-
+import {action as changeUserInfoAction} from "./components/UsersInfo.jsx"
 
 const router = createBrowserRouter([
     {
@@ -32,10 +31,9 @@ const router = createBrowserRouter([
             {
                 path:'profile', 
                 element:<Profile/>,
-                loader: profileLoader,
                 children: [
                     {path: 'cart', element :<CartComponent/>},
-                    {path: 'users-info', element :<UserInfo/>},
+                    {path: 'users-info', element :<UserInfo/>, action: changeUserInfoAction},
                     {path: 'change-password', element :<ChangePassword/>},
                     {path: 'orders-history', element :<OrdersHistory/>},
                 ]

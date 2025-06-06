@@ -94,7 +94,7 @@ function Profile(){
             <div className='flex max-w-[1200px] w-full mx-auto mt-4 gap-6'>
                 <div className="flex flex-col bg-white shadow-md rounded-lg w-[300px] h-[330px] gap-4 p-6">
                 <h2 className="text-gray-800 text-3xl font-semibold text-center">
-                    Hello, {userInfo ? userInfo.first_name : null}
+                    Hello {userInfo ? userInfo.first_name : null}
                 </h2>
                 <ProfileMenu
                     onBasketClick={setModeToCart}
