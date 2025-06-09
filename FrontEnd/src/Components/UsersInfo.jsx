@@ -7,8 +7,7 @@ import { Form } from "react-router-dom";
 import { useActionData } from "react-router-dom";
 
 function UserInfo(){
-    const submitResponse = useActionData(true);
-    const [isSavedSuccesfully, setIsSavedSuccesfully] = useState(true)
+    const submitResponse = useActionData();
     const [isLoading, setIsLoading] = useState(false);
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
@@ -43,25 +42,24 @@ function UserInfo(){
             
             if(response.ok){
                 const resData = await response.json();
-                console.log(resData);
                 setFirstName(resData.first_name|| '');
                 setLastName(resData.last_name|| '');
                 setShippingAddress(resData.shipping_address|| '');
                 setPhoneNumber(resData.phone_number|| '');
                 setEmail(resData.email|| '');
-                setIsSavedSuccesfully(submitResponse);
             }else{
 
             }
             setIsLoading(false);
         }
         getUserData();
-    },[submitResponse])
+    },[])
 
+    
     return <div className={`flex flex-col w-full items-center ${isLoading?"justify-center":null} shadow-md rounded-xl ${isLoading ? 'bg-gray-100' : 'bg-white'}`}>
 
             {isLoading ? <LoadingAnimation className="flex justify-center items-start"/> :
-                <Form method="PUT" action="users-info" className="flex flex-col w-full items-center gap-8">
+                <Form method="PUT" className="flex flex-col w-full items-center gap-4">
                     <div className="flex justify-start items-start">
                     <div className="flex flex-col w-[300px]">
                         <AuthInput
@@ -103,9 +101,9 @@ function UserInfo(){
                         />
                         
                     </div>
-                    </div>
-                    {isSavedSuccesfully && <p className="text-green-400 text-xl">Changes saved successfully!</p>}
-                    <button className="gradient-btn-green rounded-4xl min-w-[200px] min-h-[40px]">Save changes</button>
+                </div>
+                <button className="gradient-btn-green rounded-4xl min-w-[200px] min-h-[40px]" >Save changes</button>
+                {submitResponse ? <p className="text-green-400 text-md pb-4">{submitResponse.message}</p> : null}
                 </Form>}
     </div>
 }
@@ -130,9 +128,9 @@ export async function action({request}) {
     })
     
     if(response.ok){
-        return true;
+         return { message: `Saved successfully` };
     }else{
-        return false;
+        return { message: `Error` };
     }
 
 }

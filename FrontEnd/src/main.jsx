@@ -31,9 +31,10 @@ const router = createBrowserRouter([
             {
                 path:'profile', 
                 element:<Profile/>,
+                action: changeUserInfoAction,
                 children: [
                     {path: 'cart', element :<CartComponent/>},
-                    {path: 'users-info', element :<UserInfo/>, action: changeUserInfoAction},
+                    {path: 'users-info', element :<UserInfo/>},
                     {path: 'change-password', element :<ChangePassword/>},
                     {path: 'orders-history', element :<OrdersHistory/>},
                 ]
