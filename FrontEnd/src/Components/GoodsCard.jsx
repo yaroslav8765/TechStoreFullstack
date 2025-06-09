@@ -15,7 +15,6 @@ function GoodsCard(props) {
         const authResult = checkAuthLoader();
         if(authResult) return authResult;
         const token = getAuthToken();
-        console.log(`${API_URL}/user/add-to-basket`);
         const response = await fetch(`${API_URL}/user/add-to-basket`, {
             method: 'POST',
             headers: {

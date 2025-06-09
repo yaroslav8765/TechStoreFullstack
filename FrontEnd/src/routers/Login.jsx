@@ -91,7 +91,6 @@ export async function action({request}) {
     });
 
     const data = await response.json();
-    console.log(data);
     if(data.detail){
         return(data)
     }

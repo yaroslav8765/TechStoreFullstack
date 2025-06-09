@@ -326,17 +326,37 @@ async def edit_user(db: db_dependancy, user: user_dependency, request: EditUserR
     db.add(user_model)
     db.commit()
 
-@router.put("/change-password", status_code = status.HTTP_200_OK)
-async def change_password(user: user_dependency, db: db_dependancy, request: RecoverPasswordRequest):
+@router.put("/change-password", status_code=status.HTTP_200_OK)
+async def change_password(
+    user: user_dependency,
+    db: db_dependancy,
+    request: RecoverPasswordRequest
+):
     if user is None:
-        raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail = "Log in first")
-    user_info = db.query(Users).filter(Users.id == user.get("id")).first()
-    if not bcrypt_context.verify(request.old_password, user_info.hashed_password): 
-        raise HTTPException(status_code = status.HTTP_406_NOT_ACCEPTABLE, detail = "Wrong password")
-    
-    user_info.hashed_password = bcrypt_context.hash(request.new_password)
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Log in first"
+        )
 
-    db.commit
+    user_info = db.query(Users).filter(Users.id == user.get("id")).first()
+    if user_info is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+
+    if not bcrypt_context.verify(request.old_password, user_info.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail="Wrong password"
+        )
+
+    user_info.hashed_password = bcrypt_context.hash(request.new_password)
+    db.add(user_info)
+    db.commit()
+
+    return {"detail": "Password changed successfully"}
+
 
 @router.get("/search", status_code=status.HTTP_200_OK)
 async def search( request: str, db: db_dependancy):

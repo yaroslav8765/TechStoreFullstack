@@ -24,7 +24,6 @@ function OrdersHistory(){
 
             if(response.ok){
                 const resData = await response.json();
-                console.log(resData);
                 setOrders(resData);
             }
             setIsLoading(false);

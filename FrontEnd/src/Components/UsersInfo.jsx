@@ -113,7 +113,6 @@ export default UserInfo;
 export async function action({request}) {
     const formData = await request.formData();
     const postData = Object.fromEntries(formData);
-    console.log(JSON.stringify(postData));
     const API_URL = import.meta.env.VITE_API_URL;
     const authResult = checkAuthLoader();
     if (authResult) return authResult;

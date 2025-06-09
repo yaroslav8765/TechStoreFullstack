@@ -37,7 +37,6 @@ function SingleOrder(props){
                 setOrderInfo(resData.order);
                 setOrderDetails(resData.order_items);
                 setOrderGoods(resData.goods);
-                console.log(orderGoods.length*114);
                 setContainerHeight(((resData.goods.length + 1) * 114) + 72);
 
             }

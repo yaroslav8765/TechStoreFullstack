@@ -1,8 +1,5 @@
-import { redirect, useLoaderData } from "react-router-dom";
 import { useNavigate,useRevalidator  } from "react-router-dom";
-import listOfLinks from "../links";
 import { getAuthToken, checkAuthLoader,removeToken } from "../../util/auth.js"
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react"
 import ProfileMenu from "../ui/ProfileMenu.jsx";
 import CartComponent from "../components/CartComponent.jsx";
@@ -11,71 +8,85 @@ import ChangePassword from "../components/ChangePassword.jsx";
 import OrdersHistory from "../components/OrdersHistory.jsx";
 import CrititcalErrorWindow from "../ui/CrititcalErrorWindow.jsx";
 import LoadingAnimation from "../components/LoadingAnimation.jsx";
+import { useLocation } from "react-router-dom";
 
 function Profile(){
     const navigate = useNavigate();
     const revalidator = useRevalidator();
-    //const userInfo = useLoaderData();
+    const location = useLocation();
     const [userInfo, setUserInfo] = useState([]);
-    const [currentMode, setCurretMode ]= useState("Profile");
+    const [currentMode, setCurretMode ]= useState("users-info");
     
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    useEffect(() => {
-        async function loadUserData() {
-            setIsLoading(true)
-            const API_URL = import.meta.env.VITE_API_URL;
-            const authResult = checkAuthLoader();
-            if (authResult) return authResult;
-            const token = getAuthToken();
+useEffect(() => {
+  const path = location.pathname;
 
-            const response = await fetch(API_URL + "/user/user-info", {
-                method: "GET",
-                headers: {
-                "Content-type":"application/json",
-                "Authorization": `Bearer ${token}`
-                }
-            });
+  if (path.includes('cart')) {
+    setCurretMode("cart");
+  } else if (path.includes('users-info')) {
+    setCurretMode("users-info");
+  } else if (path.includes('change-password')) {
+    setCurretMode("change-password");
+  } else if (path.includes('orders-history')) {
+    setCurretMode("orders-history");
+  } else {
+    setCurretMode("users-info");
+  }
 
-            const resData = await response.json();
-            if(response.ok){
-                setIsLoading(false);
-                return resData;
+  async function loadUserData() {
+    setIsLoading(true)
+    const API_URL = import.meta.env.VITE_API_URL;
+    const authResult = checkAuthLoader();
+    if (authResult) return authResult;
+    const token = getAuthToken();
 
-            } else {
-                setErrorMessage((resData.detail || JSON.stringify(resData)) + ". Please, try to re-login");
-                console.error("PROFILE ERROR:", resData.message || resData);
-                setIsError(true);
-                removeToken();
-                revalidator.revalidate();
-            }
-            setIsLoading(false);
-        }
+    const response = await fetch(API_URL + "/user/user-info", {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    });
 
-        loadUserData().then((data) => {
-        setUserInfo(data);
-        });
-    },[])
+    const resData = await response.json();
+    if (response.ok) {
+      setIsLoading(false);
+      return resData;
+    } else {
+      setErrorMessage((resData.detail || JSON.stringify(resData)) + ". Please, try to re-login");
+      setIsError(true);
+      removeToken();
+      revalidator.revalidate();
+    }
+    setIsLoading(false);
+  }
+
+  loadUserData().then((data) => {
+    setUserInfo(data);
+  });
+}, []);
+
 
     function setModeToCart(){
-        setCurretMode("Cart")
+        setCurretMode("cart")
         navigate('cart');
     }
 
     function setModeToEditProfile(){
-        setCurretMode("Profile")
+        setCurretMode("users-info")
         navigate('users-info');
     }
 
     function setModeToChangePassword(){
-        setCurretMode("Password")
+        setCurretMode("change-password")
         navigate('change-password');
     }
 
     function setModeToMyOrders(){
-        setCurretMode("Orders")
+        setCurretMode("orders-history")
         navigate('orders-history');
     }
 
@@ -104,11 +115,11 @@ function Profile(){
                     logoutHandler={logoutHandler}
                 />
                 </div>
-                {currentMode === "Cart" ? <CartComponent/>: 
-                currentMode === "Profile" ? <UserInfo/>:
-                currentMode === "Password" ? <ChangePassword/>:
-                currentMode === "Orders" ? <OrdersHistory/>:
-                currentMode === "Cart" ? <CartComponent/>:
+                {currentMode === "сart" ? <CartComponent/>: 
+                currentMode === "users-info" ? <UserInfo/>:
+                currentMode === "change-password" ? <ChangePassword/>:
+                currentMode === "orders-history" ? <OrdersHistory/>:
+                currentMode === "cart" ? <CartComponent/>:
                 null}
             </div>}
         </div>

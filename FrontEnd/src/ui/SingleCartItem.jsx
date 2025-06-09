@@ -31,7 +31,6 @@ function SingleCartItem(props) {
 
   async function plusGoodHandled(){
     const prevValue = quantity;
-    console.log(props.quantity);
     if(quantity+1>props.left_quantity){
       setIsMaxError(true);
     } else {

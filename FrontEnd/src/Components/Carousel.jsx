@@ -9,9 +9,7 @@ const contentStyle = {
 };
 const MainCarousel = (props) => {
 
-  const onChange = currentSlide => {
-    console.log(currentSlide);
-  };
+
 
   return (
     <div className='mb-3'>
