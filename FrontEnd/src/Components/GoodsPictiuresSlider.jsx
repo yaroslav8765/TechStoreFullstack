@@ -1,20 +1,26 @@
-import React, { useRef, useState } from 'react';
-// Import Swiper React components
+import React, { useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-
-//import './styles.css';
-
-// import required modules
+import "./custom-swiper.css";
 import { Pagination, Navigation } from 'swiper/modules';
 import SmallImage from '../ui/SmallImage';
 
 
 function GoodsPicturesSlider({mainPicture, pictures}){
+    const [swiperInstance, setSwiperInstance] = useState(null);
+
+    useEffect(()=>{
+        console.log(pictures);
+    },[])
+
+    function smallImageClick(event){
+    const id = parseInt(event.target.id, 10);
+    if (swiperInstance) {
+        swiperInstance.slideToLoop(id, 500);
+    }
+    }
 
     return <>
         <Swiper
@@ -26,19 +32,37 @@ function GoodsPicturesSlider({mainPicture, pictures}){
             loop={true}
             modules={[Pagination, Navigation]}
             className="mySwiper rounded-md"
+            onSwiper={setSwiperInstance}
         >
-            <SwiperSlide className='object-contain'><img src={mainPicture} /></SwiperSlide>
-            <SwiperSlide><img src='https://images8.alphacoders.com/931/thumb-1920-931700.jpg'/></SwiperSlide>
-            <SwiperSlide>Slide 3</SwiperSlide>
-            <SwiperSlide>Slide 4</SwiperSlide>
-            <SwiperSlide>Slide 5</SwiperSlide>
-            <SwiperSlide>Slide 6</SwiperSlide>
-            <SwiperSlide>Slide 7</SwiperSlide>
-            <SwiperSlide>Slide 8</SwiperSlide>
-            <SwiperSlide>Slide 9</SwiperSlide>
+            <SwiperSlide><img src={mainPicture} className='object-contain w-full h-full'/></SwiperSlide>
+            {pictures&& pictures.map((image, index)=>
+                <SwiperSlide>
+                    <img src={image.url} className='swiper-slide'/>
+                </SwiperSlide>
+            )}
         </Swiper>
-        <SmallImage url="https://images8.alphacoders.com/931/thumb-1920-931700.jpg"/>
 
+
+
+        <div className='flex flex-wrap'>
+            <SmallImage 
+                clickAction={smallImageClick}
+                url={mainPicture} 
+                key = {0}
+                id = {0}
+            />
+            {pictures&& pictures.map((image, index)=>
+                <SmallImage 
+                clickAction={smallImageClick}
+                url={image.url} 
+                key = {index+1}
+                id = {index+1}
+                />
+            )}
+
+
+
+        </div>
     </>
 }
 
