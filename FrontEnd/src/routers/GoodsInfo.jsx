@@ -4,7 +4,7 @@ import { getAuthToken, checkAuthLoader,removeToken } from "../../util/auth.js"
 import GoodsPicturesSlider from '../components/GoodsPictiuresSlider.jsx';
 import CrititcalErrorWindow from '../ui/CrititcalErrorWindow.jsx';
 import LoadingAnimation from '../components/LoadingAnimation.jsx';
-import SmallImage from '../ui/SmallImage.jsx';
+import MainGoodInfo from '../components/MainGoodInfo.jsx';
 
 function GoodsInfo(){
     const { category, id } = useParams();
@@ -40,14 +40,22 @@ return (
     {isLoading ? (
       <LoadingAnimation className="flex justify-center items-center" />
     ) : (
-      <div className='flex m-2 '>
+      <div className='flex m-2 gap-4 w-full'>
         <div className="max-h-[750px] max-w-[480px]  rounded-xl shadow-md flex flex-col p-2 ">
             {goodsData[0] && (
                 <GoodsPicturesSlider mainPicture={goodsData[0].image_url} pictures={goodsData[2]} />
             )}
         </div>
-        <div >
-
+        <div className='flex flex-col gap-4 w-full'>
+          {goodsData[0] && (
+            <MainGoodInfo  
+            title={goodsData[0].name}
+            isAvailable={goodsData[0].quantity > 0 ? true : false}
+            rating={goodsData[0].rating}
+            voted={goodsData[0].voted}
+            id={goodsData[0].id}
+            />
+          )}
         </div>
       </div>
     )}
