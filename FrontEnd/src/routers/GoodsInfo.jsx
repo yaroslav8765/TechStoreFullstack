@@ -5,6 +5,7 @@ import GoodsPicturesSlider from '../components/GoodsPictiuresSlider.jsx';
 import CrititcalErrorWindow from '../ui/CrititcalErrorWindow.jsx';
 import LoadingAnimation from '../components/LoadingAnimation.jsx';
 import MainGoodInfo from '../components/MainGoodInfo.jsx';
+import GoodsPrice from '../components/GoodsPrice.jsx';
 
 function GoodsInfo(){
     const { category, id } = useParams();
@@ -56,6 +57,15 @@ return (
             id={goodsData[0].id}
             />
           )}
+          {goodsData[0] && (
+            <GoodsPrice  
+            oldPrice={goodsData[0].old_price}
+            newPrice={goodsData[0].price}
+            categoty={goodsData[0].category}
+            id={goodsData[0].id}
+            />
+          )}
+
         </div>
       </div>
     )}
