@@ -11,22 +11,24 @@ import 'swiper/css/navigation';
 
 // import required modules
 import { Pagination, Navigation } from 'swiper/modules';
+import SmallImage from '../ui/SmallImage';
 
 
-
-function GoodsPicturesSlider({pictures}){
+function GoodsPicturesSlider({mainPicture, pictures}){
 
     return <>
         <Swiper
             pagination={{
             type: 'fraction',
             }}
+            spaceBetween={100}
             navigation={true}
+            loop={true}
             modules={[Pagination, Navigation]}
-            className="mySwiper "
+            className="mySwiper rounded-md"
         >
+            <SwiperSlide className='object-contain'><img src={mainPicture} /></SwiperSlide>
             <SwiperSlide><img src='https://images8.alphacoders.com/931/thumb-1920-931700.jpg'/></SwiperSlide>
-            <SwiperSlide>Slide 2</SwiperSlide>
             <SwiperSlide>Slide 3</SwiperSlide>
             <SwiperSlide>Slide 4</SwiperSlide>
             <SwiperSlide>Slide 5</SwiperSlide>
@@ -35,6 +37,8 @@ function GoodsPicturesSlider({pictures}){
             <SwiperSlide>Slide 8</SwiperSlide>
             <SwiperSlide>Slide 9</SwiperSlide>
         </Swiper>
+        <SmallImage url="https://images8.alphacoders.com/931/thumb-1920-931700.jpg"/>
+
     </>
 }
 
