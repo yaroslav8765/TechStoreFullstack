@@ -13,6 +13,7 @@ import UserInfo from './components/UsersInfo.jsx';
 import OrdersHistory from './components/OrdersHistory.jsx';
 import ChangePassword from './components/ChangePassword.jsx';
 import {action as changeUserInfoAction} from "./components/UsersInfo.jsx"
+import GoodsInfo from './routers/GoodsInfo.jsx';
 
 const router = createBrowserRouter([
     {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
                     {path: 'change-password', element :<ChangePassword/>},
                     {path: 'orders-history', element :<OrdersHistory/>},
                 ]
+            },
+            {
+                path:'/:category/:id',
+                element:<GoodsInfo/>
             }
         ]
     }
