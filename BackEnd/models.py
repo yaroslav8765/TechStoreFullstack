@@ -1,4 +1,4 @@
-from .database import Base
+from backend.database import Base
 from sqlalchemy import Column, Integer, Float, String, Boolean, ForeignKey, DateTime, CheckConstraint
 from datetime import datetime, timezone, timedelta
 from sqlalchemy.orm import relationship
@@ -173,3 +173,4 @@ class BestSellers(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     goods_id = Column(Integer, ForeignKey("goods.id"))
+

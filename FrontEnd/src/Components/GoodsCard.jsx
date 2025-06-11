@@ -1,37 +1,13 @@
 import React, { useState } from "react";
 import Rating from '@mui/material/Rating';
 import StarIcon from '@mui/icons-material/Star';
-import listOfLinks from "../links";
-import { Link, useNavigate } from "react-router-dom";
-import { checkAuthLoader, getAuthToken } from "../../util/auth";
+import { Link} from "react-router-dom";
 import CartComponentOverlay from "./CartComponentOverlay";
+import AddToCartButton from "../ui/AddToCartButton";
 
 function GoodsCard(props) {
-    const API_URL = import.meta.env.VITE_API_URL;
-    const navigate = useNavigate();
-    const [isCartOpened, setIsCartOpened] = useState(false);
 
-    async function clickHandler(e){
-        e.preventDefault();
-        const authResult = checkAuthLoader();
-        if(authResult) return authResult;
-        const token = getAuthToken();
-        const response = await fetch(`${API_URL}/user/add-to-basket`, {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ 
-                goods_id: props.id,
-                quantity: 1,
-             }),
-        });
-        if(response.ok){
-            //navigate('/cart');
-            setIsCartOpened(true);
-        }
-    };
+    const [isCartOpened, setIsCartOpened] = useState(false);
 
     function closeCartComponent(){
         setIsCartOpened(false);
@@ -40,8 +16,8 @@ function GoodsCard(props) {
     return (
         <div className="m-1">
             {isCartOpened && <CartComponentOverlay clickHandler={closeCartComponent} navigateTo="."/>}
-            <Link to={`/${props.category}/${props.product_link}`}> 
-                <form className="flex flex-col items-center bg-gray-100 w-[240px] h-[400px] rounded-2xl shadow-lg p-4 hover:bg-gray-200 transition-bg duration-200" >
+                <div className="flex flex-col items-center bg-gray-100 w-[240px] h-[400px] rounded-2xl shadow-lg p-4 hover:bg-gray-200 transition-bg duration-200" >
+                    <Link to={`/${props.category}/${props.product_link}`}> 
                     {/* Picture */}
                     <img 
                     src={props.img}
@@ -75,18 +51,11 @@ function GoodsCard(props) {
 
                         <p className="text-black ml-1 text-lg">({props.voted})</p>
                     </div>
+                    </Link>
 
-                    {/* Button */}
-                    <div className="relative w-full mt-2">
-                        <button 
-                            className={`relative z-30  py-2 px-5 rounded-lg  w-full text-lg gradient-btn-red`}
-                            onClick={clickHandler}
-                        >
-                            Add
-                        </button>
-                    </div>
-                </form>
-            </Link>
+
+                    <AddToCartButton id={props.id}/>
+                </div>
         </div>
     );
 }
