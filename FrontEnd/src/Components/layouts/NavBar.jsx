@@ -13,12 +13,23 @@ import listOfLinks from "../../links";
 import { Link, useRouteLoaderData } from "react-router-dom";
 import SearchBar from "../../ui/SearchBar";
 import LogoLink from "../../ui/LogoLink";
+import CartComponentOverlay from "../CartComponentOverlay";
+import { useState } from "react";
 
 function NavBar() {
   const token = useRouteLoaderData('root');
+  const [isCartOpened, setIsCartOpened] = useState(false);
+
+  function closeCartComponent(){
+      setIsCartOpened(false);
+  }
+  function openCartComponent(){
+    setIsCartOpened(true);
+  }
 
   return (
     <div className="relative">
+      {isCartOpened && <CartComponentOverlay className="z-60" clickHandler={closeCartComponent} navigateTo="." />}
       <div className="px-6 py-4 bg-white shadow-md">
         <div className="flex items-center justify-between max-w-[1200px] mx-auto">
           <LogoLink />
@@ -27,9 +38,9 @@ function NavBar() {
             <Link to={token ? `${listOfLinks.profile}/users-info` : listOfLinks.auth}>
               <IconButton icon={PersonIcon} />
             </Link>
-            <Link to="/cart">
+            <div onClick={openCartComponent}>
               <IconButton icon={ShoppingCartIcon} />
-            </Link>
+            </div>
           </div>
         </div>
 

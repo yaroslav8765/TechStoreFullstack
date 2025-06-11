@@ -4,11 +4,12 @@ import StarIcon from '@mui/icons-material/Star';
 import listOfLinks from "../links";
 import { Link, useNavigate } from "react-router-dom";
 import { checkAuthLoader, getAuthToken } from "../../util/auth";
-
+import CartComponentOverlay from "./CartComponentOverlay";
 
 function GoodsCard(props) {
     const API_URL = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
+    const [isCartOpened, setIsCartOpened] = useState(false);
 
     async function clickHandler(e){
         e.preventDefault();
@@ -27,12 +28,18 @@ function GoodsCard(props) {
              }),
         });
         if(response.ok){
-            navigate('/cart');
+            //navigate('/cart');
+            setIsCartOpened(true);
         }
     };
 
+    function closeCartComponent(){
+        setIsCartOpened(false);
+    }
+
     return (
         <div className="m-1">
+            {isCartOpened && <CartComponentOverlay clickHandler={closeCartComponent} navigateTo="."/>}
             <Link to={`/${props.category}/${props.product_link}`}> 
                 <form className="flex flex-col items-center bg-gray-100 w-[240px] h-[400px] rounded-2xl shadow-lg p-4 hover:bg-gray-200 transition-bg duration-200" >
                     {/* Picture */}

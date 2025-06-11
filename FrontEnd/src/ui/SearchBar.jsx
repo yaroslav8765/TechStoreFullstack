@@ -23,8 +23,8 @@ function SearchBar() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full max-w-[440px] mx-auto z-50">
-      <div className="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 h-[45px] max-w-[400px] w-full mx-2 z-50 shadow-md">
+    <div className="flex flex-col justify-center items-center w-full max-w-[440px] mx-auto z-40">
+      <div className="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 h-[45px] max-w-[400px] w-full mx-2 z-40 shadow-md">
         <input
           className="flex-grow bg-transparent text-black placeholder-gray-500 focus:outline-none"
           name="title"
@@ -43,7 +43,7 @@ function SearchBar() {
       {isRequestActive && (
         <>
           <div
-            className="fixed inset-0 bg-black/20 z-40"
+            className="fixed inset-0 bg-black/20 z-30"
             onClick={() => setIsRequestActive(false)}
           ></div>
 

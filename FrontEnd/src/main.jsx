@@ -26,7 +26,7 @@ const router = createBrowserRouter([
             element: <MainPage/>,
             children: [
                 {path:'auth', element: <Login/>, action: loginAction},
-                {path:'cart', element: <CartComponentOverlay/>}
+                {path:'cart', element: <CartComponentOverlay navigateTo=".." isAllowedNavigate={true}/>}
             ]
             },
             {
