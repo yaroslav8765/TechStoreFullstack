@@ -1,10 +1,10 @@
-from typing import Annotated, Optional
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from typing import Annotated, Literal, Optional
+from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel, Field
 from starlette import status
 from sqlalchemy.orm import Session
 from ...database import SessionLocal
-from ...models import Users, Orders, Smartphones, Laptops, Goods, GoodsImage, BestSellers
+from ...models import Users, Orders, Smartphones, Laptops, Goods, GoodsImage, BestSellers, GoodsRelatives
 from ...routers.auth import get_current_user
 from ...routers.goods_actions.request_models.smartphone import AddEditSmartphoneRequest, add_smartphones_model, edit_smartphone_model
 from ...routers.goods_actions.request_models.laptop import AddEditLaptopRequest, add_laptop_model, edit_laptop_model
@@ -96,8 +96,12 @@ def edit_goods_model(goods_request: AddEditGoodsRequest, old_good: Goods) -> Goo
 
     return old_good
 
-
-
+class AddRelativeModel(BaseModel):
+    good_one:int = Field(1, ge=1)
+    good_two:int = Field(1, ge=1)
+    difference: Literal["memory","color", "size", "screen-size"] = "color"
+    value: str
+    
 
 
 
@@ -105,13 +109,39 @@ def edit_goods_model(goods_request: AddEditGoodsRequest, old_good: Goods) -> Goo
 ##################################################################
 #                                                                # 
 #                          ADD & EDIT                            # 
-#                           DIFFERETN                            # 
+#                           DIFFERENT                            # 
 #                             GOODS                              # 
 #                            SECTION                             # 
 #                                                                # 
 ##################################################################
 
+@router.post("/edit-goods/add-relative", status_code=status.HTTP_201_CREATED)
+async def add_relative(
+    db: db_dependancy,
+    user: user_dependency,
+    request: Annotated[AddRelativeModel, Query()]
+):
+    if user is None or user.get('role') != 'admin':
+        raise HTTPException(status_code=401, detail='Authentication Failed')
 
+    relative = GoodsRelatives(
+        good_one=request.good_one,
+        good_two=request.good_two,
+        difference=request.difference,
+        diff_value=request.value
+    )
+
+    db.add(relative)
+    db.commit()
+    db.refresh(relative)
+
+    return {"message": "Relative added successfully", "relative": {
+        "id": relative.id,
+        "good_one": relative.good_one,
+        "good_two": relative.good_two,
+        "difference": relative.difference,
+        "diff_value": relative.diff_value
+    }}
 
 #############################################################################################################
 #                                                                                                           #

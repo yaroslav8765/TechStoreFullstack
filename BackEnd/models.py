@@ -174,3 +174,14 @@ class BestSellers(Base):
     id = Column(Integer, primary_key=True, index=True)
     goods_id = Column(Integer, ForeignKey("goods.id"))
 
+class GoodsRelatives(Base):
+    __tablename__ = 'goods_relatives'
+
+    id = Column(Integer, primary_key=True, index=True)
+    good_one = Column(Integer, ForeignKey('goods.id'), nullable=False)
+    good_two = Column(Integer, ForeignKey('goods.id'), nullable=False)
+    difference = Column(String, nullable=False)
+    diff_value = Column(String, nullable=True)
+
+    good_one_ref = relationship("Goods", foreign_keys=[good_one], backref="related_from")
+    good_two_ref = relationship("Goods", foreign_keys=[good_two], backref="related_to")

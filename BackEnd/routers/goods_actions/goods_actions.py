@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from typing import Annotated
 from ...routers.auth import get_current_user
 from starlette import status
-from ...models import Goods, Basket, OrderItem, Orders, Users, Smartphones, Laptops, GoodsImage, BestSellers, GoodsRating 
+from ...models import Goods, Basket, OrderItem, Orders, Users, Smartphones, Laptops, GoodsImage, BestSellers, GoodsRating, GoodsRelatives 
 from ...routers.email_actions.email_verification import send_verification_email
 from ...routers.auth import check_if_user_enter_email_or_phone_num
 from ...routers.email_actions.email_mailing import send_order_details, send_cancel_order_notification
@@ -79,5 +79,7 @@ async def get_goods_info(db: db_dependancy, category: str, goods_id: int):
         goods_images = "https://media.tenor.com/7vW_xoioKbIAAAAM/anime-girl-shrugging-and-looking-away.gif"
 
 
-    return goods_base_info, goods_details_model, goods_images
+    goods_relatives = db.query(GoodsRelatives).filter(GoodsRelatives.good_one == goods_base_info.id).all()
+
+    return goods_base_info, goods_details_model, goods_images, goods_relatives
 
