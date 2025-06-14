@@ -6,6 +6,7 @@ import CrititcalErrorWindow from '../ui/CrititcalErrorWindow.jsx';
 import LoadingAnimation from '../components/LoadingAnimation.jsx';
 import MainGoodInfo from '../components/MainGoodInfo.jsx';
 import GoodsPrice from '../components/GoodsPrice.jsx';
+import RelativeGoods from '../components/RelativeGoods.jsx';
 
 function GoodsInfo(){
     const { category, id } = useParams();
@@ -33,7 +34,7 @@ function GoodsInfo(){
                 setIsLoading(false);
         }
         loadGoodsData();
-    },[])
+    },[category,id])
 
 return (
   <div className={`flex items-center max-w-[1200px] mx-auto w-full min-h-[70vh]`}>
@@ -55,6 +56,12 @@ return (
             rating={goodsData[0].rating}
             voted={goodsData[0].voted}
             id={goodsData[0].id}
+            />
+          )}
+          {goodsData[3] && (
+            <RelativeGoods  
+            info={goodsData[3]}
+            category={goodsData[0].category}
             />
           )}
           {goodsData[0] && (
