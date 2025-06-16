@@ -83,3 +83,41 @@ async def get_goods_info(db: db_dependancy, category: str, goods_id: int):
 
     return goods_base_info, goods_details_model, goods_images, goods_relatives
 
+from fastapi import Path, Depends
+
+@router.get("/{category}/{id}/reviews", status_code=status.HTTP_200_OK)
+async def get_goods_reviews(db: db_dependancy,id: int = Path()):
+    goods_id = id
+
+    reviews = []
+
+    relative_goods_id = set()
+    relative_goods = db.query(GoodsRelatives).filter(GoodsRelatives.good_one == goods_id).all()
+
+    for good in relative_goods.copy():
+        extra_relatives = db.query(GoodsRelatives).filter(GoodsRelatives.good_two == good.good_two).all()
+        relative_goods.extend(extra_relatives)
+
+    for good in relative_goods:
+        relative_goods_id.add(good.good_one)
+        relative_goods_id.add(good.good_two)
+
+
+    for id in relative_goods_id:
+        relative_reviews = db.query(GoodsRating).filter(GoodsRating.good_id == id).all()
+        reviews.extend(relative_reviews)
+
+    response = []
+    for review in reviews:
+        author = db.query(Users).filter(Users.id == review.author_id).first()
+        review_data = {
+            "id": review.id,
+            "good_id": review.good_id,
+            "author_id": review.author_id,
+            "rating": review.rate,
+            "comment": review.comment,
+            "author_name": author.first_name if author else "User"
+        }
+        response.append(review_data)
+
+    return reviews
