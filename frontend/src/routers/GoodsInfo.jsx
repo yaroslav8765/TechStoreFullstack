@@ -43,7 +43,7 @@ return (
       <LoadingAnimation className="flex justify-center items-center" />
     ) : (
       <div className='flex m-2 gap-4 w-full'>
-        <div className="max-h-[750px] max-w-[480px]  rounded-xl shadow-md flex flex-col p-2 ">
+        <div className="  rounded-xl shadow-md flex flex-col p-2 ">
             {goodsData[0] && (
                 <GoodsPicturesSlider mainPicture={goodsData[0].image_url} pictures={goodsData[2]} />
             )}

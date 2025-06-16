@@ -1,0 +1,83 @@
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #ffffff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border-radius: 50%;
+  border: 2px solid #03e0b0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-size: 60% 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: all 0.3s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: #bbe9df;
+  border-color: #03e0b0;
+  filter: brightness(1.1);
+}
+
+.swiper-button-prev {
+  background-image: url("https://www.svgrepo.com/show/365074/arrow-left-thin.svg");
+}
+
+.swiper-button-next {
+  background-image: url("https://www.svgrepo.com/show/365082/arrow-right-thin.svg");
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  display: none;
+}
+
+.swiper-pagination-fraction {
+  font-weight: bold;
+  color: #03e0b0;
+  font-size: 16px;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
+}
+
+.swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background-color: #ccc;
+  opacity: 1;
+  border-radius: 50%;
+  margin: 0 4px;
+  transition: background-color 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #03e0b0;
+  transform: scale(1.2);
+}
+
+
+.swiper-pagination{
+ display: none;
+}
