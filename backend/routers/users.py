@@ -6,7 +6,7 @@ from sqlalchemy import text, func
 from typing import Annotated
 from ..routers.auth import get_current_user
 from starlette import status
-from ..models import Goods, Basket, OrderItem, Orders, Users, GoodsRating
+from ..models import Goods, Basket, GoodsRelatives, OrderItem, Orders, Users, GoodsRating
 from ..routers.email_actions.email_verification import send_verification_email
 from ..routers.auth import check_if_user_enter_email_or_phone_num
 from ..routers.email_actions.email_mailing import send_order_details, send_cancel_order_notification
@@ -367,35 +367,48 @@ async def search( request: str, db: db_dependancy):
 async def post_review(db: db_dependancy, user: user_dependency, request: PostReviewRequest):
     if user is None:
         return {"message": "Sorry, but at this moment if you want to made a review you need to create accout first"}
-        #here I want to add LocalStorage so user can add goods to the basket without registration 
-        #and list of the goods will be stored in the local storage even if user closed the site
 
-    if db.query(GoodsRating).filter(GoodsRating.author_id == user.get("id"), GoodsRating.good_id == request.good_id).first():
-        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = "You alredy made a review")
-    else:
-        postRewiew = GoodsRating(
-                good_id = request.good_id,
-                author_id = user.get("id"),
-                comment = request.comment,
-                rate = request.rate
-            )
-        db.add(postRewiew)
+    postRewiew = GoodsRating(
+            good_id = request.good_id,
+            author_id = user.get("id"),
+            comment = request.comment,
+            rate = request.rate
+        )
+    db.add(postRewiew)
+    db.commit()
+
+
+    relative_goods_id = set()
+    relative_goods = db.query(GoodsRelatives).filter(GoodsRelatives.good_one == request.good_id).all()
+
+    for good in relative_goods.copy():
+        extra_relatives = db.query(GoodsRelatives).filter(GoodsRelatives.good_two == good.good_two).all()
+        relative_goods.extend(extra_relatives)
+
+    for good in relative_goods:
+        relative_goods_id.add(good.good_one)
+        relative_goods_id.add(good.good_two)
+
+    avg_rating = 0
+    goods_with_rate = 0
+    total_voted = 0
+    for id in relative_goods_id:
+        rates = db.query(GoodsRating).filter(GoodsRating.good_id == id).all()
+        if rates:
+            for rate in rates:
+                goods_with_rate+=1
+                avg_rating+=rate.rate
+                total_voted+=1
+
+    avg_rating = avg_rating/total_voted
+
+    for id in relative_goods_id:
+        good = db.query(Goods).filter(Goods.id == id).first()
+        good.rating = avg_rating
+        good.voted = total_voted
         db.commit()
 
-        updated_good = db.query(Goods).filter(Goods.id == request.good_id).first()
-        result = db.query(
-            func.count(GoodsRating.id).label("total_reviews"),
-            func.avg(GoodsRating.rate).label("average_rating")
-        ).filter(GoodsRating.good_id == request.good_id).first()
-
-        total_reviews = result.total_reviews
-        average_rating = result.average_rating
-
-        updated_good.rating = average_rating
-        updated_good.voted = total_reviews
-        db.commit()
-
-        return {"message": "Posted"}
+    return {"message":"posted"}
     
 
 @router.get("/user-info", status_code = status.HTTP_200_OK)
