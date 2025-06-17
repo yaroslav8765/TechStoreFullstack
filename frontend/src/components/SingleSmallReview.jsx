@@ -3,7 +3,7 @@ import StarIcon from '@mui/icons-material/Star';
 
 function SingleSmallReview({ review }) {
     return (
-        <div className="flex flex-col gap-2 bg-white shadow-md rounded-2xl p-4 w-full max-w-md transition hover:shadow-lg">
+        <div className="flex flex-col gap-2 bg-white p-4 w-full max-w-md transition ">
             <div className="flex items-center justify-between">
                 <p className="text-lg font-semibold text-gray-800">
                     {review.author_name}

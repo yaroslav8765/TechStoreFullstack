@@ -35,7 +35,7 @@ function SmallReviewsComponent({ id, goToReviewsSection }) {
     }, [id]);
 
     return (
-        <div className="flex items-center justify-center w-full max-w-4xl mx-auto my-6 min-h-[130px]">
+        <div className="flex items-center justify-center  border-1 border-gray-100 min-h-[130px]  shadow-md rounded-2xl hover:shadow-lg w-[680px]">
             {isLoading?<LoadingAnimation />:
             <Swiper
                 pagination={{ type: 'fraction' }}
@@ -52,7 +52,7 @@ function SmallReviewsComponent({ id, goToReviewsSection }) {
                         </SwiperSlide>
                     ))}
                     <SwiperSlide >
-                        <div onClick={goToReviewsSection} className='flex justify-center items-center shadow-md rounded-2xl p-4 w-full max-w-md transition hover:shadow-lg '>
+                        <div onClick={goToReviewsSection} className='flex justify-center items-center '>
                             <p className="text-gray-900 hover:underline cursor-pointer hover:scale-102">See more...</p>
                         </div>
                     </SwiperSlide>

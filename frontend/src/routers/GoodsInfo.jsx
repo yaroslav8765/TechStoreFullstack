@@ -16,6 +16,12 @@ function GoodsInfo(){
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
     const [goodsData, setGoodsData] = useState([]);
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    function expandFunction(){
+      setIsExpanded(!isExpanded)
+    }
+
     useEffect(() => {
         async function loadGoodsData() {
             setIsLoading(true)
@@ -45,14 +51,14 @@ function GoodsInfo(){
     }
 
 return (
-  <div className={`flex items-center justify-center max-w-[1200px] mx-auto w-full min-h-[70vh]`}>
+  <div className={`flex items-center justify-center max-w-[1200px] mx-auto mt-4 w-full min-h-[70vh]`}>
     {isError && <CrititcalErrorWindow message={errorMessage} />}
     {isLoading ? (
       <LoadingAnimation className="flex justify-center items-center" />
     ) : (
-      <div className='flex flex-col items-start justify-start'>
-        <div className='flex m-2 gap-4 w-full'>
-          <div className="  rounded-xl shadow-md flex flex-col p-2 ">
+      <div className='flex flex-col items-start justify-start max-w-[1200px]'>
+        <div className='flex justify-between gap-4 w-full'>
+          <div className="  rounded-xl shadow-md flex flex-col ">
               {goodsData[0] && (
                   <GoodsPicturesSlider mainPicture={goodsData[0].image_url} pictures={goodsData[2]} />
               )}
@@ -87,9 +93,9 @@ return (
             )}
           </div>
         </div>
-        <div>
-        {goodsData[1] && <CharacteristicsTable characteristics={goodsData[1]}/>}
-        {goodsData[0] && <Description Description={goodsData[0].description}/>}
+        <div className='w-full flex justify-between max-w-[1200px] gap-4 mt-8'>
+        {goodsData[1] && <CharacteristicsTable characteristics={goodsData[1]} expandFunction={expandFunction} isExpanded={isExpanded}/>}
+        {goodsData[0] && <Description Description={goodsData[0].description} isExpanded={isExpanded} />}
         </div>
       </div>
     )}

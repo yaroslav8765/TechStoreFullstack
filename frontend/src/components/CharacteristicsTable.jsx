@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-function CharacteristicsTable({ characteristics }) {
-    const [expanded, setExpanded] = useState(false);
+function CharacteristicsTable({ characteristics, isExpanded, expandFunction}) {
     const [height, setHeight] = useState("0px");
     const contentRef = useRef(null);
 
@@ -13,9 +12,9 @@ function CharacteristicsTable({ characteristics }) {
 
     useEffect(() => {
         if (contentRef.current) {
-            setHeight(expanded ? `${contentRef.current.scrollHeight}px` : "140px");
+            setHeight(isExpanded ? `${contentRef.current.scrollHeight}px` : "140px");
         }
-    }, [expanded]);
+    }, [isExpanded]);
 
     const formatKey = (key) => {
         return key
@@ -24,7 +23,7 @@ function CharacteristicsTable({ characteristics }) {
     };
 
     return (
-        <div className="bg-white shadow-md rounded-2xl p-6 max-w-4xl mx-auto mt-8 overflow-hidden">
+        <div className="bg-white shadow-md rounded-2xl w-full p-6 mx-auto  overflow-hidden">
             <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">
                 Technical Specifications
             </h2>
@@ -52,10 +51,10 @@ function CharacteristicsTable({ characteristics }) {
 
             <div className="text-center mt-4">
                 <button
-                    onClick={() => setExpanded(!expanded)}
+                    onClick={expandFunction}
                     className="text-gray-600 border px-12 py-2 rounded-4xl hover:underline hover:border-gray-900 hover:bg-gray-100 focus:outline-none transition-all duration-200"
                 >
-                    {expanded ? "Show Less ▲" : "Show More ▼"}
+                    {isExpanded ? "Show Less ▲" : "Show More ▼"}
                 </button>
             </div>
         </div>
