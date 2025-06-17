@@ -8,6 +8,7 @@ import MainGoodInfo from '../components/MainGoodInfo.jsx';
 import GoodsPrice from '../components/GoodsPrice.jsx';
 import RelativeGoods from '../components/RelativeGoods.jsx';
 import SmallReviewsComponent from '../components/SmallReviewsComponent.jsx';
+import Description from '../components/Description.jsx';
 
 function GoodsInfo(){
     const { category, id } = useParams();
@@ -48,41 +49,44 @@ return (
     {isLoading ? (
       <LoadingAnimation className="flex justify-center items-center" />
     ) : (
-      <div className='flex m-2 gap-4 w-full'>
-        <div className="  rounded-xl shadow-md flex flex-col p-2 ">
+      <div className='flex flex-col items-start justify-start'>
+        <div className='flex m-2 gap-4 w-full'>
+          <div className="  rounded-xl shadow-md flex flex-col p-2 ">
+              {goodsData[0] && (
+                  <GoodsPicturesSlider mainPicture={goodsData[0].image_url} pictures={goodsData[2]} />
+              )}
+          </div>
+          <div className='flex flex-col justify-between w-full max-w-[700px]'>
             {goodsData[0] && (
-                <GoodsPicturesSlider mainPicture={goodsData[0].image_url} pictures={goodsData[2]} />
+              <MainGoodInfo  
+              title={goodsData[0].name}
+              isAvailable={goodsData[0].quantity > 0 ? true : false}
+              rating={goodsData[0].rating}
+              voted={goodsData[0].voted}
+              id={goodsData[0].id}
+              goToReviewsSection={goToReviewsSection}
+              />
             )}
+            {goodsData[3] && (
+              <RelativeGoods  
+              info={goodsData[3]}
+              category={goodsData[0].category}
+              />
+            )}
+            {goodsData[0] && (
+              <GoodsPrice  
+              oldPrice={goodsData[0].old_price}
+              newPrice={goodsData[0].price}
+              categoty={goodsData[0].category}
+              id={goodsData[0].id}
+              />
+            )}
+            {goodsData[0] && (
+              <SmallReviewsComponent id={goodsData[0].id} goToReviewsSection={goToReviewsSection}/>
+            )}
+          </div>
         </div>
-        <div className='flex flex-col justify-between w-full max-w-[700px]'>
-          {goodsData[0] && (
-            <MainGoodInfo  
-            title={goodsData[0].name}
-            isAvailable={goodsData[0].quantity > 0 ? true : false}
-            rating={goodsData[0].rating}
-            voted={goodsData[0].voted}
-            id={goodsData[0].id}
-            goToReviewsSection={goToReviewsSection}
-            />
-          )}
-          {goodsData[3] && (
-            <RelativeGoods  
-            info={goodsData[3]}
-            category={goodsData[0].category}
-            />
-          )}
-          {goodsData[0] && (
-            <GoodsPrice  
-            oldPrice={goodsData[0].old_price}
-            newPrice={goodsData[0].price}
-            categoty={goodsData[0].category}
-            id={goodsData[0].id}
-            />
-          )}
-          {goodsData[0] && (
-            <SmallReviewsComponent id={goodsData[0].id} goToReviewsSection={goToReviewsSection}/>
-          )}
-        </div>
+        {goodsData[0] && <Description Description={goodsData[0].description}/>}
       </div>
     )}
   </div>
