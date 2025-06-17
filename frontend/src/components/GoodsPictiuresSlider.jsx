@@ -45,7 +45,7 @@ function GoodsPicturesSlider({mainPicture, pictures}){
         </div>
 
 
-    <ThumbnailsSlider pictures={pictures} smallImageClick={smallImageClick} />
+    <ThumbnailsSlider mainPicture={mainPicture} pictures={pictures} smallImageClick={smallImageClick} />
 
 
     </div>

@@ -8,7 +8,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import SmallImage from './SmallImage'; 
 
 
-const ThumbnailsSlider = ({ pictures, smallImageClick }) => {
+const ThumbnailsSlider = ({ pictures, smallImageClick, mainPicture }) => {
 
   
   return (
@@ -23,6 +23,13 @@ const ThumbnailsSlider = ({ pictures, smallImageClick }) => {
       modules={[Navigation, Pagination]}
       className="mySwiper"
     >
+      <SwiperSlide>
+        <SmallImage
+        clickAction={smallImageClick}
+        url={mainPicture}
+        id={0}
+        />
+      </SwiperSlide>
       {pictures &&
         pictures.map((image, index) => (
           <SwiperSlide key={index}>
