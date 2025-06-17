@@ -9,6 +9,7 @@ import GoodsPrice from '../components/GoodsPrice.jsx';
 import RelativeGoods from '../components/RelativeGoods.jsx';
 import SmallReviewsComponent from '../components/SmallReviewsComponent.jsx';
 import Description from '../components/Description.jsx';
+import CharacteristicsTable from '../components/CharacteristicsTable.jsx';
 
 function GoodsInfo(){
     const { category, id } = useParams();
@@ -86,7 +87,10 @@ return (
             )}
           </div>
         </div>
+        <div>
+        {goodsData[1] && <CharacteristicsTable characteristics={goodsData[1]}/>}
         {goodsData[0] && <Description Description={goodsData[0].description}/>}
+        </div>
       </div>
     )}
   </div>
