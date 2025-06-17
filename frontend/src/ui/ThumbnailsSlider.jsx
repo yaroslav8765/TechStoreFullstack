@@ -16,7 +16,6 @@ const ThumbnailsSlider = ({ pictures, smallImageClick }) => {
       slidesPerView={4}
       spaceBetween={10}
       navigation={true}
-      loop={true}
       pagination={{
         clickable: true,
         type: 'fraction',

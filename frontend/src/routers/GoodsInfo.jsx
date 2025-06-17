@@ -7,6 +7,7 @@ import LoadingAnimation from '../components/LoadingAnimation.jsx';
 import MainGoodInfo from '../components/MainGoodInfo.jsx';
 import GoodsPrice from '../components/GoodsPrice.jsx';
 import RelativeGoods from '../components/RelativeGoods.jsx';
+import SmallReviewsComponent from '../components/SmallReviewsComponent.jsx';
 
 function GoodsInfo(){
     const { category, id } = useParams();
@@ -36,8 +37,13 @@ function GoodsInfo(){
         loadGoodsData();
     },[category,id])
 
+    function goToReviewsSection(){
+
+
+    }
+
 return (
-  <div className={`flex items-center max-w-[1200px] mx-auto w-full min-h-[70vh]`}>
+  <div className={`flex items-center justify-center max-w-[1200px] mx-auto w-full min-h-[70vh]`}>
     {isError && <CrititcalErrorWindow message={errorMessage} />}
     {isLoading ? (
       <LoadingAnimation className="flex justify-center items-center" />
@@ -48,7 +54,7 @@ return (
                 <GoodsPicturesSlider mainPicture={goodsData[0].image_url} pictures={goodsData[2]} />
             )}
         </div>
-        <div className='flex flex-col gap-4 w-full'>
+        <div className='flex flex-col justify-between w-full max-w-[700px]'>
           {goodsData[0] && (
             <MainGoodInfo  
             title={goodsData[0].name}
@@ -56,6 +62,7 @@ return (
             rating={goodsData[0].rating}
             voted={goodsData[0].voted}
             id={goodsData[0].id}
+            goToReviewsSection={goToReviewsSection}
             />
           )}
           {goodsData[3] && (
@@ -72,7 +79,9 @@ return (
             id={goodsData[0].id}
             />
           )}
-
+          {goodsData[0] && (
+            <SmallReviewsComponent id={goodsData[0].id} goToReviewsSection={goToReviewsSection}/>
+          )}
         </div>
       </div>
     )}

@@ -85,8 +85,8 @@ async def get_goods_info(db: db_dependancy, category: str, goods_id: int):
 
 from fastapi import Path, Depends
 
-@router.get("/{category}/{id}/reviews", status_code=status.HTTP_200_OK)
-async def get_goods_reviews(db: db_dependancy,id: int = Path()):
+@router.get("/{categoty}/{id}/reviews", status_code=status.HTTP_200_OK)
+async def get_goods_reviews(db: db_dependancy,id: int = Path(gt=0)):
     goods_id = id
 
     reviews = []
@@ -120,4 +120,4 @@ async def get_goods_reviews(db: db_dependancy,id: int = Path()):
         }
         response.append(review_data)
 
-    return reviews
+    return response

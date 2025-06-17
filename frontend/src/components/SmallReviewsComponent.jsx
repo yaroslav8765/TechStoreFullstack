@@ -1,9 +1,75 @@
+import { useEffect, useState } from 'react';
+import SingleSmallReview from './SingleSmallReview';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Navigation } from 'swiper/modules';
 
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import './GoodsPicturesSlider.css';
+import LoadingAnimation from './LoadingAnimation';
 
-function SmallReviewsComponent(){
-    return <>
-    
-    </>
+function SmallReviewsComponent({ id, goToReviewsSection }) {
+    const [reviews, setReviews] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+            try {
+                const API_URL = import.meta.env.VITE_API_URL;
+                const response = await fetch(`${API_URL}/goods/aboba/${id}/reviews`);
+                if (response.ok) {
+                    const resData = await response.json();
+                    setReviews(resData);
+                    console.log(resData);
+                } else {
+                    console.error('Failed to fetch reviews');
+                }
+            } catch (error) {
+                console.error('Error fetching reviews:', error);
+            }
+            setIsLoading(false);
+        };
+
+        fetchData();
+    }, [id]);
+
+    return (
+        <div className="flex items-center justify-center w-full max-w-4xl mx-auto my-6 min-h-[130px]">
+            {isLoading?<LoadingAnimation />:
+            <Swiper
+                pagination={{ type: 'fraction' }}
+                spaceBetween={32}
+                navigation={true}
+                modules={[Pagination, Navigation]}
+                className="mySwiper rounded-md"
+            >
+                {reviews.length > 0 ? (
+                    <>
+                    {reviews.slice(0, 5).map((review) => (
+                        <SwiperSlide key={review.id}>
+                            <SingleSmallReview review={review} />
+                        </SwiperSlide>
+                    ))}
+                    <SwiperSlide >
+                        <div onClick={goToReviewsSection} className='flex justify-center items-center shadow-md rounded-2xl p-4 w-full max-w-md transition hover:shadow-lg '>
+                            <p className="text-gray-900 hover:underline cursor-pointer hover:scale-102">See more...</p>
+                        </div>
+                    </SwiperSlide>
+                    </>
+                ) : (
+                    <SwiperSlide>
+                        <div className="flex items-center justify-center h-40">
+                            <p className="text-gray-600 text-xl font-medium">
+                                There are no reviews yet.
+                            </p>
+                        </div>
+                    </SwiperSlide>
+                )}
+            </Swiper>
+            }
+        </div>
+    );
 }
 
 export default SmallReviewsComponent;

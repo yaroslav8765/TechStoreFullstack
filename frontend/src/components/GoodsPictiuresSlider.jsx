@@ -22,7 +22,7 @@ function GoodsPicturesSlider({mainPicture, pictures}){
     }
     }
 
-    return <div className='flex flex-col max-h-[650px] max-w-[480px] gap-4'>
+    return <div className='flex flex-col max-h-[650px] max-w-[500px] gap-4'>
         <div className='max-h-[500px]'>
             <Swiper
                 pagination={{
