@@ -185,3 +185,11 @@ class GoodsRelatives(Base):
 
     good_one_ref = relationship("Goods", foreign_keys=[good_one], backref="related_from")
     good_two_ref = relationship("Goods", foreign_keys=[good_two], backref="related_to")
+
+
+class RecentlyWatchedGoods(Base):
+    __tablename__ = 'recently_watched_goods'
+
+    id                      = Column(Integer, primary_key=True, index=True)  
+    goods_id                = Column(Integer, ForeignKey("goods.id"))
+    users_id                 = Column(Integer, ForeignKey("users.id"))

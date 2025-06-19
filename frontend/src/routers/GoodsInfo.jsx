@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getAuthToken, checkAuthLoader,removeToken } from "../../util/auth.js"
 import GoodsPicturesSlider from '../components/GoodsPictiuresSlider.jsx';
 import CrititcalErrorWindow from '../ui/CrititcalErrorWindow.jsx';
@@ -18,6 +18,7 @@ function GoodsInfo(){
     const [isError, setIsError] = useState(false);
     const [goodsData, setGoodsData] = useState([]);
     const [isExpanded, setIsExpanded] = useState(false);
+    const targetRef = useRef(null);
 
     function expandFunction(){
       setIsExpanded(!isExpanded)
@@ -38,6 +39,17 @@ function GoodsInfo(){
                 if (response.ok) {
                     setGoodsData(resData);
                     console.log(resData);
+
+                    const authResult = checkAuthLoader();
+                    if (authResult) return authResult;
+                    const token = getAuthToken();
+                    const response2 = await fetch(`${API_URL}/user/add-good-to-recently-watched?good_id=${resData[0].id}`,{
+                      method:"POST",
+                      headers: {
+                      "Content-type":"application/json",
+                      "Authorization": `Bearer ${token}`
+                      }
+                    })
                 } else {
 
                 }
@@ -46,9 +58,11 @@ function GoodsInfo(){
         loadGoodsData();
     },[category,id])
 
+
+
+
     function goToReviewsSection(){
-
-
+      targetRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
 return (
@@ -99,7 +113,9 @@ return (
         {goodsData[0] && <Description Description={goodsData[0].description} isExpanded={isExpanded} />}
         </div>
         {goodsData[0] && (
+          <div ref={targetRef} className='flex w-full'>
           <BigReviewsComponent id={goodsData[0].id} voted={goodsData[0].voted} />
+          </div>
         )}
       </div>
     )}

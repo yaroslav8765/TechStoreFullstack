@@ -55,11 +55,11 @@ function BigReviewsComponent({ id, voted }) {
                             <SingleBigReview review={review}/>
                         ))
                     ) : (
-                        <p className="text-gray-500">No reviews available.</p>
+                        <p className="text-gray-500 text-xl text-center m-6 mt-8">No reviews available.</p>
                     )}
                 </div>
             )}
-            <div className="flex gap-2">
+            <div className="flex gap-2 mt-2">
                 <PagginationButton 
                 mode="left" 
                 onClick={() => setPage(prev => Math.max(1, prev - 1))}

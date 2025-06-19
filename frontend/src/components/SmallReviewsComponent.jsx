@@ -42,7 +42,7 @@ function SmallReviewsComponent({ id, goToReviewsSection }) {
                 spaceBetween={32}
                 navigation={true}
                 modules={[Pagination, Navigation]}
-                className="mySwiper rounded-md"
+                className="mySwiper rounded-xl"
             >
                 {reviews.length > 0 ? (
                     <>
@@ -58,14 +58,15 @@ function SmallReviewsComponent({ id, goToReviewsSection }) {
                     </SwiperSlide>
                     </>
                 ) : (
-                    <SwiperSlide>
-                        <div className="flex items-center justify-center h-40">
+                    <SwiperSlide >
+                        <div className="flex items-center justify-center max-h-[130px]">
                             <p className="text-gray-600 text-xl font-medium">
                                 There are no reviews yet.
                             </p>
                         </div>
-                    </SwiperSlide>
-                )}
+                    </SwiperSlide >
+                    )}
+                    
             </Swiper>
             }
         </div>

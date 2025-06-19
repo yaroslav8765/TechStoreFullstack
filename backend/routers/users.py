@@ -6,7 +6,7 @@ from sqlalchemy import text, func
 from typing import Annotated
 from ..routers.auth import get_current_user
 from starlette import status
-from ..models import Goods, Basket, GoodsRelatives, OrderItem, Orders, Users, GoodsRating
+from ..models import Goods, Basket, GoodsRelatives, OrderItem, Orders, Users, GoodsRating, RecentlyWatchedGoods
 from ..routers.email_actions.email_verification import send_verification_email
 from ..routers.auth import check_if_user_enter_email_or_phone_num
 from ..routers.email_actions.email_mailing import send_order_details, send_cancel_order_notification
@@ -449,3 +449,41 @@ async def show_order_info(db: db_dependancy, order_number: int, user: user_depen
         "order_items": order_items,
         "goods": goods
     }
+
+
+@router.post("/add-good-to-recently-watched", status_code=status.HTTP_201_CREATED)
+async def add_to_recently_watched(user:user_dependency, db: db_dependancy, good_id:Annotated[int, Query(ge=1)]):
+    if user is None:
+
+        raise HTTPException(status_code=401, detail='Authentication Failed')
+    
+    goodInDB = db.query(RecentlyWatchedGoods).filter(RecentlyWatchedGoods.goods_id == good_id, RecentlyWatchedGoods.users_id == user.get("id")).first()
+
+    if(goodInDB):
+        # return{"message":"goods already in db"}
+        db.delete(goodInDB)
+    
+    model = RecentlyWatchedGoods(
+        goods_id=good_id,
+        users_id=user.get("id") 
+    )
+    db.add(model)
+    db.commit()
+    return {"message":"Added succesfully"}
+
+@router.get("/get-users-recently-watched-goods", status_code=status.HTTP_200_OK)
+async def get_users_recently_watched_goods(user:user_dependency, db: db_dependancy):
+    if user is None:
+
+        raise HTTPException(status_code=401, detail='Authentication Failed')
+    
+    goods = db.query(RecentlyWatchedGoods).filter(RecentlyWatchedGoods.users_id == user.get("id")).all()
+    
+    goods_ids = [g.goods_id for g in goods]
+    
+    if not goods_ids:
+        return []  
+    
+    response = db.query(Goods).filter(Goods.id.in_(goods_ids)).all()
+
+    return response

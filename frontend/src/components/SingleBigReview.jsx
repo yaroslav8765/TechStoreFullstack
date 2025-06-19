@@ -6,7 +6,7 @@ function SingleBigReview({ review }) {
     <div className="p-4 bg-white shadow-md hover:shadow-lg rounded-2xl space-y-2">
 
 
-    <div className='flex justify-between'>
+    <div className='flex justify-between items-center'>
       <div className="flex gap-2 items-center text-lg font-semibold text-gray-800">
          <Rating
         className="self-start"
