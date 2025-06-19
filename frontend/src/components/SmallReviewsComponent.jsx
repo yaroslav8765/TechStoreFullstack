@@ -17,7 +17,7 @@ function SmallReviewsComponent({ id, goToReviewsSection }) {
             setIsLoading(true);
             try {
                 const API_URL = import.meta.env.VITE_API_URL;
-                const response = await fetch(`${API_URL}/goods/aboba/${id}/reviews`);
+                const response = await fetch(`${API_URL}/goods/aboba/${id}/reviews?page=1&page_size=5`);
                 if (response.ok) {
                     const resData = await response.json();
                     setReviews(resData);

@@ -10,6 +10,7 @@ import RelativeGoods from '../components/RelativeGoods.jsx';
 import SmallReviewsComponent from '../components/SmallReviewsComponent.jsx';
 import Description from '../components/Description.jsx';
 import CharacteristicsTable from '../components/CharacteristicsTable.jsx';
+import BigReviewsComponent from '../components/BigReviewsComponent.jsx';
 
 function GoodsInfo(){
     const { category, id } = useParams();
@@ -56,7 +57,7 @@ return (
     {isLoading ? (
       <LoadingAnimation className="flex justify-center items-center" />
     ) : (
-      <div className='flex flex-col items-start justify-start max-w-[1200px]'>
+      <div className='flex flex-col items-start justify-start max-w-[1200px] gap-4'>
         <div className='flex justify-between gap-4 w-full'>
           <div className="  rounded-xl shadow-md flex flex-col ">
               {goodsData[0] && (
@@ -93,10 +94,13 @@ return (
             )}
           </div>
         </div>
-        <div className='w-full flex justify-between max-w-[1200px] gap-4 mt-8'>
+        <div className='w-full flex justify-between max-w-[1200px] gap-4'>
         {goodsData[1] && <CharacteristicsTable characteristics={goodsData[1]} expandFunction={expandFunction} isExpanded={isExpanded}/>}
         {goodsData[0] && <Description Description={goodsData[0].description} isExpanded={isExpanded} />}
         </div>
+        {goodsData[0] && (
+          <BigReviewsComponent id={goodsData[0].id} voted={goodsData[0].voted} />
+        )}
       </div>
     )}
   </div>
