@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Depends, HTTPException
+from fastapi import APIRouter, Body,Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 from ...database import SessionLocal
 from sqlalchemy import func
@@ -85,8 +85,13 @@ async def get_goods_info(db: db_dependancy, category: str, goods_id: int):
 
 from fastapi import Path, Depends
 
-@router.get("/{categoty}/{id}/reviews", status_code=status.HTTP_200_OK)
-async def get_goods_reviews(db: db_dependancy,id: int = Path(gt=0)):
+@router.get("/{category}/{id}/reviews", status_code=status.HTTP_200_OK)
+async def get_goods_reviews(
+    db: db_dependancy,
+    id: int = Path(gt=0), 
+    page: int = Query(1, ge=1), 
+    page_size: int = Query(10, ge=1)
+    ):
     goods_id = id
 
     reviews = []
@@ -103,9 +108,13 @@ async def get_goods_reviews(db: db_dependancy,id: int = Path(gt=0)):
         relative_goods_id.add(good.good_two)
 
 
-    for id in relative_goods_id:
-        relative_reviews = db.query(GoodsRating).filter(GoodsRating.good_id == id).all()
-        reviews.extend(relative_reviews)
+    reviews = (
+        db.query(GoodsRating)
+        .filter(GoodsRating.good_id.in_(relative_goods_id))
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+        .all()
+    )
 
     response = []
     for review in reviews:

@@ -56,7 +56,11 @@ function PopularGoods({ title, category_link }) {
   useEffect( () => {
     async function fetchGoods(){
       setIsFetching(true)
-      const response = await fetch(`${API_URL}/goods/${category_link}`)
+      console.log(`${API_URL}/goods/${category_link}`);
+      const response = await fetch(`${API_URL}/goods/${category_link}`,{
+        method:"GET",
+        headers: { "Content-Type": "application/json" }
+      })
       const resData = await response.json();
       setGoodsCard(resData);
       setTimeout(updateButtonVisibility, 100);
