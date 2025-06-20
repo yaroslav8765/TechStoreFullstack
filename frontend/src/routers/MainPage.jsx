@@ -26,9 +26,9 @@ function MainPage() {
       <div className='flex flex-col max-w-[1200px] w-full mx-auto mt-4'>
 
       <MainCarousel listOfObjects={tempCarouselList}/>
-        <PopularGoods title="Best Sellers" category_link="bestsellers"/>
-        <PopularGoods title="Smartphones"  category_link="Smartphones"/>
-        <PopularGoods title="Laptops" category_link="Laptops"/>
+        <PopularGoods title="Best Sellers" request_link="goods/bestsellers" req_type="noToken"/>
+        <PopularGoods title="Smartphones"  request_link="goods/Smartphones" req_type="noToken"/>
+        <PopularGoods title="Laptops" request_link="goods/Laptops" req_type="noToken"/>
       </div>
     </div>
   )

@@ -2,7 +2,7 @@ from fastapi import APIRouter,Depends, HTTPException, Query
 from pydantic import BaseModel, Field, EmailStr
 from ..database import SessionLocal
 from sqlalchemy.orm import Session
-from sqlalchemy import text, func
+from sqlalchemy import text, func, desc
 from typing import Annotated
 from ..routers.auth import get_current_user
 from starlette import status
@@ -451,16 +451,19 @@ async def show_order_info(db: db_dependancy, order_number: int, user: user_depen
     }
 
 
+
+
+
+
+
 @router.post("/add-good-to-recently-watched", status_code=status.HTTP_201_CREATED)
 async def add_to_recently_watched(user:user_dependency, db: db_dependancy, good_id:Annotated[int, Query(ge=1)]):
     if user is None:
-
         raise HTTPException(status_code=401, detail='Authentication Failed')
     
     goodInDB = db.query(RecentlyWatchedGoods).filter(RecentlyWatchedGoods.goods_id == good_id, RecentlyWatchedGoods.users_id == user.get("id")).first()
 
     if(goodInDB):
-        # return{"message":"goods already in db"}
         db.delete(goodInDB)
     
     model = RecentlyWatchedGoods(
@@ -469,21 +472,40 @@ async def add_to_recently_watched(user:user_dependency, db: db_dependancy, good_
     )
     db.add(model)
     db.commit()
+
+    usersRecentGoods = db.query(RecentlyWatchedGoods).filter(RecentlyWatchedGoods.users_id==user.get("id")).all()
+    if len(usersRecentGoods) > 20:
+        for item in usersRecentGoods[20:]:
+            db.delete(item)
+        db.commit()
     return {"message":"Added succesfully"}
 
+
+
+
+
+
+
 @router.get("/get-users-recently-watched-goods", status_code=status.HTTP_200_OK)
-async def get_users_recently_watched_goods(user:user_dependency, db: db_dependancy):
+async def get_users_recently_watched_goods(user: user_dependency, db: db_dependancy):
     if user is None:
-
         raise HTTPException(status_code=401, detail='Authentication Failed')
-    
-    goods = db.query(RecentlyWatchedGoods).filter(RecentlyWatchedGoods.users_id == user.get("id")).all()
-    
-    goods_ids = [g.goods_id for g in goods]
-    
-    if not goods_ids:
-        return []  
-    
-    response = db.query(Goods).filter(Goods.id.in_(goods_ids)).all()
 
-    return response
+    goods = db.query(RecentlyWatchedGoods)\
+        .filter(RecentlyWatchedGoods.users_id == user.get("id"))\
+        .order_by(desc(RecentlyWatchedGoods.id))\
+        .all()
+
+    goods_ids = [g.goods_id for g in goods]
+
+    if not goods_ids:
+        return []
+
+    goods_map = {
+        good.id: good
+        for good in db.query(Goods).filter(Goods.id.in_(goods_ids)).all()
+    }
+
+    sorted_goods = [goods_map[gid] for gid in goods_ids if gid in goods_map]
+
+    return sorted_goods

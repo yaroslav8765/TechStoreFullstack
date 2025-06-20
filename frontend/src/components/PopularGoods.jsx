@@ -5,10 +5,11 @@ import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { Link } from "react-router-dom";
 import listOfLinks from "../links";
 import LoadingAnimation from "./LoadingAnimation";
+import { getAuthToken, checkAuthLoader, removeToken } from "../../util/auth.js"
 
 const CARD_WIDTH = 265;
 
-function PopularGoods({ title, category_link }) {
+function PopularGoods({ title, request_link, req_type }) {
   const API_URL = import.meta.env.VITE_API_URL;
   const containerRef = useRef();
   const [goodsCards, setGoodsCard] = useState([]);
@@ -56,14 +57,31 @@ function PopularGoods({ title, category_link }) {
   useEffect( () => {
     async function fetchGoods(){
       setIsFetching(true)
-      console.log(`${API_URL}/goods/${category_link}`);
-      const response = await fetch(`${API_URL}/goods/${category_link}`,{
+      if(req_type==="noToken"){
+        const response = await fetch(`${API_URL}/${request_link}`,{
         method:"GET",
         headers: { "Content-Type": "application/json" }
       })
       const resData = await response.json();
       setGoodsCard(resData);
       setTimeout(updateButtonVisibility, 100);
+      }else{
+        const authResult = checkAuthLoader();
+        if (authResult) return authResult;
+        const token = getAuthToken();
+    
+        const response = await fetch(`${API_URL}/${request_link}`, {
+            method: "GET",
+            headers: {
+            "Content-type":"application/json",
+            "Authorization": `Bearer ${token}`
+            }
+        });
+      const resData = await response.json();
+      setGoodsCard(resData);
+      setTimeout(updateButtonVisibility, 100);
+      }
+      
       setIsFetching(false)
     }
     fetchGoods();
@@ -114,13 +132,13 @@ function PopularGoods({ title, category_link }) {
           <LoadingAnimation/>
         </div>
       }
-      <div className="flex items-end justify-end mt-2">
+      {req_type==="noToken"?<div className="flex items-end justify-end mt-2">
         <Link className="text-white px-15 py-4 mr-11 font-bold text-xl rounded-xl gradient-btn-green"
-          to={category_link}
+          to={request_link}
         >
           See more
         </Link>
-      </div>
+      </div>:null}
     </div>
     </>
   );

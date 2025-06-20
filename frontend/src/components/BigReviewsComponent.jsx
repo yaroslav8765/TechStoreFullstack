@@ -52,7 +52,7 @@ function BigReviewsComponent({ id, voted }) {
                 <div className="flex flex-col gap-4 w-full ">
                     {reviews.length > 0 ? (
                         reviews.map((review) => (
-                            <SingleBigReview review={review}/>
+                            <SingleBigReview key={review.id} review={review}/>
                         ))
                     ) : (
                         <p className="text-gray-500 text-xl text-center m-6 mt-8">No reviews available.</p>

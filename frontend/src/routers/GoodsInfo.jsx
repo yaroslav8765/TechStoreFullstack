@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import { getAuthToken, checkAuthLoader,removeToken } from "../../util/auth.js"
 import GoodsPicturesSlider from '../components/GoodsPictiuresSlider.jsx';
 import CrititcalErrorWindow from '../ui/CrititcalErrorWindow.jsx';
 import LoadingAnimation from '../components/LoadingAnimation.jsx';
@@ -11,6 +10,8 @@ import SmallReviewsComponent from '../components/SmallReviewsComponent.jsx';
 import Description from '../components/Description.jsx';
 import CharacteristicsTable from '../components/CharacteristicsTable.jsx';
 import BigReviewsComponent from '../components/BigReviewsComponent.jsx';
+import PopularGoods from '../components/PopularGoods.jsx';
+import { getAuthToken, checkAuthLoader, removeToken } from "../../util/auth.js"
 
 function GoodsInfo(){
     const { category, id } = useParams();
@@ -117,6 +118,9 @@ return (
           <BigReviewsComponent id={goodsData[0].id} voted={goodsData[0].voted} />
           </div>
         )}
+        <div className='flex flex-col max-w-[1200px] w-full mx-auto mt-4'>
+          <PopularGoods title="You recently watched" request_link="user/get-users-recently-watched-goods"/>
+        </div>
       </div>
     )}
   </div>
