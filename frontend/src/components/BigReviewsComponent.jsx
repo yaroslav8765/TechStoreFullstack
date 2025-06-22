@@ -43,12 +43,14 @@ function BigReviewsComponent({ id, voted }) {
     }
 
 
-    return<div className="flex justify-center w-full">
-        <div className="flex flex-col w-full min-h-[130px] border-1 border-gray-200 p-4 rounded-2xl">
+    return<div className="flex justify-center w-full min-h-[670px]">
+        <div className="flex flex-col w-full min-h-[670px] border-1 border-gray-200 p-4 rounded-2xl">
             <h2 className="text-gray-800 text-2xl font-bold border-black mb-4 border-b pb-2">Customers reviews</h2>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center min-h-[524px]">
                 {isLoading ? (
-                <LoadingAnimation className="flex justify-center items-center w-full h-full" />
+                <div className="flex justify-center items-center w-full h-full">
+                    <LoadingAnimation className="flex justify-center items-center w-full h-full " />
+                </div>
                 ) : (
                     <div className="flex flex-col gap-4 w-full ">
                         {reviews.length > 0 ? (
@@ -60,7 +62,9 @@ function BigReviewsComponent({ id, voted }) {
                         )}
                     </div>
                 )}
-                <div className="flex gap-2 mt-2">
+
+            </div>
+                <div className="flex gap-2 mt-2 items-center justify-center">
                     <PagginationButton 
                     mode="left" 
                     onClick={() => setPage(prev => Math.max(1, prev - 1))}
@@ -79,7 +83,6 @@ function BigReviewsComponent({ id, voted }) {
                     onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
                     />
                 </div>
-            </div>
         </div>
     </div>
 }

@@ -47,7 +47,7 @@ function GoodsCard(props) {
                         readOnly 
                         icon={<StarIcon style={{ color: '#f59e0b' }} />} 
                         emptyIcon={<StarIcon style={{ color: '#6f7787' }} />} 
-                        />
+                        /> 
 
                         <p className="text-black ml-1 text-lg">({props.voted})</p>
                     </div>

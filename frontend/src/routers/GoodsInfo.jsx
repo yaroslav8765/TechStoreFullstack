@@ -112,7 +112,7 @@ return (
         </div>
 
 
-      <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-4 w-full'>
         <div className="w-full flex max-w-[1200px] mx-auto gap-4  ">
           {goodsData[1] && (
             <div className="w-1/2">
@@ -140,7 +140,7 @@ return (
               <BigReviewsComponent id={goodsData[0].id} voted={goodsData[0].voted} />
             </div>
             <div className="w-1/2">
-              <CreateReview/>
+              <CreateReview goods_id={goodsData[0].id}/>
             </div>
           </div>
         )}
