@@ -23,7 +23,7 @@ function CharacteristicsTable({ characteristics, isExpanded, expandFunction}) {
     };
 
     return (
-        <div className="bg-white shadow-md rounded-2xl w-full p-6 mx-auto  overflow-hidden">
+        <div className="bg-white shadow-md rounded-2xl w-full p-6 mx-auto  overflow-hidden border-1 border-gray-200">
             <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">
                 Technical Specifications
             </h2>

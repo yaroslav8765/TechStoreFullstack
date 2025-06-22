@@ -11,6 +11,7 @@ import Description from '../components/Description.jsx';
 import CharacteristicsTable from '../components/CharacteristicsTable.jsx';
 import BigReviewsComponent from '../components/BigReviewsComponent.jsx';
 import PopularGoods from '../components/PopularGoods.jsx';
+import CreateReview from '../components/CreateReview.jsx';
 import { getAuthToken, checkAuthLoader, removeToken } from "../../util/auth.js"
 
 function GoodsInfo(){
@@ -109,17 +110,46 @@ return (
             )}
           </div>
         </div>
-        <div className='w-full flex justify-between max-w-[1200px] gap-4'>
-        {goodsData[1] && <CharacteristicsTable characteristics={goodsData[1]} expandFunction={expandFunction} isExpanded={isExpanded}/>}
-        {goodsData[0] && <Description Description={goodsData[0].description} isExpanded={isExpanded} />}
+
+
+      <div className='flex flex-col gap-4'>
+        <div className="w-full flex max-w-[1200px] mx-auto gap-4  ">
+          {goodsData[1] && (
+            <div className="w-1/2">
+              <CharacteristicsTable
+                characteristics={goodsData[1]}
+                expandFunction={expandFunction}
+                isExpanded={isExpanded}
+              />
+            </div>
+          )}
+          {goodsData[0] && (
+            <div className="w-1/2">
+              <Description
+                Description={goodsData[0].description}
+                isExpanded={isExpanded}
+              />
+            </div>
+          )}
         </div>
+
+
         {goodsData[0] && (
-          <div ref={targetRef} className='flex w-full'>
-          <BigReviewsComponent id={goodsData[0].id} voted={goodsData[0].voted} />
+          <div ref={targetRef} className="w-full flex max-w-[1200px] mx-auto gap-4">
+            <div className="w-1/2">
+              <BigReviewsComponent id={goodsData[0].id} voted={goodsData[0].voted} />
+            </div>
+            <div className="w-1/2">
+              <CreateReview/>
+            </div>
           </div>
         )}
+        </div>
+
+
+
         <div className='flex flex-col max-w-[1200px] w-full mx-auto mt-4'>
-          <PopularGoods title="You recently watched" request_link="user/get-users-recently-watched-goods"/>
+          <PopularGoods title="You recently watched" request_link="user/get-users-recently-watched-goods" see_more_link="none"/>
         </div>
       </div>
     )}

@@ -9,7 +9,7 @@ import { getAuthToken, checkAuthLoader, removeToken } from "../../util/auth.js"
 
 const CARD_WIDTH = 265;
 
-function PopularGoods({ title, request_link, req_type }) {
+function PopularGoods({ title, request_link, req_type, see_more_link }) {
   const API_URL = import.meta.env.VITE_API_URL;
   const containerRef = useRef();
   const [goodsCards, setGoodsCard] = useState([]);
@@ -78,6 +78,8 @@ function PopularGoods({ title, request_link, req_type }) {
             }
         });
       const resData = await response.json();
+      console.log("resData:", resData);
+
       setGoodsCard(resData);
       setTimeout(updateButtonVisibility, 100);
       }
@@ -134,7 +136,7 @@ function PopularGoods({ title, request_link, req_type }) {
       }
       {req_type==="noToken"?<div className="flex items-end justify-end mt-2">
         <Link className="text-white px-15 py-4 mr-11 font-bold text-xl rounded-xl gradient-btn-green"
-          to={request_link}
+          to={see_more_link}
         >
           See more
         </Link>

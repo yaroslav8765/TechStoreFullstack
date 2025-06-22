@@ -44,39 +44,41 @@ function BigReviewsComponent({ id, voted }) {
 
 
     return<div className="flex justify-center w-full">
-        <div className="flex flex-col items-center w-full max-w-[800px] min-h-[130px] border-1 border-gray-200 p-4 rounded-xl">
-            <h2 className="text-gray-800 text-2xl font-bold">Customers reviews</h2>
-            {isLoading ? (
-            <LoadingAnimation className="flex justify-center items-center w-full h-full" />
-            ) : (
-                <div className="flex flex-col gap-4 w-full ">
-                    {reviews.length > 0 ? (
-                        reviews.map((review) => (
-                            <SingleBigReview key={review.id} review={review}/>
-                        ))
-                    ) : (
-                        <p className="text-gray-500 text-xl text-center m-6 mt-8">No reviews available.</p>
-                    )}
+        <div className="flex flex-col w-full min-h-[130px] border-1 border-gray-200 p-4 rounded-2xl">
+            <h2 className="text-gray-800 text-2xl font-bold border-black mb-4 border-b pb-2">Customers reviews</h2>
+            <div className="flex flex-col items-center">
+                {isLoading ? (
+                <LoadingAnimation className="flex justify-center items-center w-full h-full" />
+                ) : (
+                    <div className="flex flex-col gap-4 w-full ">
+                        {reviews.length > 0 ? (
+                            reviews.map((review) => (
+                                <SingleBigReview key={review.id} review={review}/>
+                            ))
+                        ) : (
+                            <p className="text-gray-500 text-xl text-center m-6 mt-8">No reviews available.</p>
+                        )}
+                    </div>
+                )}
+                <div className="flex gap-2 mt-2">
+                    <PagginationButton 
+                    mode="left" 
+                    onClick={() => setPage(prev => Math.max(1, prev - 1))}
+                    />
+
+                    <input 
+                    className="border-1 border-gray-500  mt-2 rounded-md w-[60px] h-[40px]
+                    focus:border-cyan-600 focus:ring-1 focus:ring-cyan-300 outline-none text-gray-600 text-center
+                    "
+                    value={page}
+                    onChange={changePageHandler}
+                    />
+
+                    <PagginationButton 
+                    mode="right" 
+                    onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
+                    />
                 </div>
-            )}
-            <div className="flex gap-2 mt-2">
-                <PagginationButton 
-                mode="left" 
-                onClick={() => setPage(prev => Math.max(1, prev - 1))}
-                />
-
-                <input 
-                className="border-1 border-gray-500  mt-2 rounded-md w-[60px] h-[40px]
-                focus:border-cyan-600 focus:ring-1 focus:ring-cyan-300 outline-none text-gray-600 text-center
-                "
-                value={page}
-                onChange={changePageHandler}
-                />
-
-                <PagginationButton 
-                mode="right" 
-                onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
-                />
             </div>
         </div>
     </div>

@@ -21,7 +21,7 @@ const ThumbnailsSlider = ({ pictures, smallImageClick, mainPicture }) => {
         type: 'fraction',
       }}
       modules={[Navigation, Pagination]}
-      className="mySwiper"
+      className="mySwiper rounded-2xl"
     >
       <SwiperSlide>
         <SmallImage

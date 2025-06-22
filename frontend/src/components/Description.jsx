@@ -5,11 +5,11 @@ function Description({ Description,isExpanded }) {
 
     return (
         <>
-            <div className="shadow-md rounded-2xl max-w-[600px] bg-white">
+            <div className="shadow-md rounded-2xl w-full bg-white border-1 border-gray-200">
                 <div
                     className={`
                         transition-all duration-500 ease-in-out 
-                        ${isExpanded ? 'max-h-[1000px]' : 'max-h-[300px]'} 
+                        ${isExpanded ? 'max-h-[1000px]' : 'max-h-[303px]'} 
                         overflow-y-auto rounded-2xl
                     `}
                 >
