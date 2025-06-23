@@ -6,6 +6,7 @@ import 'swiper/css/navigation';
 import "./GoodsPicturesSlider.css";
 import { Pagination, Navigation } from 'swiper/modules';
 import ThumbnailsSlider from '../ui/ThumbnailsSlider';
+import ImageZoom from "react-image-zooom";
 
 
 function GoodsPicturesSlider({mainPicture, pictures}){
@@ -23,6 +24,7 @@ function GoodsPicturesSlider({mainPicture, pictures}){
     }
 
     return <div className='flex flex-col max-h-[650px] max-w-[500px] gap-4 rounded-xl'>
+        
         <div className='max-h-[500px]'>
             <Swiper
                 pagination={{
@@ -35,11 +37,18 @@ function GoodsPicturesSlider({mainPicture, pictures}){
                 className="mySwiper rounded-md"
                 onSwiper={setSwiperInstance}
             >
-                <SwiperSlide><img src={mainPicture} className='object-contain w-full h-full'/></SwiperSlide>
+                <SwiperSlide><ImageZoom  src={mainPicture} className='object-contain w-full h-full'/></SwiperSlide>
                 {pictures&& pictures.map((image, index)=>
-                    <SwiperSlide>
-                        <img src={image.url} className='swiper-slide'/>
+                    <SwiperSlide key={index}>
+                    <div className="h-[500px] w-full flex items-center justify-center overflow-hidden">
+                        <ImageZoom 
+                        src={image.url}
+                        className="h-full w-auto object-contain"
+                        />
+                    </div>
                     </SwiperSlide>
+
+
                 )}
             </Swiper>
         </div>
