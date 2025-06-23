@@ -379,6 +379,7 @@ async def post_review(db: db_dependancy, user: user_dependency, request: PostRev
 
 
     relative_goods_id = set()
+    relative_goods_id.add(request.good_id)
     relative_goods = db.query(GoodsRelatives).filter(GoodsRelatives.good_one == request.good_id).all()
 
     for good in relative_goods.copy():
@@ -400,6 +401,9 @@ async def post_review(db: db_dependancy, user: user_dependency, request: PostRev
                 avg_rating+=rate.rate
                 total_voted+=1
 
+    if total_voted == 0:
+        total_voted = 1
+        
     avg_rating = avg_rating/total_voted
 
     for id in relative_goods_id:
