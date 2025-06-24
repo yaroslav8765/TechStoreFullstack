@@ -19,11 +19,13 @@ function GoodsCard(props) {
                 <div className="flex flex-col items-center bg-gray-100 w-[240px] h-[400px] rounded-2xl shadow-lg p-4 hover:bg-gray-200 transition-bg duration-200" >
                     <Link to={`/${props.category}/${props.product_link}`}> 
                     {/* Picture */}
-                    <img 
-                    src={props.img}
-                    alt={props.producName}
-                    className="w-[180px] h-[180px] object-contain gap-y-2 mt-2 rounded-xl"
-                    />
+                    <div className="flex items-center justify-center w-full">
+                        <img 
+                            src={props.img}
+                            alt={props.producName}
+                            className="w-[180px] h-[180px] object-contain gap-y-2 mt-2 rounded-xl"
+                        />
+                    </div>
 
                     {/* Name */}
                     <p className="text-black text-xl text-left font-semibold mt-3 min-h-[55px] line-clamp-2 ">{props.producName}</p>

@@ -44,15 +44,26 @@ function NavBar() {
           </div>
         </div>
 
-        <div className="w-full flex items-center justify-between py-4 text-gray-700 text-xl font-bold max-w-[1200px] mx-auto">
-          <Tab />
-          <div className="flex gap-8">
-
-            <CategoryButton title="Smartphones" icon={SmartphoneIcon} categoty_link={"/Smartphones"}/>
+        <div className="w-full flex items-center justify-between py-4 text-gray-700 text-xl font-bold max-w-[1200px] mx-auto gap-8">
+          <div className="max-w-[150px]">
+            <Tab />
+          </div>
+          <div className="flex gap-8 flex-wrap w-full justify-around">
+            <div className="hidden sm:block">
+            <CategoryButton title="Smartphones" icon={SmartphoneIcon} categoty_link={"/Smartphones"} />
+            </div>
+            <div className="hidden sm:block">
             <CategoryButton title="Laptops" icon={LaptopChromebookIcon} categoty_link={"/Laptops"}/>
-            <CategoryButton title="Headphones" icon={HeadsetMicIcon} categoty_link={"/Headphones"}/>
-            <CategoryButton title="Mice" icon={MouseIcon} categoty_link={"/Mouses"}/>
-            <CategoryButton title="Keyboards" icon={KeyboardIcon} categoty_link={"/Keyboards"}/>
+            </div>
+            <div className="hidden md:block">
+              <CategoryButton title="Headphones" icon={HeadsetMicIcon} categoty_link={"/Headphones"}/>
+            </div>
+            <div className="hidden lg:block">
+              <CategoryButton title="Mice" icon={MouseIcon} categoty_link={"/Mouses"}/>
+            </div>
+            <div className="hidden xl:block">
+              <CategoryButton title="Keyboards" icon={KeyboardIcon} categoty_link={"/Keyboards"} />
+            </div>
           </div>
         </div>
       </div>
