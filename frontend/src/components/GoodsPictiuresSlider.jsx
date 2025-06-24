@@ -34,7 +34,7 @@ function GoodsPicturesSlider({mainPicture, pictures}){
                 navigation={true}
                 loop={true}
                 modules={[Pagination, Navigation]}
-                className="mySwiper rounded-md"
+                className="mySwiper rounded-md "
                 onSwiper={setSwiperInstance}
             >
                 <SwiperSlide><ImageZoom  src={mainPicture} className='object-contain w-full h-full'/></SwiperSlide>

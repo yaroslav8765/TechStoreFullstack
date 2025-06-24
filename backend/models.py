@@ -193,3 +193,10 @@ class RecentlyWatchedGoods(Base):
     id                      = Column(Integer, primary_key=True, index=True)  
     goods_id                = Column(Integer, ForeignKey("goods.id"))
     users_id                 = Column(Integer, ForeignKey("users.id"))
+
+class SavedGoods(Base):
+    __tablename__ = 'saved_goods'
+
+    id                      = Column(Integer, primary_key=True, index=True)  
+    goods_id                = Column(Integer, ForeignKey("goods.id"))
+    users_id                 = Column(Integer, ForeignKey("users.id"))

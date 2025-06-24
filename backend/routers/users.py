@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Depends, HTTPException, Query
+from fastapi import APIRouter,Depends, HTTPException, Path, Query
 from pydantic import BaseModel, Field, EmailStr
 from ..database import SessionLocal
 from sqlalchemy.orm import Session
@@ -6,7 +6,7 @@ from sqlalchemy import text, func, desc
 from typing import Annotated
 from ..routers.auth import get_current_user
 from starlette import status
-from ..models import Goods, Basket, GoodsRelatives, OrderItem, Orders, Users, GoodsRating, RecentlyWatchedGoods
+from ..models import Goods, Basket, GoodsRelatives, OrderItem, Orders, SavedGoods, Users, GoodsRating, RecentlyWatchedGoods
 from ..routers.email_actions.email_verification import send_verification_email
 from ..routers.auth import check_if_user_enter_email_or_phone_num
 from ..routers.email_actions.email_mailing import send_order_details, send_cancel_order_notification
@@ -513,3 +513,36 @@ async def get_users_recently_watched_goods(user: user_dependency, db: db_dependa
     sorted_goods = [goods_map[gid] for gid in goods_ids if gid in goods_map]
 
     return sorted_goods
+
+
+@router.post("/add-to-saved-goods/{goods_id}", status_code=status.HTTP_201_CREATED)
+async def add_to_saved_goods(user:user_dependency, db:db_dependancy, goods_id = Annotated[int, Path(ge=1)]):
+    if user is None:
+        raise HTTPException(status_code=401, detail='Authentication Failed')
+    
+    model = SavedGoods(
+        goods_id = goods_id,
+        users_id = user.get("id")
+    )
+
+    db.add(model)
+    db.commit()
+
+    return {"message":"added"}
+
+@router.get("/show-saved-goods", status_code=status.HTTP_200_OK)
+async def show_saved_goods(user:user_dependency, db:db_dependancy):
+    if user is None:
+        raise HTTPException(status_code=401, detail='Authentication Failed')
+    
+    response = db.query(SavedGoods).filter(SavedGoods.users_id == user.get("id")).all()
+
+    return response
+
+@router.delete("/delete-from-saved-goods/{goods_id}", status_code=status.HTTP_200_OK)
+async def delete_from_saved_goods(db:db_dependancy, user:user_dependency, goods_id = Annotated[int, Path(ge=1)]):
+    if user is None:
+        raise HTTPException(status_code=401, detail='Authentication Failed')
+    db.query(SavedGoods).filter(SavedGoods.goods_id == goods_id, SavedGoods.users_id == user.get("id")).delete()
+    db.commit()
+    return{"message":"deleted"}
