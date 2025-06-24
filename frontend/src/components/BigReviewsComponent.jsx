@@ -8,7 +8,7 @@ function BigReviewsComponent({ id, voted }) {
     const [reviews, setReviews] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const pageSize = 5;
+    const pageSize = 4;
     const totalPages = Math.max(1, Math.ceil(voted/pageSize));
 
 
@@ -43,10 +43,10 @@ function BigReviewsComponent({ id, voted }) {
     }
 
 
-    return<div className="flex justify-center w-full min-h-[670px]">
-        <div className="flex flex-col w-full min-h-[670px] border-1 border-gray-200 p-4 rounded-2xl">
+    return<div className="flex justify-center w-full">
+        <div className="flex flex-col w-full  border-1 border-gray-200 p-4 rounded-2xl">
             <h2 className="text-gray-800 text-2xl font-bold border-black mb-4 border-b pb-2">Customers reviews</h2>
-            <div className="flex flex-col items-center min-h-[524px]">
+            <div className="flex flex-col items-center min-h-[544px]">
                 {isLoading ? (
                 <div className="flex justify-center items-center w-full h-full">
                     <LoadingAnimation className="flex justify-center items-center w-full h-full " />
