@@ -60,9 +60,6 @@ function GoodsInfo(){
         loadGoodsData();
     },[category,id])
 
-
-
-
     function goToReviewsSection(){
       targetRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }

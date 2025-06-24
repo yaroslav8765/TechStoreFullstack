@@ -72,7 +72,7 @@ function CartComponent(){
     return <div className={`flex flex-col w-full items-center justify-center shadow-md rounded-xl ${isLoading ? 'bg-gray-100' : 'bg-white'}`}>
         {isError && <CrititcalErrorWindow message={errorMessage}/>}
         {isLoading ? <LoadingAnimation className="flex justify-center items-center"/> : <div>
-        <div className=" w-full h-[650px] ">
+        <div className=" w-full h-[520px] ">
               <h2 className="text-gray-800 text-3xl font-semibold text-center my-2">Your Cart</h2>
                 {usersGoods.length === 0 ? (
                 <div className="flex flex-col h-full items-center justify-evenly">
@@ -83,7 +83,7 @@ function CartComponent(){
                     />
                 </div>
                 ) : (
-                <div className=" max-h-[572px] overflow-y-auto z-50 bg-white scroll-smooth">
+                <div className=" max-h-[450px] overflow-y-auto z-50 bg-white scroll-smooth">
                     <div className="flex flex-col w-full">
                     {usersGoods.slice().reverse().map((item, index) => (
                         <SingleCartItem
