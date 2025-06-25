@@ -83,7 +83,7 @@ async function changeGoodHandler(e) {
       setIsMaxError(false);
       setIsMinError(true);
     }
-  } else {
+  } else if(newValue>1) {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
@@ -127,8 +127,8 @@ useEffect(() => {
 },[])
 
   return (
-    <div className="flex justify-around px-6">
-        <div className="px-2 w-[600px] box-border">
+    <div className="flex flex-col items-center sm:flex-row justify-around px-6">
+        <div className="px-2 w-full box-border">
         <SingleSearchBarResult
             img={props.image_url}
             title={props.name}

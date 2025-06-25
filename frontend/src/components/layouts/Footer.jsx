@@ -34,7 +34,7 @@ function Footer() {
                         <input 
                             type="email" 
                             placeholder="Email address" 
-                            className="px-3 py-2 border rounded-l-md w-full max-w-[200px] outline-none
+                            className="px-3 py-2 border rounded-l-md w-full max-w-[200px]
                             focus:border-cyan-600 focus:ring-1 focus:ring-cyan-300 outline-none"
                         />
                         <button 

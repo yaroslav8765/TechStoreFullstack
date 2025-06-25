@@ -12,8 +12,8 @@ function SingleSearchBarResult(props) {
           />
         </div>
         <div className="ml-2 flex flex-col w-full pt-2">
-          <h2 className="text-gray-700 font-semibold text-lg">{props.title}</h2>
-          <div className="flex mt-2">
+          <h2 className="text-gray-700 font-semibold text-md md:text-xl">{props.title}</h2>
+          <div className="flex flex-col sm:flex sm:flex-row mt-2 ">
             {props.old_price && (
               <p className="text-gray-600 text-md line-through">
                 {props.old_price}₴
@@ -27,7 +27,7 @@ function SingleSearchBarResult(props) {
               {props.price} ₴
             </p>
           </div>
-          <p className="text-gray-600 text-sm line-clamp-3">{props.description}</p>
+          <p className="text-gray-600 text-sm md:line-clamp-3 hidden sm:block">{props.description}</p>
         </div>
       </div>
     </Link>
