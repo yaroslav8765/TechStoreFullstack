@@ -15,6 +15,7 @@ import ChangePassword from './components/ChangePassword.jsx';
 import {action as changeUserInfoAction} from "./components/UsersInfo.jsx"
 import GoodsInfo from './routers/GoodsInfo.jsx';
 import Category from './routers/Category.jsx';
+import Checkout from './routers/Checkout.jsx';
 
 const router = createBrowserRouter([
     {
@@ -48,8 +49,12 @@ const router = createBrowserRouter([
             {
                 path:'/:category/:id',
                 element:<GoodsInfo/>
-            }
+            },
         ]
+    },
+    {
+        path:'/check-out', 
+        element:<Checkout/>
     }
 ]);
 

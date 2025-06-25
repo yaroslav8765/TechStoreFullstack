@@ -15,6 +15,9 @@ import SearchBar from "../../ui/SearchBar";
 import LogoLink from "../../ui/LogoLink";
 import CartComponentOverlay from "../CartComponentOverlay";
 import { useState } from "react";
+import SearchIcon from '@mui/icons-material/Search';
+
+
 
 function NavBar() {
   const token = useRouteLoaderData('root');
@@ -35,6 +38,9 @@ function NavBar() {
           <LogoLink />
           <SearchBar />
           <div className="flex items-center space-x-8">
+            <div className="block md:hidden">
+              <IconButton icon={SearchIcon}/>
+            </div>
             <Link to={token ? `${listOfLinks.profile}/users-info` : listOfLinks.auth}>
               <IconButton icon={PersonIcon} />
             </Link>
