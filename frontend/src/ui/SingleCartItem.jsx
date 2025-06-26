@@ -83,7 +83,7 @@ async function changeGoodHandler(e) {
       setIsMaxError(false);
       setIsMinError(true);
     }
-  } else if(newValue>1) {
+  } else if(newValue>=1) {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }

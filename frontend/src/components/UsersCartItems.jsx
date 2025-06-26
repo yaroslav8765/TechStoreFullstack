@@ -107,7 +107,20 @@ function UsersCartItem({extIsLoading}){
                 
                 )}
         </div>}
+        {extIsLoading || isLoading ? null :
+            usersGoods.length >= 1 && <div> 
+            <div className="flex gap-4 items-center w-full">
+                <div className="flex-grow border-t border-gray-300"></div>
+                    <div className="flex gap-2 pb-2">
+                    <h2 className="text-2xl font-semibold text-gray-900">Total:</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">{totalSum} ₴</h2>
+                    </div>
+                    <div className="flex-grow border-t border-gray-300"></div>
+                </div>
+            </div> 
+        }
     </div>
 }
+
 
 export default UsersCartItem;
