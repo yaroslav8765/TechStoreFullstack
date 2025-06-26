@@ -2,9 +2,8 @@ import { useState } from "react";
 import NovaPostInputCity from "../ui/NovaPostInputCity";
 import NovaPostInputDepartment from "../ui/NovaPostInputDepartment";
 
-function NovaPostSearch(){
-    const [cityName, setCityName] = useState("");
-    const [departmentName, setDepartmentName] = useState("");
+function NovaPostSearch({cityName, setCityName,departmentName, setDepartmentName}){
+
     const [isCityResultsShown, setCityIsResultShown] = useState(false);
     const [isDepartmentResultsShown, setIsDepartmentResultShown] = useState(false);
 

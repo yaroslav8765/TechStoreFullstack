@@ -55,7 +55,8 @@ useEffect(() => {
 }, []);
 
 
-    return <div className="max-w-[220px]">
+    return <div className="max-w-[220px] mt-4">
+      <p className="text-lg text-gray-600">Enter department name*</p>
       <input
         className={`bg-gray-50 h-[35px] rounded-md border border-gray-500 pl-2 
              focus:border-cyan-600 focus:ring-1 focus:ring-cyan-300 outline-none text-gray-600 text-lg w-full `}

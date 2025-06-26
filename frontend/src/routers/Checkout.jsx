@@ -3,15 +3,20 @@ import UsersCartItem from "../components/UsersCartItems";
 import AuthInput from "../ui/AuthInput";
 import NovaPostInput from "../ui/NovaPostInputCity";
 import NovaPostSearch from "../components/NovaPostSearch";
+import { useState } from "react";
 
 function Checkout(){
     function handleInputChange(){
 
     }
+
+    const [cityName, setCityName] = useState("");
+    const [departmentName, setDepartmentName] = useState("");
+    
     return <div className="flex flex-col max-w-[1200px] w-full mx-auto mt-4 shadow-md border border-gray-100 rounded-xl p-4">
         <LogoLink />
         <div className="flex justify-evenly">
-            <div className="flex flex-col items-center w-full max-w-[500px]">
+            <div className="flex flex-col items-center mt-10 w-full max-w-[500px]">
                 <div className="max-w-[300px]">
                 <AuthInput
                     label="Your name*"
@@ -38,14 +43,24 @@ function Checkout(){
                     errorMessage={""}
                 />    
 
-                <NovaPostSearch/>  
-                          
+                <NovaPostSearch 
+                    cityName={cityName}
+                    setCityName={setCityName}
+                    departmentName={departmentName}
+                    setDepartmentName={setDepartmentName}
+                />         
                 </div>
                 
             </div>
-            <div className="max-w-[500px]">
+            <div className="max-w-[500px] pb-10">
             <UsersCartItem/>
             </div>
+            
+        </div>
+        <div className="flex w-full justify-center pb-4">
+            <button className="gradient-btn-green w-[400px] h-[50px] rounded-3xl">
+                Confirm order
+            </button>
         </div>
     </div>
 }
