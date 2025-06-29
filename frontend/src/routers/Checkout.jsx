@@ -6,38 +6,49 @@ import NovaPostSearch from "../components/NovaPostSearch";
 import { useState } from "react";
 
 function Checkout(){
-    function handleInputChange(){
-
+    function handleInputChange(event){
+        const { name, value } = event.target;
+        if (name === 'first_name') {setFirstName(value)}
+        if(name === 'last_name') {setLastName(value)}
+        if(name === 'phone_number'){setPhoneNumber(value)}
     }
 
     const [cityName, setCityName] = useState("");
     const [departmentName, setDepartmentName] = useState("");
-    
+    const [departmentFullName, setDepartmentFullname] = useState('');
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+
+
+
     return <div className="flex flex-col max-w-[1200px] w-full mx-auto mt-4 shadow-md border border-gray-100 rounded-xl p-4">
         <LogoLink />
         <div className="flex justify-evenly">
-            <div className="flex flex-col items-center mt-10 w-full max-w-[500px]">
+            <div className="flex flex-col items-center mt-4 w-full max-w-[300px]">
+                <p className="text-gray-800 text-3xl font-semibold">Order confirmation</p>
+                <p className="text-gray-500 mt-2">Please, make sure, that all data is correct</p>
                 <div className="max-w-[300px]">
                 <AuthInput
-                    label="Your name*"
+                    label="Your first name*"
                     placeholder="Enter your name"
-                    value="dsfs"
+                    value={firstName}
                     onChange={handleInputChange}
-                    name="username"
+                    name="first_name"
                     errorMessage={""}
                 />
                 <AuthInput
-                    label="Your surname*"
+                    label="Your last name*"
                     placeholder="Enter surname"
-                    value="dsfs"
+                    value={lastName}
                     onChange={handleInputChange}
-                    name="surname"
+                    name="last_name"
                     errorMessage={""}
                 />
                 <AuthInput
                     label="Phone number*"
                     placeholder="Enter your phone number"
-                    value="dsfs"
+                    value={phoneNumber}
                     onChange={handleInputChange}
                     name="phone_number"
                     errorMessage={""}
@@ -48,6 +59,8 @@ function Checkout(){
                     setCityName={setCityName}
                     departmentName={departmentName}
                     setDepartmentName={setDepartmentName}
+                    departmentFullName={departmentFullName}
+                    setDepartmentFullname={setDepartmentFullname}
                 />         
                 </div>
                 
@@ -58,7 +71,16 @@ function Checkout(){
             
         </div>
         <div className="flex w-full justify-center pb-4">
-            <button className="gradient-btn-green w-[400px] h-[50px] rounded-3xl">
+            <button 
+                className="gradient-btn-green w-[400px] h-[50px] rounded-3xl"
+                onClick={console.log(`
+                    FirtsName:${firstName}
+                    Last name: ${lastName}
+                    Phone number: ${phoneNumber}
+                    City: ${cityName}
+                    Department: ${departmentFullName}
+                    `)}
+            >
                 Confirm order
             </button>
         </div>

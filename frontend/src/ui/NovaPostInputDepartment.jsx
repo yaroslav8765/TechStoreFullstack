@@ -2,44 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import InputSearchResult from "./InputSearchResult";
 
-function NovaPostInputDepartment({placeholder, onChange, value,setValue, name,showResults, hideResults,isResultsShown, cityName}){
+function NovaPostInputDepartment({placeholder, onChange, value,setValue, name,showResults, hideResults,isResultsShown, cityName, isCityFound, departmentFullName, isDepartmentFound,setIsDepartmentFound, setDepartmentFullname,results}){
   const containerRef = useRef(null);
-  const [results, setResults] = useState([]);
-  const [cityFullName, setCityFullName] = useState("");
   
   function setInput(text){
     setValue(text);
     hideResults();
   }
-
-  useEffect(()=>{
-    async function getCities() {
-      if(cityName !== ""){
-        const novaPostKey = import.meta.env.NOVA_POST_API_KEY;
-        const response = await fetch(`https://api.novaposhta.ua/v2.0/json/`,{
-            method: "POST",
-            headers: {
-            "Content-type":"application/json",
-            },
-            body: JSON.stringify({
-            apiKey: novaPostKey,
-            modelName: "AddressGeneral",
-            calledMethod: "getWarehouses",
-            methodProperties: {
-                "FindByString": value,
-                "CityName" : cityName
-            }
-            })
-        })
-        if(response.ok){
-            const resData = await response.json();
-            console.log(resData);
-            setResults(resData);
-        }
-        }
-    }
-    getCities();
-  },[value, cityName])
 
 useEffect(() => {
   function handleClickOutside(event) {
@@ -55,18 +24,21 @@ useEffect(() => {
 }, []);
 
 
-    return <div className="max-w-[220px] mt-4">
-      <p className="text-lg text-gray-600">Enter department name*</p>
+    return <div className={`max-w-[220px] mt-4 block ` }>
+      <p className={`text-lg text-gray-600 ${isDepartmentFound? "text-green-600" : ""}`}>Enter department name*</p>
       <input
         className={`bg-gray-50 h-[35px] rounded-md border border-gray-500 pl-2 
-             focus:border-cyan-600 focus:ring-1 focus:ring-cyan-300 outline-none text-gray-600 text-lg w-full `}
+             focus:border-cyan-600 focus:ring-1 focus:ring-cyan-300 outline-none text-gray-600 text-lg w-full 
+             ${isCityFound ? "" : "bg-gray-200"}`}
         placeholder={placeholder}
         onChange={onChange}
         value={value}
         name={name}
         onClick={showResults}
+        disabled={isCityFound ? false : true}
+        autoComplete="off"
       />
-      <p className="text-gray-400 text-sm">{cityFullName}</p>
+      <p className="text-gray-400 text-sm">{departmentFullName}</p>
       <div ref={containerRef} className="max-h-[200px] overflow-y-auto scroll-smooth max-w-[220px] absolute z-50">
         {isResultsShown && Array.isArray(results?.data) &&
           results.data.map((city, index) => (
@@ -77,7 +49,8 @@ useEffect(() => {
                 setInput(
                   `${city.Description}`
                 );
-                setCityFullName(`${city.Description}`)
+                setDepartmentFullname(`${city.Description}`);
+                setIsDepartmentFound(true);
               }
               }
             />
