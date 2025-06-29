@@ -2,15 +2,12 @@ import { useState, useEffect } from "react";
 import NovaPostInputCity from "../ui/NovaPostInputCity";
 import NovaPostInputDepartment from "../ui/NovaPostInputDepartment";
 
-function NovaPostSearch({cityName, setCityName,departmentName, setDepartmentName, departmentFullName, setDepartmentFullname}){
+function NovaPostSearch({cityName,isCityFound,setIsCityFound,isDepartmentFound,setIsDepartmentFound, setCityName,departmentName, setDepartmentName, departmentFullName, setDepartmentFullname, cityFullName, setCityFullName}){
 
     const [isCityResultsShown, setCityIsResultShown] = useState(false);
     const [isDepartmentResultsShown, setIsDepartmentResultShown] = useState(false);
-    const [isCityFound, setIsCityFound] = useState(false);
-    const [cityFullName, setCityFullName] = useState("");
     const [cityFullNameUnderInput, setCityFullNameUnderInput] = useState("");
     const [debouncedCityName, setDebouncedCityName] = useState('');
-    const [isDepartmentFound, setIsDepartmentFound] = useState(false);
     const [debouncedDepartmentName, setDebouncedDepartmentName] = useState('');
     const [citySearchResults, setCitySearchResults] = useState();
     const [departmentSearchResults, setDepartmentSearchResults] = useState();
@@ -116,7 +113,7 @@ function NovaPostSearch({cityName, setCityName,departmentName, setDepartmentName
             calledMethod: "getWarehouses",
             methodProperties: {
                 "FindByString": departmentName,
-                "CityName" : cityName
+                "CityName" : cityFullNameUnderInput
             }
             })
         })
@@ -128,6 +125,9 @@ function NovaPostSearch({cityName, setCityName,departmentName, setDepartmentName
             if(firstDepartment){
                 setDepartmentFullname(firstDepartment.Description)
                 setIsDepartmentFound(true);
+            }else{
+                setIsDepartmentFound(false);
+                setDepartmentFullname("");
             }
         } 
         if (debouncedDepartmentName.length === 0) {

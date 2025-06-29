@@ -35,6 +35,7 @@ function ChangePassword(){
     }
 
 
+    
     async function submitHandler() {
         if(newPasswordOne === newPasswordTwo){
             const postData = {

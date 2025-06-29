@@ -24,7 +24,7 @@ useEffect(() => {
 }, []);
 
 
-    return <div className={`max-w-[220px] mt-4 block ` }>
+    return <div className={` mt-4 block ` }>
       <p className={`text-lg text-gray-600 ${isDepartmentFound? "text-green-600" : ""}`}>Enter department name*</p>
       <input
         className={`bg-gray-50 h-[35px] rounded-md border border-gray-500 pl-2 
@@ -39,7 +39,7 @@ useEffect(() => {
         autoComplete="off"
       />
       <p className="text-gray-400 text-sm">{departmentFullName}</p>
-      <div ref={containerRef} className="max-h-[200px] overflow-y-auto scroll-smooth max-w-[220px] absolute z-50">
+      <div ref={containerRef} className="max-h-[200px] overflow-y-auto scroll-smooth absolute z-50">
         {isResultsShown && Array.isArray(results?.data) &&
           results.data.map((city, index) => (
             <InputSearchResult
