@@ -4,6 +4,7 @@ import AuthInput from "../ui/AuthInput";
 import NovaPostInput from "../ui/NovaPostInputCity";
 import NovaPostSearch from "../components/NovaPostSearch";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { parsePhoneNumberFromString, PhoneNumber } from 'libphonenumber-js';
 import { debounce } from "@mui/material";
 import { checkAuthLoader, getAuthToken } from "../../util/auth";
@@ -16,6 +17,7 @@ function isValidPhoneNumber(input) {
 
 
 function Checkout(){
+    const navigate = useNavigate();
     const [cityName, setCityName] = useState("");
     const [cityFullName, setCityFullName] = useState("");
     const [departmentName, setDepartmentName] = useState("");
@@ -30,6 +32,7 @@ function Checkout(){
     const [isSubmiting, setIsSubmiting] = useState(false);
     const [isSubmitingError, setSubmitingError] = useState(false);
     const [submitErrorDetails, setSubmitErrorsDetails] = useState("");
+    const [isOrderWasSuccessful, setIsOrderWasSuccessful] = useState(false);
 
     async function submitHandler() {
         setIsSubmiting(true);
@@ -54,7 +57,50 @@ function Checkout(){
             setSubmitErrorsDetails("Invalid department")
         }
 
-
+        const API_URL = import.meta.env.VITE_API_URL;
+        const authResult = checkAuthLoader();
+        let response;
+        if(authResult) {
+            response = await fetch(`${API_URL}/user/order`,{
+                method:"POST",
+                headers:{
+                    "Content-type":"application/json"
+                },
+                body:JSON.stringify({
+                    reciever_first_name: firstName,
+                    reciever_last_name: lastName,
+                    reciever_phone_number: phoneNumber,
+                    shipping_city: cityFullName,
+                    nova_post_department: departmentFullName
+                })
+            })
+        } else {
+        console.log({reciever_first_name: firstName,
+                reciever_last_name: lastName,
+                reciever_phone_number: phoneNumber,
+                shipping_city: cityFullName,
+                nova_post_department: departmentFullName})
+        const token = getAuthToken();
+        response = await fetch(`${API_URL}/user/order`,{
+            method:"POST",
+            headers:{
+                "Content-type":"application/json",
+                "Authorization" : `Bearer ${token}`
+            },
+            body:JSON.stringify({
+                reciever_first_name: firstName,
+                reciever_last_name: lastName,
+                reciever_phone_number: phoneNumber,
+                shipping_city: cityFullName,
+                nova_post_department: departmentFullName
+                })
+            })
+        }
+        if(response.ok){
+            const resData = await response.json();
+            setIsOrderWasSuccessful(true);
+            navigate(`/check-out/congrats/${resData.order_number}`)
+        }
         ////Here's sumbit fetch
         
         setIsSubmiting(false);

@@ -4,6 +4,7 @@ import dotenv
 dotenv.load_dotenv(verbose=True)
 
 class Settings(BaseSettings):
+    API_BASE_URL: str
     SECRET_KEY: str
     ALGORITHM: str
     MAIL_PASSWORD: str

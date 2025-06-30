@@ -1,10 +1,10 @@
-from fastapi import APIRouter,Depends, HTTPException, Path, Query
+from fastapi import APIRouter,Depends, HTTPException, Path, Query,Request
 from pydantic import BaseModel, Field, EmailStr
 from ..database import SessionLocal
 from sqlalchemy.orm import Session
 from sqlalchemy import text, func, desc
 from typing import Annotated
-from ..routers.auth import get_current_user
+from ..routers.auth import get_current_user, get_current_user_with_str_token
 from starlette import status
 from ..models import Goods, Basket, GoodsRelatives, OrderItem, Orders, SavedGoods, Users, GoodsRating, RecentlyWatchedGoods
 from ..routers.email_actions.email_verification import send_verification_email
@@ -12,6 +12,9 @@ from ..routers.auth import check_if_user_enter_email_or_phone_num
 from ..routers.email_actions.email_mailing import send_order_details, send_cancel_order_notification
 from passlib.context import CryptContext
 from typing import Optional
+import httpx
+from ..config import settings
+from .auth import CreateUserRequest
 
 router = APIRouter(
     prefix = "/user",
@@ -39,14 +42,20 @@ class EditTheBasketRequest(BaseModel):
     new_quantity: int = Field(gt = 0)
 
 class CreateOrderRequest(BaseModel):
-    reciever_name: str = Field(min_length = 2, max_length = 30)
-    shipping_adress: str = Field(min_length = 2, max_length = 100)
+    reciever_first_name: str = Field(min_length = 2, max_length = 30)
+    reciever_last_name: str = Field(min_length=2, max_length=30)
+    reciever_phone_number: str = Field(min_length=10, max_length=14)
+    shipping_city: str = Field(min_length=2, max_length=80) 
+    nova_post_department: str = Field(min_length = 2, max_length = 300)
 
     model_config = {
         "json_schema_extra" : {
             "example" : {
-                "reciever_name" : "Tohru", 
-                "shipping_adress" : "Miss Kobayashi's Home"
+                "reciever_first_name" : "Ярослав", 
+                "reciever_last_name" : "Печоркін",
+                "reciever_phone_number": "+380637014924",
+                "shipping_city": "Чернігів",
+                "nova_post_department":"Відділення №18 (до 30 кг на одне місце): вул. П'ятницька, 49"
             }
         }
     }
@@ -182,57 +191,89 @@ async def delete_goods_from_basket(db: db_dependancy, user: user_dependency, goo
     db.commit()
 
 
-@router.post("/order", status_code = status.HTTP_200_OK)
-async def create_order(db: db_dependancy, user: user_dependency, order: CreateOrderRequest):
-    if user is None:
-        return {"message": "Sorry, but at this moment if you want to add good to the basket you need to create accout first"}
-        #here I want to add LocalStorage so user can add goods to the basket without registration 
-        #and list of the goods will be stored in the local storage even if user closed the site
+@router.post("/order", status_code = status.HTTP_201_CREATED)
+async def create_order(db: db_dependancy,  order: CreateOrderRequest, request: Request):
+    
+    auth_header = request.headers.get("Authorization")
+    if auth_header is None:
+        print("User does not have token")
+        newUserRequest = CreateUserRequest(
+            email_or_phone_number = order.reciever_phone_number,
+            first_name = order.reciever_first_name,
+            last_name= order.reciever_last_name,
+            password=order.reciever_phone_number
+        )
 
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+            f"{settings.API_BASE_URL}/auth/create-user",
+            json=newUserRequest.dict()
+        )    
+        print(response)
+        if response.status_code != 201:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Something unexpected happened. Probably user with this phone number already exist")
+        new_user_model = db.query(Users).filter(Users.phone_number == order.reciever_phone_number).first()
+
+        user  = {"username":new_user_model.first_name, "id":new_user_model.id, "role":"user"}
+    else:
+        print("User has token")
+        token = auth_header[len("Bearer "):]
+        user = await get_current_user_with_str_token(token)
+
+    print("-1")
     create_order_model = Orders(
-        reciever_name = order.reciever_name,
-        shipping_adress = order.shipping_adress,
+        reciever_first_name = order.reciever_first_name,
+        reciever_last_name = order.reciever_last_name,
+        reciever_phone_number = order.reciever_phone_number,
+        shipping_city = order.shipping_city,
+        nova_post_department = order.nova_post_department,
         user_id = user.get("id"),
         total_price = 1
     )
+    print(0)
     db.add(create_order_model)
     db.commit()
 
+    print(1)
     total_price = 0
 
-    goods_in_basket = []
-    goods_in_basket = db.query(Basket).filter(Basket.user_id == user.get("id")).all()
-    for good in goods_in_basket:
-        goods_info = db.query(Goods).filter(Goods.id == good.goods_id).first()
-        order_item = OrderItem(
-            goods_id = good.goods_id,
-            quantity = good.quantity,
-            order_id = create_order_model.order_number,
-            price_for_one = goods_info.price
-        )
-        total_price += good.quantity * (db.query(Goods).filter(Goods.id == good.goods_id).first()).price
-        db.add(order_item)
-        db.commit()
-        change_goods_quantity_model = db.query(Goods).filter(Goods.id == order_item.goods_id).first()
-        change_goods_quantity_model.quantity -= order_item.quantity
-        db.add(change_goods_quantity_model)
-        db.commit()
+    if auth_header is not None:
+        goods_in_basket = []
+        goods_in_basket = db.query(Basket).filter(Basket.user_id == user.get("id")).all()
+        for good in goods_in_basket:
+            goods_info = db.query(Goods).filter(Goods.id == good.goods_id).first()
+            order_item = OrderItem(
+                goods_id = good.goods_id,
+                quantity = good.quantity,
+                order_id = create_order_model.order_number,
+                price_for_one = goods_info.price
+            )
+            total_price += good.quantity * (db.query(Goods).filter(Goods.id == good.goods_id).first()).price
+            db.add(order_item)
+            db.commit()
+            change_goods_quantity_model = db.query(Goods).filter(Goods.id == order_item.goods_id).first()
+            change_goods_quantity_model.quantity -= order_item.quantity
+            db.add(change_goods_quantity_model)
+            db.commit()
 
-
+    print(2)
+    #Need to add calculations from cookie parameters
     create_order_model.total_price = total_price
     db.add(create_order_model)
     db.commit()
     
-
-    user_info = db.query(Users).filter(Users.id == user.get("id")).first()
-    if(user_info.email is not None):
-        await send_order_details(user_info.email, create_order_model.order_number, db)
+    if auth_header is not None:
+        user_info = db.query(Users).filter(Users.id == user.get("id")).first()
+        if(user_info.email is not None):
+            await send_order_details(user_info.email, create_order_model.order_number, db)
     
-    #clear_basket
-    for good in goods_in_basket:
-        db.query(Basket).filter(Basket.user_id == user.get("id")).filter(good.goods_id == Basket.goods_id).delete()
-        db.commit()
+        for good in goods_in_basket:
+            db.query(Basket).filter(Basket.user_id == user.get("id")).filter(good.goods_id == Basket.goods_id).delete()
+            db.commit()
 
+    db.query(Orders).filter()
+
+    return {"message" : "success", "order_number":create_order_model.order_number}
 
 @router.put("/cancel-order", status_code = status.HTTP_200_OK)
 async def cancel_order(db: db_dependancy, user: user_dependency, order_number: int):

@@ -4,7 +4,7 @@ from .models import Base
 from .routers import auth, admin, users
 from .routers.goods_actions import goods_actions, goods_actions_admin
 from .routers.email_actions import email_verification
-
+from .config import settings
 from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
@@ -13,6 +13,7 @@ origins = [
     "https://localhost.tiangolo.com",
     "http://localhost",
     "http://localhost:5173",
+    f"{settings.API_BASE_URL}"
 ]
 
 app.add_middleware(

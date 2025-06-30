@@ -69,8 +69,8 @@ async def send_order_details(email: str, order_id: int, db: db_dependancy):
     {orders_text}
     
     Total price: {total_for_order}
-    Receiver name: {order_info.reciever_name}
-    Shipping address: {order_info.shipping_adress}
+    Receiver name: {order_info.reciever_last_name}
+    Shipping address: f"{order_info.shipping_city} {order_info.nova_post_department}"
     """
 
 

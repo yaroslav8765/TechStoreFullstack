@@ -33,6 +33,7 @@ router = APIRouter(
 bcrypt_context = CryptContext(schemes=["bcrypt"],deprecated = "auto") 
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl = "auth/token")
 
+
 class CreateUserRequest(BaseModel):
     email_or_phone_number: str
     first_name: Optional[str] = Field(default=None, min_length=2, max_length=30)
@@ -83,6 +84,17 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     except JWTError:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "Could not validate user. JWTError")
 
+async def get_current_user_with_str_token(token: str):
+    try: 
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms = [settings.ALGORITHM])
+        username: str = payload.get("sub")
+        user_id: int = payload.get("id")
+        user_role: str = payload.get("role")
+        if username is None or user_id is None:
+            raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "Could not validate user err 1")
+        return {"username":username, "id":user_id, "role":user_role}
+    except JWTError:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "Could not validate user. JWTError")
 
 def check_if_user_enter_email_or_phone_num(login: str):
     try:
@@ -142,7 +154,6 @@ async def create_user(db: db_dependancy, new_user_request: CreateUserRequest):
         )
         db.add(create_user_model)
         db.commit()
-    
     else:
         raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = "User enter invalid phone number or email")
     

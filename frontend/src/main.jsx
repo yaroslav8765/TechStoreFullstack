@@ -16,6 +16,7 @@ import {action as changeUserInfoAction} from "./components/UsersInfo.jsx"
 import GoodsInfo from './routers/GoodsInfo.jsx';
 import Category from './routers/Category.jsx';
 import Checkout from './routers/Checkout.jsx';
+import OrderCongratulations from './routers/OrderCongratulations.jsx';
 
 const router = createBrowserRouter([
     {
@@ -54,7 +55,11 @@ const router = createBrowserRouter([
     },
     {
         path:'/check-out', 
-        element:<Checkout/>
+        element:<Checkout/>,
+    },
+    {
+        path: '/check-out/congrats/:order_number',
+        element: <OrderCongratulations/>
     }
 ]);
 

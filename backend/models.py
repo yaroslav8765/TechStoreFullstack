@@ -150,14 +150,17 @@ class Basket(Base):
 class Orders(Base):
     __tablename__ = "orders"
 
-    order_number    = Column(Integer, primary_key=True, index=True)
-    user_id         = Column(Integer, ForeignKey("users.id"))
-    reciever_name   = Column(String)
-    shipping_adress = Column(String)
-    total_price     = Column(Float, nullable=False)
-    status          = Column(String, default="pending")
-    created_at      = Column(DateTime, default=datetime.now(utc_plus_2))
-    updated_at      = Column(DateTime, default=datetime.now(utc_plus_2), onupdate=datetime.now(utc_plus_2))
+    order_number            = Column(Integer, primary_key=True, index=True)
+    user_id                 = Column(Integer, ForeignKey("users.id"))
+    reciever_first_name     = Column(String)
+    reciever_last_name      = Column(String)
+    reciever_phone_number   = Column(String)
+    shipping_city           = Column(String)
+    nova_post_department    = Column(String)
+    total_price             = Column(Float, nullable=False)
+    status                  = Column(String, default="pending")
+    created_at              = Column(DateTime, default=datetime.now(utc_plus_2))
+    updated_at              = Column(DateTime, default=datetime.now(utc_plus_2), onupdate=datetime.now(utc_plus_2))
 
 class OrderItem(Base):
     __tablename__ = "order_item"
