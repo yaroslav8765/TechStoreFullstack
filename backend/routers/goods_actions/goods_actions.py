@@ -10,6 +10,8 @@ from ...models import Goods, Basket, OrderItem, Orders, Users, Smartphones, Lapt
 from ...routers.email_actions.email_verification import send_verification_email
 from ...routers.auth import check_if_user_enter_email_or_phone_num
 from ...routers.email_actions.email_mailing import send_order_details, send_cancel_order_notification
+from sqlalchemy import asc, desc
+
 
 router = APIRouter(
     prefix = "/goods",
@@ -47,13 +49,47 @@ async def show_goods_categories(db: db_dependancy):
     all_categories = db.query(Goods.category).distinct().all()
     return [category[0] for category in all_categories]
 
-@router.get("/{category}", status_code = status.HTTP_200_OK)
-async def show_category_goods(db: db_dependancy, category: str):
-    category_goods = db.query(Goods).filter(Goods.category == category).all()
-    if not category_goods:
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "No such category")
+from fastapi import Query
 
-    return category_goods
+from fastapi import Query
+from sqlalchemy import asc, desc
+
+@router.get("/{category}", status_code=status.HTTP_200_OK)
+async def show_category_goods(
+    category: str,
+    db: db_dependancy,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(10, ge=1, le=100),
+    sort: str = Query("rating_desc", description="Sort by field and direction, e.g. price_asc, price_desc, rating_desc")
+):
+    query = db.query(Goods).filter(Goods.category == category)
+
+    if sort == "price_asc":
+        query = query.order_by(asc(Goods.price))
+    elif sort == "price_desc":
+        query = query.order_by(desc(Goods.price))
+    elif sort == "rating_desc":
+        query = query.order_by(desc(Goods.rating))
+    elif sort == "rating_asc":
+        query = query.order_by(asc(Goods.rating))
+    else:
+        raise HTTPException(status_code=400, detail="Invalid sort option")
+
+    total = query.count()
+
+    category_goods = (
+        query.offset(skip).limit(limit).all()
+    )
+
+    if not category_goods:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No such category")
+
+    return {
+        "total": total,
+        "items": category_goods
+    }
+
+
 
 @router.get("/{category}/{goods_id}", status_code=status.HTTP_200_OK)
 async def get_goods_info(db: db_dependancy, category: str, goods_id: int):

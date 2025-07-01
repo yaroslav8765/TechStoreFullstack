@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import GoodsCard from '../components/GoodsCard';
 import InputSearchResult from '../ui/InputSearchResult';
+import LoadingAnimation from '../components/LoadingAnimation';
 
 function Category() {
   const { category } = useParams();
@@ -9,6 +10,7 @@ function Category() {
   const [isExpanded, setIsExpanded] = useState(false);
   const listOfSearchParams = ['Rating', 'Price: from lower', 'Price: from bigger'];
   const [selectedMode, setSelectedMode] = useState('Rating');
+  const [isLoading, setIsLoading] = useState(false);
 
   function expandSorting() {
     setIsExpanded(true);
@@ -18,31 +20,53 @@ function Category() {
     setIsExpanded(false);
   }
 
-  useEffect(() => {
+    useEffect(() => {
     async function getGoods() {
-      setGoods([]);
-      const API_URL = import.meta.env.VITE_API_URL;
-      const response = await fetch(`${API_URL}/goods/${category}`);
-      if (response.ok) {
+        setIsLoading(true);
+        setGoods([]);
+        const API_URL = import.meta.env.VITE_API_URL;
+
+        const skip = 0;
+        const limit = 4;
+
+        let sortParam = "";
+        if (selectedMode === "Rating") {
+        sortParam = "rating_desc";
+        } else if (selectedMode === "Price: from lower") {
+        sortParam = "price_asc";
+        } else if (selectedMode === "Price: from bigger") {
+        sortParam = "price_desc";
+        }
+
+        const response = await fetch(
+        `${API_URL}/goods/${category}?skip=${skip}&limit=${limit}&sort=${sortParam}`
+        );
+
+        if (response.ok) {
         const resData = await response.json();
         setGoods(resData);
-      }
-    }
-    getGoods();
-  }, [category]);
+        }
 
-  // 🧩 Мемоизированная сортировка — пересчитается только при смене goods или режима сортировки
-  const sortedGoods = useMemo(() => {
-    const sorted = [...goods];
-    if (selectedMode === 'Rating') {
-      sorted.sort((a, b) => b.rating - a.rating);
-    } else if (selectedMode === 'Price: from lower') {
-      sorted.sort((a, b) => a.price - b.price);
-    } else if (selectedMode === 'Price: from bigger') {
-      sorted.sort((a, b) => b.price - a.price);
+        setIsLoading(false);
+    }
+
+    getGoods();
+    }, [category, selectedMode]);
+
+
+    const goodsArray = goods?.items ?? [];
+
+    const sortedGoods = useMemo(() => {
+    const sorted = [...goodsArray];
+    if (selectedMode === "Rating") {
+        sorted.sort((a, b) => b.rating - a.rating);
+    } else if (selectedMode === "Price: from lower") {
+        sorted.sort((a, b) => a.price - b.price);
+    } else if (selectedMode === "Price: from bigger") {
+        sorted.sort((a, b) => b.price - a.price);
     }
     return sorted;
-  }, [goods, selectedMode]);
+    }, [goodsArray, selectedMode]);
 
   return (
     <div className="flex flex-col gap-4 max-w-[1200px] mx-auto mt-4 w-full min-h-[70vh]">
@@ -79,7 +103,7 @@ function Category() {
         </div>
       </div>
 
-      <div className="flex flex-col w-full gap-2">
+      {isLoading ? <div className='flex items-center justify-center w-full min-h-[70vh]'><LoadingAnimation/></div> : <div className="flex flex-col w-full gap-2">
         <div className="flex w-full justify-center">
           <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-2">
             {sortedGoods &&
@@ -99,7 +123,7 @@ function Category() {
               ))}
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 }
