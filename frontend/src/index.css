@@ -69,11 +69,26 @@
     background: linear-gradient(300deg, #1a75ff, #00d4b4, #4fffcf);
   }
 
+  .gradient-btn-red:disabled {
+    @apply cursor-not-allowed opacity-60;
+    background: linear-gradient(300deg, #8b7fff, #ff91c0, #f88a8a);
+    background-size: 180% 180%;
+    animation: none;
+  }
+
+  .gradient-btn-green:disabled {
+    @apply cursor-not-allowed opacity-60;
+    background: linear-gradient(300deg, #79a3ff, #66dede, #7befc4);
+    background-size: 180% 180%;
+    animation: none;
+  }
+
   .google-auth-btn {
     @apply flex justify-around items-center border border-gray-300 shadow-md mx-16 py-3 mt-8
     transition-all duration-300 ease-in-out hover:bg-gray-200 hover:border-gray-400;
   }
 }
+
 
 .orders-table {
   display: flex;

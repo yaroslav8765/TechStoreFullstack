@@ -16,7 +16,7 @@ function PopularGoods({ title, request_link, req_type, see_more_link }) {
   const [isFetching, setIsFetching] = useState(false);
   const [isLeftButtonVisible, setIsLeftButtonVisible] = useState(false);
   const [isRightButtonVisible, setIsRightButtonVisible] = useState(true);
-
+  const [isGoodsFetched, setIsGoodsFetched] = useState(false);
 
   const updateButtonVisibility = () => {
     const container = containerRef.current;
@@ -63,13 +63,18 @@ function PopularGoods({ title, request_link, req_type, see_more_link }) {
         headers: { "Content-Type": "application/json" }
       })
       const resData = await response.json();
-      setGoodsCard(resData);
+      if (Array.isArray(resData)) {
+        setGoodsCard(resData)
+      } else if (typeof resData === "object" && resData !== null) {
+        setGoodsCard(resData.items);
+        console.log(resData)
+      }
+      setIsGoodsFetched(true);
       setTimeout(updateButtonVisibility, 100);
       }else{
         const authResult = checkAuthLoader();
         if (authResult) return authResult;
         const token = getAuthToken();
-    
         const response = await fetch(`${API_URL}/${request_link}`, {
             method: "GET",
             headers: {
@@ -78,9 +83,9 @@ function PopularGoods({ title, request_link, req_type, see_more_link }) {
             }
         });
       const resData = await response.json();
-      console.log("resData:", resData);
 
       setGoodsCard(resData);
+      setIsGoodsFetched(true);
       setTimeout(updateButtonVisibility, 100);
       }
       
@@ -112,7 +117,7 @@ function PopularGoods({ title, request_link, req_type, see_more_link }) {
         <div
           className="flex gap-4  p-4 rounded-xl w-max min-w-full scroll-smooth"
         >
-          {goodsCards &&
+          {isGoodsFetched &&
             goodsCards.map((item) => (
               <GoodsCard
                 key={item.id}

@@ -27,8 +27,8 @@ function MainPage() {
 
       <MainCarousel listOfObjects={tempCarouselList}/>
         <PopularGoods title="Best Sellers" request_link="goods/bestsellers" req_type="noToken" see_more_link="Bestsellers"/>
-        <PopularGoods title="Smartphones"  request_link="goods/Smartphones" req_type="noToken" see_more_link="Smartphones"/>
-        <PopularGoods title="Laptops" request_link="goods/Laptops" req_type="noToken" see_more_link="Laptops"/>
+        <PopularGoods title="Smartphones"  request_link="goods/Smartphones?skip=0&limit=10&sort=rating_desc" req_type="noToken" see_more_link="Smartphones"/>
+        <PopularGoods title="Laptops" request_link="goods/Laptops?skip=0&limit=10&sort=rating_desc" req_type="noToken" see_more_link="Laptops"/>
       </div>
     </div>
   )
