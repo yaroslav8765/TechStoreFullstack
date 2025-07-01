@@ -82,7 +82,7 @@ function GoodsPrice({oldPrice, newPrice, categoty, id}){
                 <p className={`ml-2 text-4xl ${oldPrice ? 'text-red-500' : 'text-gray-600' } `}>{newPrice} ₴ </p>
             </div>
             <div className="flex flex-col items-center justify-center h-full w-[200px]">
-                <AddToCartButton id={id} maxW={200} maxH={54}/>
+                <AddToCartButton id={id} maxW={200} maxH={54} category={categoty}/>
             </div>
         </div>
         <div className="flex items-center justify-center  mr-4">

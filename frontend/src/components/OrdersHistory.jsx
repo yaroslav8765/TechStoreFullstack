@@ -44,16 +44,20 @@ function OrdersHistory(){
                     <h2 className="orders-table">Order status</h2>
                 </div>
                 
-                {orders && orders.map((order, index)=>
+                {orders &&
+                orders
+                    .slice()
+                    .sort((a, b) => b.order_number - a.order_number)
+                    .map((order, index) => (
                     <SingleOrder
-                    key = {index}
-                    order_number = {order.order_number}
-                    created_at = {order.created_at.slice(0, 10)}
-                    total_price = {order.total_price}
-                    last_update = {order.updated_at.slice(0, 10)}
-                    order_status = {order.status}
+                        key={index}
+                        order_number={order.order_number}
+                        created_at={order.created_at.slice(0, 10)}
+                        total_price={order.total_price}
+                        last_update={order.updated_at.slice(0, 10)}
+                        order_status={order.status}
                     />
-                )}
+                    ))}
             </div>}
     </div>
 }

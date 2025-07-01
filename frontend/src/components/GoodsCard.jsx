@@ -56,7 +56,7 @@ function GoodsCard(props) {
                     </Link>
 
 
-                    <AddToCartButton id={props.id}/>
+                    <AddToCartButton id={props.id} category={props.category}/>
                 </div>
         </div>
     );

@@ -64,7 +64,7 @@ function SingleOrder(props){
             }}
             >
 
-                {orderGoods && orderGoods.map((good, index) =>
+            {orderGoods && orderGoods.map((good, index) =>
                 <ExpandedOrderItem
                     key={index}
                     id={good.id} 
@@ -78,9 +78,10 @@ function SingleOrder(props){
                     category={good.category}
                 />
                 )}
-                <div className="flex flex-col items-end text-right text-sm text-gray-500 p-4">
-                    <p>Recipient: <span className="font-medium">{orderInfo?.reciever_name}</span></p>
-                    <p>Address: <span className="font-medium">{orderInfo?.shipping_adress}</span></p>
+
+                <div className="flex flex-col items-start text-left text-sm text-gray-500 p-4">
+                    <p>Recipient: <span className="font-medium">{`${orderInfo?.reciever_first_name} ${orderInfo?.reciever_last_name}`}</span></p>
+                    <p>Address: <span className="font-medium">{`${orderInfo?.shipping_city} ${orderInfo?.nova_post_department}`}</span></p>
                 </div>
             </div>
         </div>
