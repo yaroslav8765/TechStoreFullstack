@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import SingleSearchBarResult from "./SingleSearchBarResult";
 import listOfLinks from "../links";
+import { useNavigate } from "react-router-dom";
 
 function SearchBar() {
   const [usersPrompt, setUsersPrompt] = useState("");
   const [isRequestActive, setIsRequestActive] = useState(false);
   const [resData, setResData] = useState([]);
+  const navigate = useNavigate();
 
   async function handleClickOnSearch() {
     setIsRequestActive(true);
@@ -36,6 +38,7 @@ function SearchBar() {
         <SearchIcon
           sx={{ fontSize: "30px" }}
           className="text-gray-700 w-[40px] h-[40px] rounded-md hover:text-black transition-bg duration-200"
+          onClick={()=>{navigate(`/search/${usersPrompt}`)}}
         />
       </div>
 

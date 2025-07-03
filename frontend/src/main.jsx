@@ -22,6 +22,7 @@ import AboutUs from './routers/AboutUs.jsx';
 import PrivacyPolicy from './routers/PrivacyPolicy.jsx';
 import ReturnPolicyFAQs from './routers/ReturnPolicyFAQs.jsx';
 import TermsAndConditions from './routers/TermsAndConditions.jsx';
+import SearchResults from './routers/SearchResults.jsx';
 
 const router = createBrowserRouter([
     {
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
             {
                 path:"/terms-and-conditions",
                 element: <TermsAndConditions/>
+            },
+            {
+                path:"/search/:result",
+                element: <SearchResults/>
             },
             {
                 path:'/:category',
