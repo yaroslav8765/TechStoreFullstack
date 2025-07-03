@@ -20,29 +20,31 @@ function Catalog(){
         }
         getCategories();
     },[])
-    return <div className="flex flex-col gap-4 max-w-[1200px] mx-auto mt-4 w-full min-h-[70vh]">
-        {isLoading && <LoadingAnimation />}
-{categories && categories.map((category, index) => (
-  <p
-    key={index}
-    onClick={() => navigate(`/${category}`)}
-    className="
-      inline-block
-      px-6 py-3 m-3
-      rounded-xl
-      bg-blue-100 hover:bg-blue-200
-      text-blue-800 font-semibold text-lg
-      shadow-md hover:shadow-lg
-      transition-all duration-300
-      cursor-pointer
-    "
-    >
-    {category}
-  </p>
-))}
-
-
-
+    return<div> 
+        <div className=" gap-4 max-w-[1200px] mx-auto mt-4 w-full min-h-[70vh]">
+            <h2 className="text-gray-900 text-4xl font-bold m-4">Goods categories</h2>
+            <div className="flex items-start">
+            {isLoading && <LoadingAnimation />}
+            {categories && categories.map((category, index) => (
+            <div 
+                className="flex items-center justify-center min-h-[100px] w-[300px]
+                px-6 py-3 m-3
+                rounded-xl
+                hover:bg-gray-200
+                text-gray-800 font-semibold text-2xl
+                shadow-md hover:shadow-lg
+                transition-all duration-300
+                cursor-pointer border border-gray-200"
+                key={index}
+                onClick={() => navigate(`/${category}`)}
+                >
+                <p>
+                    {category}
+                </p>
+            </div>
+            ))}
+            </div>
+        </div>
     </div>
 }
 
