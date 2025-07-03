@@ -38,7 +38,7 @@ function SearchBar() {
         <SearchIcon
           sx={{ fontSize: "30px" }}
           className="text-gray-700 w-[40px] h-[40px] rounded-md hover:text-black transition-bg duration-200"
-          onClick={()=>{navigate(`/search/${usersPrompt}`)}}
+          onClick={()=>{navigate(`/search/${usersPrompt}`); setIsRequestActive(false);}}
         />
       </div>
 
@@ -69,7 +69,7 @@ function SearchBar() {
                 <p className="text-gray-700 text-center py-4">No results</p>
               )
             ) : (
-              <p className="text-red-500">Error</p>
+              <p className="text-red-500 m-2">Error</p>
             )}
           </div>
         </>

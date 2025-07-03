@@ -23,6 +23,9 @@ import PrivacyPolicy from './routers/PrivacyPolicy.jsx';
 import ReturnPolicyFAQs from './routers/ReturnPolicyFAQs.jsx';
 import TermsAndConditions from './routers/TermsAndConditions.jsx';
 import SearchResults from './routers/SearchResults.jsx';
+import CreateUser from './routers/CreateUser.jsx';
+import {action as registerAction} from "./routers/CreateUser.jsx"
+
 
 const router = createBrowserRouter([
     {
@@ -90,6 +93,11 @@ const router = createBrowserRouter([
     {
         path: '/check-out/congrats/:order_number',
         element: <OrderCongratulations/>
+    },
+    {
+        path:"/register",
+        element: <CreateUser/>,
+        action: registerAction
     }
 ]);
 
