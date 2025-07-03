@@ -2,7 +2,7 @@ from fastapi import APIRouter,Depends, HTTPException, Path, Query,Request
 from pydantic import BaseModel, Field, EmailStr
 from ..database import SessionLocal
 from sqlalchemy.orm import Session
-from sqlalchemy import text, func, desc
+from sqlalchemy import text, func, desc, asc
 from typing import Annotated
 from ..routers.auth import get_current_user, get_current_user_with_str_token
 from starlette import status
@@ -400,8 +400,41 @@ async def change_password(
 
 
 @router.get("/search", status_code=status.HTTP_200_OK)
-async def search( request: str, db: db_dependancy):
-    return db.query(Goods).filter(Goods.name.ilike(f"%{request}%")).all()
+async def search(
+    request: str,
+    db: db_dependancy,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(10, ge=1, le=100),
+    sort: str = Query(
+        "rating_desc",
+        description="Sort by field and direction, e.g. price_asc, price_desc, rating_desc"
+    )
+):
+    query = db.query(Goods).filter(Goods.name.ilike(f"%{request}%"))
+
+    if sort == "price_asc":
+        query = query.order_by(asc(Goods.price))
+    elif sort == "price_desc":
+        query = query.order_by(desc(Goods.price))
+    elif sort == "rating_desc":
+        query = query.order_by(desc(Goods.rating))
+    elif sort == "rating_asc":
+        query = query.order_by(asc(Goods.rating))
+    else:
+        raise HTTPException(status_code=400, detail="Invalid sort option")
+
+    total = query.count()
+
+    search_results = query.offset(skip).limit(limit).all()
+
+    if not search_results:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No items found")
+
+    return {
+        "total": total,
+        "items": search_results
+    }
+
 
 
 @router.post("/post-review", status_code = status.HTTP_200_OK)

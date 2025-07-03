@@ -1,185 +1,148 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import GoodsCard from '../components/GoodsCard';
 import InputSearchResult from '../ui/InputSearchResult';
 import LoadingAnimation from '../components/LoadingAnimation';
 
-function Category() {
-  const { category } = useParams();
-  const [goodsData, setGoodsData] = useState({ total: 0, items: [] });
-  const [isExpanded, setIsExpanded] = useState(false);
-  const listOfSearchParams = ['Rating', 'Price: from lower', 'Price: from bigger'];
-  const [selectedMode, setSelectedMode] = useState('Rating');
+function SearchResults() {
+  const { result } = useParams();
+  const [items, setItems] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [sortMode, setSortMode] = useState('Rating');
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
 
   const limit = 8;
+  const sortOptions = ['Rating', 'Price: from lower', 'Price: from bigger'];
 
-  function expandSorting() {
-    setIsExpanded(true);
-  }
-
-  function collapseSorting() {
-    setIsExpanded(false);
-  }
+  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
   useEffect(() => {
-    async function getGoods() {
-      setIsLoading(true);
-      setGoodsData({ total: 0, items: [] });
-      const API_URL = import.meta.env.VITE_API_URL;
+    const pages = Math.max(Math.ceil(total / limit), 1);
+    setTotalPages(pages);
+  }, [total]);
 
+  useEffect(() => {
+    const fetchGoods = async () => {
+      setIsLoading(true);
+      setItems([]); // Очищаем товары, но total оставляем
+      const API_URL = import.meta.env.VITE_API_URL;
       const skip = (page - 1) * limit;
 
-      let sortParam = '';
-      if (selectedMode === 'Rating') {
-        sortParam = 'rating_desc';
-      } else if (selectedMode === 'Price: from lower') {
-        sortParam = 'price_asc';
-      } else if (selectedMode === 'Price: from bigger') {
-        sortParam = 'price_desc';
+      let sortQuery = '';
+      if (sortMode === 'Rating') sortQuery = 'rating_desc';
+      else if (sortMode === 'Price: from lower') sortQuery = 'price_asc';
+      else if (sortMode === 'Price: from bigger') sortQuery = 'price_desc';
+
+      try {
+        const response = await fetch(
+          `${API_URL}/user/search?request=${encodeURIComponent(result)}&sort=${sortQuery}&skip=${skip}&limit=${limit}`
+        );
+        if (!response.ok) throw new Error('Failed to fetch');
+
+        const data = await response.json();
+        setItems(data.items || []);
+        setTotal(data.total || 0);
+      } catch (error) {
+        console.error(error);
+        setItems([]);
+      } finally {
+        setIsLoading(false);
       }
+    };
 
-      const response = await fetch(
-        `${API_URL}/goods/${category}?skip=${skip}&limit=${limit}&sort=${sortParam}`
-      );
-
-      if (response.ok) {
-        const resData = await response.json();
-        setGoodsData(resData);
-      }
-
-      setIsLoading(false);
-    }
-
-    getGoods();
-  }, [category, selectedMode, page]);
-
-  const goodsArray = goodsData.items ?? [];
-
-  const sortedGoods = useMemo(() => {
-    const sorted = [...goodsArray];
-    if (selectedMode === 'Rating') {
-      sorted.sort((a, b) => b.rating - a.rating);
-    } else if (selectedMode === 'Price: from lower') {
-      sorted.sort((a, b) => a.price - b.price);
-    } else if (selectedMode === 'Price: from bigger') {
-      sorted.sort((a, b) => b.price - a.price);
-    }
-    return sorted;
-  }, [goodsArray, selectedMode]);
-
-  const totalPages = Math.ceil(goodsData.total / limit);
-
-  function goToPrevPage() {
-    setPage((prev) => Math.max(prev - 1, 1));
-  }
-
-  function goToNextPage() {
-    setPage((prev) => Math.min(prev + 1, totalPages));
-  }
+    fetchGoods();
+  }, [result, sortMode, page]);
 
   return (
-    <div className="flex flex-col gap-4 max-w-[1200px] mx-auto mt-4 w-full min-h-[70vh]">
-      <div className="flex items-end justify-between">
-        <p className="text-gray-800 font-bold text-xl 2xl:text-4xl xl:text-3xl lg:text-2xl md:text-xl sm:text-lg mb-1">
-          {category}
-        </p>
+    <div className="max-w-[1200px] mx-auto mt-4 min-h-[70vh] flex flex-col gap-6 px-4">
+      <div className="flex flex-wrap items-center justify-between">
+        <h1 className="text-gray-800 font-bold text-xl sm:text-2xl lg:text-3xl">
+          Results for: <span className="font-normal">"{result}"</span>
+        </h1>
 
-        <div className="flex items-end text-lg gap-4 relative">
-          <p className="text-gray-600">Sort by:</p>
-          <div className="relative">
-            <button
-              className="w-[160px] h-[30px] border border-gray-300 shadow-md hover:shadow-lg rounded-md bg-white text-left px-2 text-gray-600"
-              onClick={isExpanded ? collapseSorting : expandSorting}
-            >
-              {selectedMode}
-            </button>
+        <div className="relative">
+          <button
+            onClick={toggleDropdown}
+            className="w-[180px] h-[36px] border border-gray-300 shadow hover:shadow-md rounded bg-white text-left px-3 text-gray-600"
+          >
+            Sort by: {sortMode}
+          </button>
 
-            {isExpanded && (
-              <div className="absolute top-[35px] left-0 w-[160px] bg-white border border-gray-200 shadow-lg rounded-md z-50">
-                {listOfSearchParams.map((param, index) => (
-                  <InputSearchResult
-                    key={index}
-                    onClick={() => {
-                      collapseSorting();
-                      setSelectedMode(param);
-                      setPage(1); 
-                    }}
-                    value={param}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+          {isDropdownOpen && (
+            <div className="absolute top-[40px] left-0 w-[180px] bg-white border border-gray-200 shadow rounded z-50">
+              {sortOptions.map((option) => (
+                <InputSearchResult
+                  key={option}
+                  value={option}
+                  onClick={() => {
+                    setSortMode(option);
+                    setPage(1);
+                    setIsDropdownOpen(false);
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center w-full min-h-[70vh]">
+        <div className="flex justify-center items-center w-full min-h-[60vh]">
           <LoadingAnimation />
         </div>
+      ) : items.length ? (
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+          {items.map((item) => (
+            <GoodsCard
+              key={item.id}
+              id={item.id}
+              img={item.image_url}
+              producName={item.name}
+              price={item.price}
+              rating={item.rating}
+              voted={item.voted}
+              old_price={item.old_price}
+              product_link={item.id}
+              category={item.category}
+            />
+          ))}
+        </div>
       ) : (
-        <> 
-          <div className="flex flex-col w-full gap-2">
-            <div className="flex w-full justify-center">
-              <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-2">
-                {sortedGoods.length ? (
-                  sortedGoods.map((item) => (
-                    <GoodsCard
-                      key={item.id}
-                      id={item.id}
-                      img={item.image_url}
-                      producName={item.name}
-                      price={item.price}
-                      rating={item.rating}
-                      voted={item.voted}
-                      old_price={item.old_price}
-                      product_link={item.id}
-                      category={item.category}
-                    />
-                  ))
-                ) : (
-                  <p className="text-center text-gray-600 col-span-full">No items found</p>
-                )}
-              </div>
-            </div>
-          </div>
+        <p className="text-center text-gray-600">No items found</p>
+      )}
 
-          <div className="flex justify-center items-center gap-4 mt-6 mb-8 select-none">
-            <button
-              onClick={goToPrevPage}
-              disabled={page === 1}
-              className={`px-4 py-2 rounded-md gradient-btn-red transition-colors duration-300 ease-in-out ${
-                page === 1
-                  ? 'cursor-not-allowed opacity-60'
-                  : 'hover:bg-gray-100'
-              }`}
-            >
-              &lt; 
-            </button>
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-6 mt-6">
+          <button
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            disabled={page === 1}
+            className={`px-4 py-2 rounded gradient-btn-red ${
+              page === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'
+            }`}
+          >
+            &lt;
+          </button>
 
-            <span className="font-semibold text-gray-700">
-              Page {page} of {totalPages || 1}
-            </span>
+          <span className="text-gray-700 font-semibold">
+            Page {page} of {totalPages}
+          </span>
 
-            <button
-            onClick={goToNextPage}
-            disabled={page === totalPages || totalPages === 0}
-            className={`px-4 py-2 rounded-md gradient-btn-green transition-colors duration-300 ease-in-out
-                ${page === totalPages || totalPages === 0
-                ? 'cursor-not-allowed opacity-60'
-                : 'hover:bg-gray-100'}
-            `}
-            >
-             &gt;
-            </button>
-
-          </div>
-        </>
+          <button
+            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={page === totalPages}
+            className={`px-4 py-2 rounded gradient-btn-green ${
+              page === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'
+            }`}
+          >
+            &gt;
+          </button>
+        </div>
       )}
     </div>
   );
 }
 
-export default Category;
+export default SearchResults;

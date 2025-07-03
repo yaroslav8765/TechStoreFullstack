@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import GoodsCard from '../components/GoodsCard';
 import InputSearchResult from '../ui/InputSearchResult';
@@ -21,9 +21,6 @@ function SearchResults() {
   useEffect(() => {
     async function getGoods() {
       setIsLoading(true);
-      setGoodsData([]);
-      setTotalItems(0);
-
       const API_URL = import.meta.env.VITE_API_URL;
       const skip = (page - 1) * limit;
 
@@ -36,16 +33,14 @@ function SearchResults() {
         const response = await fetch(
           `${API_URL}/user/search?request=${encodeURIComponent(result)}&sort=${sortParam}&skip=${skip}&limit=${limit}`
         );
-        console.log(`${API_URL}/user/search?request=${encodeURIComponent(result)}&sort=${sortParam}&skip=${skip}&limit=${limit}`);
+
         if (!response.ok) throw new Error('Failed to fetch');
 
         const data = await response.json();
-        const total = response.headers.get('X-Total-Count') ?? data.length;
-
-        setGoodsData(data);
-        setTotalItems(Number(total));
-      } catch (e) {
-        console.error(e);
+        setGoodsData(data.items || []);
+        setTotalItems(data.total || 0);
+      } catch (error) {
+        console.error(error);
         setGoodsData([]);
         setTotalItems(0);
       } finally {
@@ -56,18 +51,6 @@ function SearchResults() {
     getGoods();
   }, [result, selectedMode, page]);
 
-  const sortedGoods = useMemo(() => {
-    const sorted = [...goodsData];
-    if (selectedMode === 'Rating') {
-      sorted.sort((a, b) => b.rating - a.rating);
-    } else if (selectedMode === 'Price: from lower') {
-      sorted.sort((a, b) => a.price - b.price);
-    } else if (selectedMode === 'Price: from bigger') {
-      sorted.sort((a, b) => b.price - a.price);
-    }
-    return sorted;
-  }, [goodsData, selectedMode]);
-
   const totalPages = Math.max(Math.ceil(totalItems / limit), 1);
 
   const goToPrevPage = () => setPage((p) => Math.max(p - 1, 1));
@@ -77,7 +60,7 @@ function SearchResults() {
     <div className="max-w-[1200px] mx-auto mt-4 min-h-[70vh] flex flex-col gap-4 px-4">
       <div className="flex items-end justify-between">
         <h1 className="text-gray-800 font-bold text-xl 2xl:text-4xl xl:text-3xl lg:text-2xl md:text-xl sm:text-lg mb-1">
-        Results for: <span className="font-normal">"{result}"</span>
+          Results for: <span className="font-normal">"{result}"</span>
         </h1>
         <div className="flex items-center gap-4 relative">
           <span className="text-gray-600">Sort by:</span>
@@ -112,26 +95,26 @@ function SearchResults() {
         <div className="flex items-center justify-center w-full min-h-[70vh]">
           <LoadingAnimation />
         </div>
-      ) : sortedGoods.length > 0 ? (
+      ) : goodsData.length > 0 ? (
         <div className="flex flex-col w-full gap-2">
-            <div className="flex w-full justify-center">
-        <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-2">
-          {sortedGoods.map((item) => (
-            <GoodsCard
-              key={item.id}
-              id={item.id}
-              img={item.image_url}
-              producName={item.name}
-              price={item.price}
-              rating={item.rating}
-              voted={item.voted}
-              old_price={item.old_price}
-              product_link={item.id}
-              category={item.category}
-            />
-          ))}
-        </div>
-        </div>
+          <div className="flex w-full justify-center">
+            <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-2">
+              {goodsData.map((item) => (
+                <GoodsCard
+                  key={item.id}
+                  id={item.id}
+                  img={item.image_url}
+                  producName={item.name}
+                  price={item.price}
+                  rating={item.rating}
+                  voted={item.voted}
+                  old_price={item.old_price}
+                  product_link={item.id}
+                  category={item.category}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       ) : (
         <p className="text-center text-gray-600 col-span-full">No items found</p>
