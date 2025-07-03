@@ -18,6 +18,10 @@ import Category from './routers/Category.jsx';
 import Checkout from './routers/Checkout.jsx';
 import OrderCongratulations from './routers/OrderCongratulations.jsx';
 import Catalog from './routers/Catalog.jsx';
+import AboutUs from './routers/AboutUs.jsx';
+import PrivacyPolicy from './routers/PrivacyPolicy.jsx';
+import ReturnPolicyFAQs from './routers/ReturnPolicyFAQs.jsx';
+import TermsAndConditions from './routers/TermsAndConditions.jsx';
 
 const router = createBrowserRouter([
     {
@@ -47,6 +51,22 @@ const router = createBrowserRouter([
             {
                 path:"/catalog",
                 element: <Catalog/>
+            },
+            {
+                path:"/about-us",
+                element: <AboutUs/>
+            },
+            {
+                path:"/privacy-policy",
+                element: <PrivacyPolicy/>
+            },
+            {
+                path:"/return-policy-faqs",
+                element: <ReturnPolicyFAQs/>
+            },
+            {
+                path:"/terms-and-conditions",
+                element: <TermsAndConditions/>
             },
             {
                 path:'/:category',

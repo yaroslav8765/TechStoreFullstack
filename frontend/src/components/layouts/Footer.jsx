@@ -1,8 +1,9 @@
 import React from "react";
 import listOfLinks from "../../links";
+import { useNavigate } from "react-router-dom";
 
 function Footer() {
-
+    const navigate = useNavigate();
     const date = new Date();
 
     return (
@@ -12,19 +13,19 @@ function Footer() {
                 <div className="mb-4 md:mb-0">
                     <h3 className="text-black font-semibold mb-2">Information</h3>
                     <ul>
-                        <li><a href={listOfLinks.about_us} className="hover:underline">About Us</a></li>
-                        <li><a href={listOfLinks.privacy_polycy} className="hover:underline">Privacy Policy</a></li>
-                        <li><a href={listOfLinks.terms_and_conditions} className="hover:underline">Terms & Conditions</a></li>
-                        <li><a href={listOfLinks.return_policy} className="hover:underline">Return Policy</a></li>
+                        <li><a onClick={()=>{navigate("/about-us")}} className="hover:cursor-pointer hover:underline hover:text-gray-800">About Us</a></li>
+                        <li><a onClick={()=>{navigate("/privacy-policy")}} className="hover:cursor-pointer hover:underline hover:text-gray-800">Privacy Policy</a></li>
+                        <li><a onClick={()=>{navigate("/terms-and-conditions")}} className="hover:cursor-pointer hover:underline hover:text-gray-800">Terms & Conditions</a></li>
+                        <li><a onClick={()=>{navigate("/return-policy-faqs")}} className="hover:cursor-pointer hover:underline hover:text-gray-800">Return Policy</a></li>
                     </ul>
                 </div>
 
                 <div className="mb-4 md:mb-0">
                     <h3 className="text-black font-semibold mb-2">Customer Service</h3>
                     <ul>
-                        <li><a href={listOfLinks.contact_us} className="hover:underline">Contact Us</a></li>
-                        <li><a href={listOfLinks.FAQs} className="hover:underline">FAQs</a></li>
-                        <li><a href={listOfLinks.support_center} className="hover:underline">Support Center</a></li>
+                        <li><a href={listOfLinks.contact_us} className="hover:cursor-pointer hover:underline hover:text-gray-800">Contact Us</a></li>
+                        <li><a onClick={()=>{navigate("/return-policy-faqs")}} className="hover:cursor-pointer hover:underline hover:text-gray-800">FAQs</a></li>
+                        <li><a href={listOfLinks.support_center} className="hover:cursor-pointer hover:underline hover:text-gray-800">Support Center</a></li>
                     </ul>
                 </div>
 
