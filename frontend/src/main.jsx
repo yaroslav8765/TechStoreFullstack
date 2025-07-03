@@ -17,6 +17,7 @@ import GoodsInfo from './routers/GoodsInfo.jsx';
 import Category from './routers/Category.jsx';
 import Checkout from './routers/Checkout.jsx';
 import OrderCongratulations from './routers/OrderCongratulations.jsx';
+import Catalog from './routers/Catalog.jsx';
 
 const router = createBrowserRouter([
     {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
                     {path: 'change-password', element :<ChangePassword/>},
                     {path: 'orders-history', element :<OrdersHistory/>},
                 ]
+            },
+            {
+                path:"/catalog",
+                element: <Catalog/>
             },
             {
                 path:'/:category',
