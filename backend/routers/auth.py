@@ -108,55 +108,84 @@ def check_if_user_enter_email_or_phone_num(login: str):
             return "Something wrong with your email or phone number. Please, check if your information is correct"
 
 ############END POINTS############
-@router.post("/create-user", status_code= status.HTTP_201_CREATED)
+from sqlalchemy.exc import IntegrityError
+from fastapi import HTTPException, status
+
+@router.post("/create-user", status_code=status.HTTP_201_CREATED)
 async def create_user(db: db_dependancy, new_user_request: CreateUserRequest):
 
     user_enter = check_if_user_enter_email_or_phone_num(new_user_request.email_or_phone_number)
 
-    if(user_enter == "Email"):
-        check_user = db.query(Users).filter((Users.email == new_user_request.email_or_phone_number)).first()
+    if user_enter == "Email":
+        check_user = db.query(Users).filter(Users.email == new_user_request.email_or_phone_number).first()
 
-        if(check_user is not None):
-            if check_user.is_active == False:
+        if check_user is not None:
+            if not check_user.is_active:
                 await send_verification_email(new_user_request.email_or_phone_number)
-                raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = "Please, verify your e-mail. We`ve sent you activation email again")
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Please verify your e-mail. We've sent you an activation email again"
+                )
             else:
-                raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = "User witch such email already exists")
-    
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="User with such email already exists"
+                )
+
         await send_verification_email(new_user_request.email_or_phone_number)
 
         create_user_model = Users(
-        email = new_user_request.email_or_phone_number,
-        first_name = new_user_request.first_name,
-        last_name = new_user_request.last_name,
-        hashed_password = bcrypt_context.hash(new_user_request.password),
-        role = "user",
-        is_active = False
+            email=new_user_request.email_or_phone_number,
+            first_name=new_user_request.first_name,
+            last_name=new_user_request.last_name,
+            hashed_password=bcrypt_context.hash(new_user_request.password),
+            role="user",
+            is_active=False
         )
 
         db.add(create_user_model)
-        db.commit()
+        try:
+            db.commit()
+        except IntegrityError:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="User with this email already exists"
+            )
 
+    elif user_enter == "Phone_number":
+        check_user = db.query(Users).filter(Users.phone_number == new_user_request.email_or_phone_number).first()
+        if check_user is not None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="User with such phone number already exists"
+            )
 
-    elif(user_enter == "Phone_number"):
-        check_user = db.query(Users).filter((Users.phone_number == new_user_request.email_or_phone_number)).first()
-        if(check_user is not None):
-            raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = "User witch such phone number already exists")
-    
-        #send verification SMS?)
         create_user_model = Users(
-            phone_number = new_user_request.email_or_phone_number,
-            first_name = new_user_request.first_name,
-            last_name = new_user_request.last_name,
-            hashed_password = bcrypt_context.hash(new_user_request.password),
-            role = "user",
-            is_active = False
+            phone_number=new_user_request.email_or_phone_number,
+            first_name=new_user_request.first_name,
+            last_name=new_user_request.last_name,
+            hashed_password=bcrypt_context.hash(new_user_request.password),
+            role="user",
+            is_active=False
         )
+
         db.add(create_user_model)
-        db.commit()
+        try:
+            db.commit()
+        except IntegrityError:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="User with this phone number already exists"
+            )
+
     else:
-        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = "User enter invalid phone number or email")
-    
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail="User entered an invalid phone number or email"
+        )
+
 
 
 @router.post("/token/", response_model=Token)

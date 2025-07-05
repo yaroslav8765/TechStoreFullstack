@@ -3,6 +3,7 @@ import { Link, Form, redirect, useActionData } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import listOfLinks from "../links";
 import AuthInput from "../ui/AuthInput";
+import LoadingAnimation from "../components/LoadingAnimation";
 
 function Register() {
     const [emailOrPhoneNumber, setEmailOrPhoneNumber] = useState("");
@@ -11,8 +12,14 @@ function Register() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     const actionData = useActionData();
+    useEffect(() => {
+      if (actionData) {
+        setIsLoading(false);
+      }
+    }, [actionData]);
 
     var passwordMismatch = password && confirmPassword && password !== confirmPassword;
 
@@ -26,6 +33,7 @@ function Register() {
     }
 
     useEffect(() => {
+      console.log(actionData);
     if (
         emailOrPhoneNumber.length > 5 &&
         firstName.length > 2 &&
@@ -41,6 +49,7 @@ function Register() {
 
   return (
     <div className="max-w-[1200px] mx-auto mt-4 min-h-[70vh] flex flex-col justify-center items-center gap-6 px-4">
+      {isLoading && <div className="w-[100vw] h-[100vh] z-50 fixed inset-0 flex items-center justify-center bg-gray-600/50"><LoadingAnimation/></div>}
       <Form method="post" className="flex flex-col w-[380px] min-h-[600px] bg-white">
         <h2 className="text-2xl font-bold text-center py-4 border-b text-gray-600">Create Account</h2>
 
@@ -51,7 +60,7 @@ function Register() {
           value={emailOrPhoneNumber}
           onChange={handleInputChange}
           required
-          errorMessage={actionData?.detail === "User already exists" ? actionData.detail : null}
+          errorMessage={actionData ? actionData.detail : null}
         />
 
         <AuthInput
@@ -79,6 +88,7 @@ function Register() {
           value={password}
           onChange={handleInputChange}
           isInputHidden="Yes"
+          isNewPassword="Yes"
           required
         />
 
@@ -89,6 +99,7 @@ function Register() {
           value={confirmPassword}
           onChange={handleInputChange}
           isInputHidden="Yes"
+          isNewPassword="Yes"
           required
           errorMessage={passwordMismatch ? "Passwords do not match" : null}
         />
@@ -96,9 +107,9 @@ function Register() {
         <div className="mx-6 text-sm text-gray-600 mt-2">
           <p>
             By continuing, you agree to TechStore's
-            <Link to={listOfLinks.terms_and_conditions} className="text-blue-400 mx-2 hover:text-blue-700">Conditions of Use</Link>
+            <Link to="/terms-and-conditions" className="text-blue-400 mx-2 hover:text-blue-700">Conditions of Use</Link>
             and
-            <Link to={listOfLinks.privacy_polycy} className="text-blue-400 mx-2 hover:text-blue-700">Privacy Notice</Link>.
+            <Link to="/privacy-policy" className="text-blue-400 mx-2 hover:text-blue-700">Privacy Notice</Link>.
           </p>
         </div>
 
@@ -108,6 +119,7 @@ function Register() {
             type="submit"
             disabled={isButtonDisabled}
             className="gradient-btn-green px-10 py-2 rounded-4xl disabled:opacity-50"
+            onClick={()=>{setIsLoading(true);}}
           >
             Create
           </button>
@@ -154,8 +166,8 @@ export async function action({request}) {
     });
 
     const data = await response.json();
-    if(data){
-        return(data)
+    if(data?.detail){
+        return { detail: data.detail };
     }
     else{
         return redirect("/confirm-email")

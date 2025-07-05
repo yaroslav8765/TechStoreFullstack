@@ -1,7 +1,8 @@
 
+import Password from "antd/es/input/Password";
 import React from "react";
 
-const AuthInput = ({ label, placeholder, value, onChange, name, errorMessage, isInputHidden, isBig }) => {
+const AuthInput = ({ label, placeholder, value, onChange, name, errorMessage, isInputHidden, isNewPassword, isBig }) => {
   return (
     <div className="flex flex-col mx-6 mt-4">
             <p className="text-lg text-gray-600">{label}</p>
@@ -15,6 +16,7 @@ const AuthInput = ({ label, placeholder, value, onChange, name, errorMessage, is
         value={value}
         name={name}
         type={isInputHidden ? "password" : "text"}
+        autoComplete={`${isNewPassword === "Yes" ? "new-password" : ''}`}
       />
       
       :
@@ -26,6 +28,8 @@ const AuthInput = ({ label, placeholder, value, onChange, name, errorMessage, is
         value={value}
         name={name}
         type={isInputHidden ? "password" : "text"}
+        autoComplete={`${isNewPassword === "Yes" ? "new-password" : ''}`}
+
       />}
 
       <p className="text-md text-red-600">{errorMessage}</p>
