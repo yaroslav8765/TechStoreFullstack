@@ -25,6 +25,7 @@ import TermsAndConditions from './routers/TermsAndConditions.jsx';
 import SearchResults from './routers/SearchResults.jsx';
 import CreateUser from './routers/CreateUser.jsx';
 import {action as registerAction} from "./routers/CreateUser.jsx"
+import ConfirmEmail from './routers/ConfirmEmail.jsx';
 
 
 const router = createBrowserRouter([
@@ -83,7 +84,7 @@ const router = createBrowserRouter([
             {
                 path:'/:category/:id',
                 element:<GoodsInfo/>
-            },
+            }
         ]
     },
     {
@@ -98,6 +99,10 @@ const router = createBrowserRouter([
         path:"/register",
         element: <CreateUser/>,
         action: registerAction
+    },
+    {
+        path:"/confirm-email",
+        element:<ConfirmEmail/>
     }
 ]);
 

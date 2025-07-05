@@ -53,6 +53,7 @@ function Register() {
       <Form method="post" className="flex flex-col w-[380px] min-h-[600px] bg-white">
         <h2 className="text-2xl font-bold text-center py-4 border-b text-gray-600">Create Account</h2>
 
+
         <AuthInput
           label="Email or mobile phone number"
           placeholder="Enter email or phone"

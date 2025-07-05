@@ -16,7 +16,7 @@ function Login() {
   }
 
   return (
-    <Modal redirectLink="..">
+    <Modal redirectLink=".." isAllowedNavigate={true}>
       <Form method="post" className="flex flex-col w-[380px] h-[600px] bg-white">
         <h2 className="text-2xl font-bold text-center py-4 border-b text-gray-600">Sign in</h2>
 
@@ -47,9 +47,9 @@ function Login() {
         <div className="mx-6 text-sm">
           <p>
             By continuing, you agree to TechStore's
-            <Link to={listOfLinks.terms_and_conditions} className="text-blue-400 mx-2 hover:text-blue-700">Conditions of Use</Link>
+            <Link to="/terms-and-conditions" className="text-blue-400 mx-2 hover:text-blue-700">Conditions of Use</Link>
             and
-            <Link to={listOfLinks.privacy_polycy} className="text-blue-400 mx-2 hover:text-blue-700">Privacy Notice</Link>.
+            <Link to="/privacy-policy" className="text-blue-400 mx-2 hover:text-blue-700">Privacy Notice</Link>.
           </p>
         </div>
 

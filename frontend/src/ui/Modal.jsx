@@ -4,7 +4,9 @@ function Modal({ children, redirectLink,clickCloseHandler,isAllowedNavigate }) {
   const navigate = useNavigate();
 
   function closeHandler() {
-    clickCloseHandler();
+    if(clickCloseHandler){
+      clickCloseHandler();
+    }
     isAllowedNavigate && navigate(redirectLink);
   }
 

@@ -24,7 +24,7 @@ function Catalog(){
         <div className=" gap-4 max-w-[1200px] mx-auto mt-4 w-full min-h-[70vh]">
             <h2 className="text-gray-900 text-4xl font-bold m-4">Goods categories</h2>
             <div className="flex items-start">
-            {isLoading && <LoadingAnimation />}
+            {isLoading && <div className=" z-50 inset-0 fixed flex items-center justify-center w-full h-full "><LoadingAnimation /></div>}
             {categories && categories.map((category, index) => (
             <div 
                 className="flex items-center justify-center min-h-[100px] w-[300px]
