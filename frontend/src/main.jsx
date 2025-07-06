@@ -26,6 +26,7 @@ import SearchResults from './routers/SearchResults.jsx';
 import CreateUser from './routers/CreateUser.jsx';
 import {action as registerAction} from "./routers/CreateUser.jsx"
 import ConfirmEmail from './routers/ConfirmEmail.jsx';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 const router = createBrowserRouter([
@@ -107,5 +108,7 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById('root')).render(
-    <RouterProvider router={router}/>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_ID}>
+        <RouterProvider router={router}/>
+    </GoogleOAuthProvider>
 )

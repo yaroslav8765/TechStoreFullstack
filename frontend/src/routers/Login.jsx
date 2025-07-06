@@ -3,6 +3,8 @@ import { Link, Form, redirect, useActionData } from 'react-router-dom';
 import { useState } from "react";
 import listOfLinks from "../links";
 import AuthInput from "../ui/AuthInput";
+import {GoogleOAuthProvider} from '@react-oauth/google'
+import { GoogleLogin } from "@react-oauth/google";
 
 function Login() {
   const [usersLogin, setUsersLogin] = useState("");
@@ -59,6 +61,12 @@ function Login() {
             <img src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s48-fcrop64=1,00000000ffffffff-rw" className="h-[30px]" />
           </div>
         </Link>
+
+        <GoogleLogin 
+          onSuccess={(credantialResponse)=>{console.log(credantialResponse)}}
+        />
+
+
 
         <div className="flex items-center my-6">
           <div className="flex-grow border-t border-gray-300"></div>
