@@ -10,5 +10,6 @@ class Settings(BaseSettings):
     MAIL_PASSWORD: str
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="allow",)
     SQLALCHEMY_DATABASE_URL: str
+    GOOGLE_AUTH_ID: str
 
 settings = Settings()

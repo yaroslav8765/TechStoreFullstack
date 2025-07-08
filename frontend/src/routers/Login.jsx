@@ -1,21 +1,59 @@
 import Modal from "../ui/Modal";
-import { Link, Form, redirect, useActionData } from 'react-router-dom';
-import { useState } from "react";
+import { Link, Form, redirect, useActionData, useNavigate } from 'react-router-dom';
 import listOfLinks from "../links";
 import AuthInput from "../ui/AuthInput";
+import { useState } from "react";
 import {GoogleOAuthProvider} from '@react-oauth/google'
 import { GoogleLogin } from "@react-oauth/google";
+import {jwtDecode} from "jwt-decode"
+import { useAuth } from "../providers/AuthProvider";
+import { useGoogleLogin } from '@react-oauth/google';
 
 function Login() {
   const [usersLogin, setUsersLogin] = useState("");
   const [usersPassword, setUsersPassword] = useState("");
   const actionData = useActionData();
+  const navigate = useNavigate();
+  const { saveToken } = useAuth();
 
   function handleInputChange(event) {
     const { name, value } = event.target;
     if (name === "username") setUsersLogin(value);
     if (name === "password") setUsersPassword(value);
   }
+
+  async function loginWithGoogle(credantialResponse){
+    const userInfo = jwtDecode(credantialResponse.credential)
+    console.log(userInfo);
+    const API_URL = import.meta.env.VITE_API_URL;
+    const requestData = {
+      sub: userInfo.sub,
+      email: userInfo.email,
+      email_verified: userInfo.email_verified,
+      name: userInfo.name,
+      picture: userInfo.picture,
+      id_token: credantialResponse.credential,
+    };
+
+    const response = await fetch(`${API_URL}/auth/login-with-google`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(requestData),
+    });
+
+    const data = await response.json();
+    if(!response.ok){
+        return(data);
+    }
+    else if(data.token_type === "bearer"){
+        saveToken(data.access_token);
+        navigate("/")
+    }
+
+  }
+
 
   return (
     <Modal redirectLink=".." isAllowedNavigate={true}>
@@ -55,16 +93,15 @@ function Login() {
           </p>
         </div>
 
-        <Link to="123" className="google-auth-btn mx-16 mt-8">
-          <div className="flex justify-around items-center">
-            <p>Continue with Google</p>
-            <img src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s48-fcrop64=1,00000000ffffffff-rw" className="h-[30px]" />
-          </div>
-        </Link>
-
-        <GoogleLogin 
-          onSuccess={(credantialResponse)=>{console.log(credantialResponse)}}
-        />
+        <div className="flex w-full justify-center my-6">
+          <GoogleLogin 
+            onSuccess={loginWithGoogle}
+            size="large"
+            text="continue_with"
+            size="large"
+            width= "300"
+          />
+        </div>
 
 
 
@@ -103,7 +140,7 @@ export async function action({request}) {
         return(data)
     }
     else if(data.token_type === "bearer"){
-        localStorage.setItem("access_token", data.access_token);
+        saveToken(data.access_token);
         return redirect("/")
     }
 }

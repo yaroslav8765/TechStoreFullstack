@@ -16,11 +16,11 @@ import LogoLink from "../../ui/LogoLink";
 import CartComponentOverlay from "../CartComponentOverlay";
 import { useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
-
+import { useAuth } from "../../providers/AuthProvider";
 
 
 function NavBar() {
-  const token = useRouteLoaderData('root');
+  const { token } = useAuth();
   const [isCartOpened, setIsCartOpened] = useState(false);
 
   function closeCartComponent(){

@@ -9,6 +9,7 @@ import OrdersHistory from "../components/OrdersHistory.jsx";
 import CrititcalErrorWindow from "../ui/CrititcalErrorWindow.jsx";
 import LoadingAnimation from "../components/LoadingAnimation.jsx";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "../providers/AuthProvider.jsx";
 
 function Profile(){
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function Profile(){
   const location = useLocation();
   const [userInfo, setUserInfo] = useState([]);
   const [currentMode, setCurretMode ]= useState("users-info");
-  
+  const { token, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -43,7 +44,6 @@ function Profile(){
       const API_URL = import.meta.env.VITE_API_URL;
       const authResult = checkAuthLoader();
       if (authResult) return authResult;
-      const token = getAuthToken();
 
       const response = await fetch(API_URL + "/user/user-info", {
         method: "GET",
@@ -90,8 +90,7 @@ function Profile(){
   }
 
   function logoutHandler(){
-      removeToken();
-      revalidator.revalidate();
+      logout();
       navigate('/');
   }
 
