@@ -21,7 +21,6 @@ function SmallReviewsComponent({ id, goToReviewsSection }) {
                 if (response.ok) {
                     const resData = await response.json();
                     setReviews(resData);
-                    console.log(resData);
                 } else {
                     console.error('Failed to fetch reviews');
                 }

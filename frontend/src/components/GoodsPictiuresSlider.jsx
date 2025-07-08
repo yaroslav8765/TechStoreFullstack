@@ -12,9 +12,7 @@ import ImageZoom from "react-image-zooom";
 function GoodsPicturesSlider({mainPicture, pictures}){
     const [swiperInstance, setSwiperInstance] = useState(null);
 
-    useEffect(()=>{
-        console.log(pictures);
-    },[])
+
 
     function smallImageClick(event){
     const id = parseInt(event.target.id, 10);

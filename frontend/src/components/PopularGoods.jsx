@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import listOfLinks from "../links";
 import LoadingAnimation from "./LoadingAnimation";
 import { getAuthToken, checkAuthLoader, removeToken } from "../../util/auth.js"
+import useRecentlyViewed from '../providers/useRecentlyViewed.js';
 
 const CARD_WIDTH = 265;
 
@@ -17,6 +18,7 @@ function PopularGoods({ title, request_link, req_type, see_more_link }) {
   const [isLeftButtonVisible, setIsLeftButtonVisible] = useState(false);
   const [isRightButtonVisible, setIsRightButtonVisible] = useState(true);
   const [isGoodsFetched, setIsGoodsFetched] = useState(false);
+  const { getViewed } = useRecentlyViewed();
 
   const updateButtonVisibility = () => {
     const container = containerRef.current;
@@ -71,7 +73,7 @@ function PopularGoods({ title, request_link, req_type, see_more_link }) {
       }
       setIsGoodsFetched(true);
       setTimeout(updateButtonVisibility, 100);
-      }else{
+      }else if(req_type ==="Token"){
         const authResult = checkAuthLoader();
         if (authResult) return authResult;
         const token = getAuthToken();
@@ -87,6 +89,25 @@ function PopularGoods({ title, request_link, req_type, see_more_link }) {
       setGoodsCard(resData);
       setIsGoodsFetched(true);
       setTimeout(updateButtonVisibility, 100);
+      } else {
+        const recentlyWatchedGoods = getViewed();
+        let goods = [];
+        console.log(recentlyWatchedGoods)
+
+        for (let i = 0; i < recentlyWatchedGoods.length-1; i++) {
+          const id = recentlyWatchedGoods[i].id;
+          console.log(`id:${id}`)
+          const response = await fetch(`${API_URL}/goods/base-info/${id}`);
+          if (response.ok) {
+            const resData = await response.json();
+            goods.push(resData);
+          } else {
+            console.error(`Ошибка при получении товара с id=${id}`);
+          }
+        }
+        console.log(goods);
+        setGoodsCard(goods);
+        setIsGoodsFetched(true);
       }
       
       setIsFetching(false)

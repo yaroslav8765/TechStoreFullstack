@@ -21,7 +21,6 @@ function BigReviewsComponent({ id, voted }) {
                 if (response.ok) {
                     const resData = await response.json();
                     setReviews(resData);
-                    console.log(resData);
                 } else {
                     console.error('Failed to fetch reviews');
                 }
@@ -36,7 +35,6 @@ function BigReviewsComponent({ id, voted }) {
 
     function changePageHandler(e){
         const value = Number(e.target.value);
-        console.log(value);
         if(value){
          value>=totalPages ? setPage(totalPages):setPage(value);
         }

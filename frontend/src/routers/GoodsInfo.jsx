@@ -13,6 +13,8 @@ import BigReviewsComponent from '../components/BigReviewsComponent.jsx';
 import PopularGoods from '../components/PopularGoods.jsx';
 import CreateReview from '../components/CreateReview.jsx';
 import { getAuthToken, checkAuthLoader, removeToken } from "../../util/auth.js"
+import { useAuth } from '../providers/AuthProvider.jsx';
+import useRecentlyViewed from '../providers/useRecentlyViewed.js';
 
 function GoodsInfo(){
     const { category, id } = useParams();
@@ -21,6 +23,9 @@ function GoodsInfo(){
     const [goodsData, setGoodsData] = useState([]);
     const [isExpanded, setIsExpanded] = useState(false);
     const targetRef = useRef(null);
+    const { token } = useAuth();
+    const { getViewed, addViewed } = useRecentlyViewed();
+
 
     function expandFunction(){
       setIsExpanded(!isExpanded)
@@ -40,18 +45,18 @@ function GoodsInfo(){
                 const resData = await response.json();
                 if (response.ok) {
                     setGoodsData(resData);
-                    console.log(resData);
-
-                    const authResult = checkAuthLoader();
-                    if (authResult) return authResult;
-                    const token = getAuthToken();
-                    const response2 = await fetch(`${API_URL}/user/add-good-to-recently-watched?good_id=${resData[0].id}`,{
-                      method:"POST",
-                      headers: {
-                      "Content-type":"application/json",
-                      "Authorization": `Bearer ${token}`
-                      }
-                    })
+                    if(token){
+                      const response2 = await fetch(`${API_URL}/user/add-good-to-recently-watched?good_id=${resData[0].id}`,{
+                        method:"POST",
+                        headers: {
+                        "Content-type":"application/json",
+                        "Authorization": `Bearer ${token}`
+                        }
+                      })
+                    } else {
+                      const productId = resData[0].id
+                      addViewed({id: productId});
+                    }
                 } else {
 
                 }
@@ -146,7 +151,7 @@ return (
 
 
         <div className='flex flex-col max-w-[1200px] w-full mx-auto mt-4'>
-          <PopularGoods title="You recently watched" request_link="user/get-users-recently-watched-goods" see_more_link="none"/>
+          <PopularGoods title="You recently watched" request_link="user/get-users-recently-watched-goods" see_more_link="none" req_type={token?`Token`:''}/>
         </div>
       </div>
     )}

@@ -98,7 +98,6 @@ function Login() {
             onSuccess={loginWithGoogle}
             size="large"
             text="continue_with"
-            size="large"
             width= "300"
           />
         </div>

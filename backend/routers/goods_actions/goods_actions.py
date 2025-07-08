@@ -90,6 +90,10 @@ async def show_category_goods(
     }
 
 
+@router.get("/base-info/{goods_id}", status_code=status.HTTP_200_OK)
+async def get_goods_base_info(db: db_dependancy, goods_id: int):
+    return db.query(Goods).filter(Goods.id == goods_id).first()
+
 
 @router.get("/{category}/{goods_id}", status_code=status.HTTP_200_OK)
 async def get_goods_info(db: db_dependancy, category: str, goods_id: int):
@@ -166,3 +170,5 @@ async def get_goods_reviews(
         response.append(review_data)
 
     return response
+
+
